@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f2f2f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="工作助手">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<title>工作助手</title>
+<style>
+:root{
+  --bg:#f2f2f7; --card:#fff; --text:#1c1c1e; --muted:#8e8e93; --line:#e4e4e9;
+  --accent:#5e5ce6; --danger:#ff3b30; --gold:#ff9500; --ok:#34c759;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#000;--card:#1c1c1e;--text:#f2f2f7;--muted:#98989d;--line:#2c2c2e;}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  display:flex;flex-direction:column;
+  height:100vh;height:100dvh;height:var(--app-h,100dvh);
+  overflow:hidden;touch-action:manipulation;
+}
+button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}
+.hidden{display:none!important}
+input,textarea{font:inherit;color:var(--text)}
+
+/* ---------- 顶栏 ---------- */
+.topbar{display:flex;align-items:center;padding:10px 14px 5px}
+.topbar h1{font-size:20px;margin:0;flex:1;font-weight:650;letter-spacing:.2px}
+.iconbtn{width:38px;height:38px;border-radius:50%;font-size:19px;color:var(--muted);display:grid;place-items:center}
+.iconbtn:active{background:var(--line)}
+#btnAdd{color:var(--accent);font-size:24px;font-weight:300}
+
+/* ---------- 页面 ---------- */
+.page{flex:1;min-height:0;display:flex;flex-direction:column}
+.scrollarea{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:14px}
+
+/* 分段控件 */
+.seg{display:flex;gap:3px;margin:2px 14px 10px;background:var(--line);border-radius:9px;padding:3px;flex:none}
+.seg button{flex:1;padding:7px 0;border-radius:7px;font-size:14px;opacity:.62}
+.seg button.on{background:var(--card);opacity:1;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+/* ---------- 列表 ---------- */
+.list{background:var(--card);border-radius:var(--r);margin:0 14px;overflow:hidden}
+.row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row:active{background:var(--line)}
+.row .body{flex:1;min-width:0}
+.row .nm{font-size:15.5px;line-height:1.3;word-break:break-word;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.row .sub{font-size:11.5px;color:var(--muted);margin-top:3px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.row .sub .over{color:var(--danger)}
+.row .sub .soon{color:var(--gold)}
+.row.done .nm{text-decoration:line-through;color:var(--muted)}
+
+/* 右侧计数 */
+.side{flex:none;text-align:right;line-height:1.35}
+.side b{font-size:16px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.side i{font-style:normal;font-size:11px;color:var(--muted)}
+.side .t2{display:block;font-size:11px;color:var(--muted)}
+.side .t2 b{font-size:12px;color:var(--muted);font-weight:600}
+
+/* 勾选圆 */
+.check{width:22px;height:22px;border-radius:50%;border:1.8px solid var(--muted);flex:none;display:grid;place-items:center;transition:background .12s,border-color .12s}
+.check.on{background:var(--accent);border-color:var(--accent)}
+.check.on::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+
+/* 徽章与星级 */
+.badge{font-size:10.5px;padding:2px 7px;border-radius:8px;font-weight:600;flex:none}
+.stars{color:var(--gold);font-size:11.5px;letter-spacing:1px;flex:none}
+
+/* 空态 */
+.empty{padding:60px 30px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.9}
+.empty .big{font-size:34px;margin-bottom:10px}
+.empty b{color:var(--text);font-weight:600}
+
+/* 分组标题（层级分组） */
+.gtitle{font-size:12px;font-weight:700;color:var(--muted);margin:16px 18px 6px;letter-spacing:.4px;display:flex;align-items:center;gap:6px}
+.gtitle:first-child{margin-top:8px}
+.gtitle .n{font-weight:400}
+
+/* ---------- 底部标签栏 ---------- */
+.tabbar{display:flex;flex:none;border-top:1px solid var(--line);background:var(--card);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabbar button{flex:1;padding:9px 0 10px;font-size:11.5px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabbar button .ic{font-size:17px;line-height:1}
+.tabbar button.on{color:var(--accent);font-weight:600}
+
+/* ---------- 整屏详情 ---------- */
+.screen{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column}
+.screen-head{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 10px;border-bottom:1px solid var(--line)}
+.screen-head h2{margin:0;font-size:17px;flex:1;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.screen-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px}
+.back{color:var(--accent);font-size:16px;display:flex;align-items:center;gap:2px;padding:4px 6px 4px 0;flex:none}
+
+/* 详情信息卡 */
+.infocard{background:var(--card);border-radius:var(--r);margin:12px 14px;padding:16px}
+.infocard .tip{font-size:11px;color:var(--muted);text-align:center;margin-top:12px}
+.infocard .big-nm{font-size:19px;font-weight:650;word-break:break-word;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.infocard .meta{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.7}
+.infocard .meta .over{color:var(--danger)}
+.infocard .note{margin-top:10px;font-size:13.5px;color:var(--text);background:var(--bg);border-radius:10px;padding:10px 12px;line-height:1.6;word-break:break-word}
+
+/* 完成总开关行 */
+.master{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:var(--r);margin:0 14px 12px;padding:13px 14px}
+.master:active{background:var(--line)}
+.master .lb{flex:1;font-size:15px;font-weight:600}
+.master .st{font-size:11.5px;color:var(--muted)}
+
+/* ---------- 底部弹层 ---------- */
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:flex-end}
+.sheet{background:var(--card);width:100%;max-height:92vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:6px 18px calc(env(safe-area-inset-bottom,0px) + 18px)}
+.sheet-grip{width:36px;height:4px;border-radius:2px;background:var(--line);margin:6px auto 12px}
+.sheet h2{margin:0 0 14px;font-size:17px;font-weight:650}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.field textarea,.field input[type=text],.field input[type=datetime-local]{
+  width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px;outline:none
+}
+@media (prefers-color-scheme:dark){.field textarea,.field input[type=text],.field input[type=datetime-local]{background:#2c2c2e}}
+.field textarea{resize:none;min-height:64px;line-height:1.5}
+.field textarea:focus,.field input:focus{border-color:var(--accent)}
+.chips{display:flex;gap:8px}
+.chips.wrap{flex-wrap:wrap}
+.chip{flex:1;padding:10px 0;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center}
+@media (prefers-color-scheme:dark){.chip{background:#2c2c2e}}
+.chips.wrap .chip{flex:1 1 30%}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.staredit{display:flex;gap:6px}
+.staredit button{flex:1;padding:8px 0;font-size:22px;color:var(--line);text-align:center}
+.staredit button.on{color:var(--gold)}
+.mini{font-size:12px;color:var(--accent);font-weight:600;padding:4px 6px}
+.pick-head{display:flex;align-items:center;gap:4px;margin-bottom:6px}
+.pick-head label{flex:1;margin:0}
+.picklist{max-height:300px;overflow-y:auto;border:1px solid var(--line);border-radius:10px}
+.picklist .prow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.picklist .prow:last-child{border-bottom:0}
+.picklist .prow:active{background:var(--line)}
+.picklist .pnm{flex:1;min-width:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sheet-actions{display:flex;gap:10px;margin-top:18px}
+.btn{flex:1;padding:13px 0;border-radius:11px;font-size:15.5px;text-align:center;font-weight:600}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.ghost{background:var(--bg);color:var(--text)}
+@media (prefers-color-scheme:dark){.btn.ghost{background:#2c2c2e}}
+.btn.danger{background:transparent;color:var(--danger)}
+.btn:active{opacity:.75}
+
+/* ---------- 菜单 / 快照 ---------- */
+.menu-list{background:var(--card);border-radius:var(--r);overflow:hidden;margin:0 14px}
+.menu-list button{display:block;width:100%;text-align:left;padding:15px 16px;font-size:15.5px;border-bottom:1px solid var(--line)}
+.menu-list button:last-child{border-bottom:0}
+.menu-list button.danger{color:var(--danger)}
+.menu-list button:active{background:var(--line)}
+.warnbar{background:#ff950022;color:#c86a00;font-size:12.5px;padding:9px 14px;text-align:center;line-height:1.6}
+@media (prefers-color-scheme:dark){.warnbar{color:#ffb340}}
+.warnbar button{color:inherit;text-decoration:underline;font-weight:700;font-size:12.5px;margin-left:4px}
+.warnbar.danger{background:#ff3b3022;color:#d70015}
+@media (prefers-color-scheme:dark){.warnbar.danger{color:#ff6961}}
+.toast{position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 64px);z-index:200;
+  background:#1c1c1e;color:#fff;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px;
+  font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+@media (prefers-color-scheme:dark){.toast{background:#2c2c2e}}
+.toast .msg{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toast button{color:#5e5ce6;font-weight:600;font-size:14px;flex:none}
+@media (prefers-color-scheme:dark){.toast button{color:#7d7aff}}
+.snap{margin-bottom:10px;padding:12px 14px;background:var(--bg);border-radius:10px}
+.snap .t{font-size:13.5px;font-weight:600;margin-bottom:3px}
+.snap .d{font-size:11.5px;color:var(--muted);margin-bottom:9px}
+.snap button{font-size:13px;color:var(--accent);font-weight:600}
+.hint{font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1 id="pageTitle">客户</h1>
+  <button class="iconbtn" id="btnAdd" aria-label="新建">＋</button>
+  <button class="iconbtn" id="btnMenu" aria-label="数据管理">⋯</button>
+</div>
+
+<div id="storeWarn" class="warnbar hidden"></div>
+
+<div id="pageClients" class="page">
+  <div class="scrollarea" id="clientList"></div>
+</div>
+
+<div id="pageTasks" class="page hidden">
+  <div class="seg" id="taskSeg">
+    <button data-v="0" class="on">未完成</button>
+    <button data-v="1">已完成</button>
+  </div>
+  <div class="scrollarea" id="taskList"></div>
+</div>
+
+<div class="tabbar">
+  <button id="tabClients" class="on"><span class="ic">▦</span>客户</button>
+  <button id="tabTasks"><span class="ic">✓</span>任务</button>
+</div>
+
+<div id="detailScreen" class="screen hidden">
+  <div class="screen-head">
+    <button class="back" id="btnBack">‹ 返回</button>
+    <h2 id="detailTitle"></h2>
+    <button class="iconbtn hidden" id="btnDetailAdd" aria-label="关联任务">＋</button>
+  </div>
+  <div class="screen-body" id="detailBody"></div>
+</div>
+
+<div id="mask" class="mask hidden">
+  <div class="sheet">
+    <div class="sheet-grip"></div>
+    <div id="sheetBox"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden">
+  <div class="msg"></div>
+  <button id="toastBtn"></button>
+</div>
+
+<input type="file" id="fileInput" accept="application/json,.json" class="hidden">
+
+<script>
+'use strict';
+
+/* ============ 常量 ============ */
+var KEY = 'work.assistant.v1';
+var SNAP_KEY = 'work.assistant.snapshots';
+var SNAP_META = 'work.assistant.snapmeta';
+var CORRUPT_KEY = 'work.assistant.corrupt';
+var SNAP_MAX = 3;
+var DAY = 86400000;
+var INF = 9007199254740991;
+
+/* 层级：顺序即排序顺序，最上面的最高 */
+var TIERS = [
+  { k:'seed',  n:'金种子',  c:'#a07d00', bg:'#ffd60a33' },
+  { k:'t360',  n:'top360',  c:'#ff3b30', bg:'#ff3b3022' },
+  { k:'t1000', n:'top1000', c:'#e08400', bg:'#ff950022' },
+  { k:'t1500', n:'top1500', c:'#0a84ff', bg:'#0a84ff22' },
+  { k:'ndka',  n:'NDKA+',   c:'#8e8e93', bg:'#8e8e9322' }
+];
+var CHANNELS = [
+  { k:'fd',   n:'FD渠道' },
+  { k:'exp',  n:'体验店渠道' },
+  { k:'both', n:'FD+体验店' }
+];
+
+var db = { version:1, clients:[], tasks:[] };
+var storageOK = true, saveFailed = false, corruptRaw = null;
+var loadFailed = false;
+
+/* 界面状态 */
+var curTab = 'clients';      // clients | tasks
+var taskShowDone = 0;        // 0 未完成 1 已完成
+var navStack = [];           // [{type:'client'|'task', id}]
+var toastTimer = null;
+var lastDeleted = null;      // {kind, obj}
+
+/* ============ 工具 ============ */
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function p2(n){ return (n<10?'0':'')+n; }
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function $(id){ return document.getElementById(id); }
+function mmdd(ts){ var d=new Date(ts); return (d.getMonth()+1)+'/'+d.getDate(); }
+function toDateInput(ts){ var d=new Date(ts); return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()); }
+function toLocalInput(ts){ var d=new Date(ts); return toDateInput(ts)+'T'+p2(d.getHours())+':'+p2(d.getMinutes()); }
+function fmtDateTime(ts){
+  var d=new Date(ts);
+  return d.getFullYear()+'/'+p2(d.getMonth()+1)+'/'+p2(d.getDate())+' '+p2(d.getHours())+':'+p2(d.getMinutes());
+}
+function clampStars(n){ n = parseInt(n,10)||3; return Math.max(1, Math.min(5, n)); }
+function starsText(n){ n = clampStars(n); var s=''; for(var i=1;i<=5;i++) s += (i<=n?'★':'☆'); return s; }
+
+function tierOf(c){
+  for(var i=0;i<TIERS.length;i++) if(TIERS[i].k===c.tier) return TIERS[i];
+  return TIERS[TIERS.length-1];
+}
+function tierIdx(c){
+  for(var i=0;i<TIERS.length;i++) if(TIERS[i].k===c.tier) return i;
+  return TIERS.length;
+}
+function channelOf(c){
+  for(var i=0;i<CHANNELS.length;i++) if(CHANNELS[i].k===c.channel) return CHANNELS[i];
+  return CHANNELS[0];
+}
+
+/* 倒计时文案 */
+function countdown(ms){
+  var m = Math.floor(ms/60000);
+  if(m < 1) return '不到 1 分钟';
+  if(m < 60) return m + ' 分钟';
+  var h = Math.floor(m/60);
+  if(h < 24) return h + ' 小时';
+  var d = Math.floor(h/24), rh = h%24;
+  return d + ' 天' + (rh ? ' '+rh+' 小时' : '');
+}
+/* 截止日期走精确时刻，不走凌晨 4 点 */
+function dayLabel(ts){
+  var d = new Date(ts), now = new Date();
+  var a = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  var b = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  if(a === b) return '今天';
+  if(a === b + DAY) return '明天';
+  return mmdd(ts);
+}
+
+/* ============ 存储 ============ */
+function warn(msg, danger){
+  var el = $('storeWarn');
+  el.innerHTML = msg;
+  el.classList.toggle('danger', !!danger);
+  el.classList.remove('hidden');
+}
+function warnCorrupt(){
+  warn('⚠️ 本地数据读取失败，已用空数据启动。<b>原始内容已保留</b>，可下载后排查。' +
+    '<button id="btnCorruptDl">下载原始数据</button><button id="btnCorruptClear">知道了</button>', true);
+  $('btnCorruptDl').onclick = function(){
+    download('工作助手-损坏数据-'+toDateInput(Date.now())+'.txt', corruptRaw || '', 'text/plain');
+  };
+  $('btnCorruptClear').onclick = function(){
+    try{ localStorage.removeItem(CORRUPT_KEY); }catch(e){}
+    corruptRaw = null;
+    $('storeWarn').classList.add('hidden');
+  };
+}
+function load(){
+  var raw = null, parseFailed = false;
+  try{ raw = localStorage.getItem(KEY); }catch(e){ storageOK = false; }
+  if(!storageOK){
+    try{ localStorage.setItem('__t','1'); localStorage.removeItem('__t'); storageOK = true; }
+    catch(e){ storageOK = false; }
+    if(!storageOK) warn('⚠️ 本浏览器不允许本地存储，数据在关闭页面后会丢失。请定期导出备份。', true);
+  }
+  if(raw){
+    try{
+      var o = JSON.parse(raw);
+      if(o && Array.isArray(o.clients) && Array.isArray(o.tasks)) db = o;
+      else parseFailed = true;
+    }catch(e){ parseFailed = true; }
+    if(parseFailed){
+      corruptRaw = raw;
+      loadFailed = true;
+      try{ localStorage.setItem(CORRUPT_KEY, raw); }catch(e){}
+      warnCorrupt();
+    }
+  }
+  if(!parseFailed && !corruptRaw){
+    try{
+      var kept = localStorage.getItem(CORRUPT_KEY);
+      if(kept){ corruptRaw = kept; warnCorrupt(); }
+    }catch(e){}
+  }
+}
+function save(){
+  if(!storageOK) return;
+  try{
+    localStorage.setItem(KEY, JSON.stringify(db));
+    saveFailed = false;
+  }catch(e){
+    if(!saveFailed){
+      saveFailed = true;
+      warn('⚠️ 保存失败，浏览器存储空间可能已满。<b>请立即导出备份</b>，否则新数据会丢。', true);
+    }
+  }
+}
+/* 每天首次打开留一份快照，最多 3 份。损坏空表启动时绝不写快照。 */
+function snapshot(){
+  if(!storageOK || saveFailed || loadFailed) return;
+  try{
+    var today = toDateInput(Date.now());
+    if(localStorage.getItem(SNAP_META) === today) return;
+    var list = readSnapshots();
+    list.push({ at:Date.now(), clients:db.clients, tasks:db.tasks });
+    if(list.length > SNAP_MAX) list = list.slice(-SNAP_MAX);
+    localStorage.setItem(SNAP_KEY, JSON.stringify(list));
+    localStorage.setItem(SNAP_META, today);
+  }catch(e){ /* 空间不足就跳过，主数据已经安全 */ }
+}
+function readSnapshots(){
+  try{
+    var v = JSON.parse(localStorage.getItem(SNAP_KEY) || '[]');
+    return Array.isArray(v) ? v : [];
+  }catch(e){ return []; }
+}
+function pushSnapshot(){
+  try{
+    var l = readSnapshots();
+    l.push({ at:Date.now(), clients:db.clients, tasks:db.tasks });
+    if(l.length > SNAP_MAX) l = l.slice(-SNAP_MAX);
+    localStorage.setItem(SNAP_KEY, JSON.stringify(l));
+  }catch(e){}
+}
+
+/* id 规范化：会拼进 HTML 属性，必须是安全形状 */
+function normalizeIds(){
+  var map = {}, seen = {};
+  function fix(arr){
+    (arr||[]).forEach(function(t){
+      if(!t) return;
+      var raw = (typeof t.id==='string'||typeof t.id==='number') ? String(t.id) : '';
+      if(raw && /^[A-Za-z0-9_-]{1,64}$/.test(raw) && !seen[raw]){
+        seen[raw]=1; if(raw!==t.id) t.id=raw;
+      }else{
+        var nid = uid(); seen[nid]=1;
+        if(raw) map[raw]=nid;
+        t.id = nid;
+      }
+    });
+  }
+  fix(db.clients); fix(db.tasks);
+  db.tasks.forEach(function(t){
+    (t.links||[]).forEach(function(l){ if(l && map[l.clientId]) l.clientId = map[l.clientId]; });
+  });
+}
+
+/* 导入前校验与归一化 */
+function normalizeImport(o){
+  if(!o || !Array.isArray(o.clients) || !Array.isArray(o.tasks))
+    throw new Error('缺少 clients/tasks 数组 —— 可能不是本应用的备份文件');
+  var out = { version:1, clients:[], tasks:[] };
+  o.clients.forEach(function(c){
+    if(!c || typeof c!=='object' || typeof c.name!=='string') return;
+    out.clients.push({
+      id: c.id,
+      name: c.name,
+      tier: typeof c.tier==='string' ? c.tier : 'ndka',
+      channel: (c.channel==='fd'||c.channel==='exp'||c.channel==='both') ? c.channel : 'fd',
+      stars: clampStars(c.stars),
+      note: typeof c.note==='string' ? c.note : '',
+      createdAt: typeof c.createdAt==='number' ? c.createdAt : Date.now(),
+      deleted: !!c.deleted
+    });
+  });
+  o.tasks.forEach(function(t){
+    if(!t || typeof t!=='object' || typeof t.name!=='string') return;
+    out.tasks.push({
+      id: t.id,
+      name: t.name,
+      stars: clampStars(t.stars),
+      dueAt: typeof t.dueAt==='number' ? t.dueAt : null,
+      createdAt: typeof t.createdAt==='number' ? t.createdAt : Date.now(),
+      doneAt: typeof t.doneAt==='number' ? t.doneAt : null,
+      deleted: !!t.deleted,
+      links: Array.isArray(t.links) ? t.links.filter(function(l){
+        return l && typeof l.clientId==='string';
+      }).map(function(l){
+        return { clientId:l.clientId, done:!!l.done, doneAt:typeof l.doneAt==='number'?l.doneAt:null };
+      }) : []
+    });
+  });
+  /* 清掉指向不存在客户的关联 */
+  var cids = {};
+  out.clients.forEach(function(c){ cids[c.id]=1; });
+  out.tasks.forEach(function(t){
+    t.links = t.links.filter(function(l){ return cids[l.clientId]; });
+  });
+  return out;
+}
+
+function download(filename, text, mime){
+  var blob = new Blob([text], { type: mime || 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
+/* ============ 领域逻辑 ============ */
+function activeClients(){ return db.clients.filter(function(c){ return !c.deleted; }); }
+function activeTasks(){ return db.tasks.filter(function(t){ return !t.deleted; }); }
+function clientById(id){
+  for(var i=0;i<db.clients.length;i++) if(db.clients[i].id===id) return db.clients[i];
+  return null;
+}
+function taskById(id){
+  for(var i=0;i<db.tasks.length;i++) if(db.tasks[i].id===id) return db.tasks[i];
+  return null;
+}
+/* 任务的关联里，指向已删除客户的不参与计数 */
+function activeLinks(t){
+  return (t.links||[]).filter(function(l){
+    var c = clientById(l.clientId);
+    return c && !c.deleted;
+  });
+}
+/* 任务完成 = 所有关联客户都勾完；无关联时看自身 doneAt */
+function taskDone(t){
+  var ls = activeLinks(t);
+  return ls.length ? ls.every(function(l){ return l.done; }) : !!t.doneAt;
+}
+function taskLinkStats(t){
+  var ls = activeLinks(t);
+  var undone = ls.filter(function(l){ return !l.done; }).length;
+  return { total: ls.length, undone: undone };
+}
+/* 客户视角：该客户关联的任务统计 */
+function clientTaskStats(c){
+  var ts = activeTasks().filter(function(t){
+    return activeLinks(t).some(function(l){ return l.clientId===c.id; });
+  });
+  var undone = ts.filter(function(t){ return !taskDone(t); }).length;
+  return { total: ts.length, undone: undone };
+}
+function isOverdue(t){ return !taskDone(t) && !!t.dueAt && t.dueAt < Date.now(); }
+
+function dueInfo(t){
+  if(!t.dueAt) return null;
+  var d = new Date(t.dueAt);
+  var hm = p2(d.getHours())+':'+p2(d.getMinutes());
+  var diff = t.dueAt - Date.now();
+  if(taskDone(t)) return { text:'⏰ '+dayLabel(t.dueAt)+' '+hm, cls:'' };
+  if(diff < 0) return { text:'⏰ 已逾期 '+countdown(-diff), cls:'over' };
+  return { text:'⏰ '+dayLabel(t.dueAt)+' '+hm+' · 还剩 '+countdown(diff), cls:(diff<DAY?'soon':'') };
+}
+
+/* 排序：客户 = 层级顺序 → 星级高 → 创建早 */
+function sortedClients(){
+  return activeClients().slice().sort(function(a,b){
+    return tierIdx(a)-tierIdx(b) || b.stars-a.stars || a.createdAt-b.createdAt;
+  });
+}
+/* 排序：任务未完成 = 截止早(无截止沉底) → 星级高 → 创建早；已完成 = 完成晚 */
+function sortedTasks(done){
+  var list = activeTasks().filter(function(t){ return taskDone(t)===done; });
+  if(done) return list.sort(function(a,b){ return (b.doneAt||0)-(a.doneAt||0); });
+  return list.sort(function(a,b){
+    return (a.dueAt||INF)-(b.dueAt||INF) || b.stars-a.stars || a.createdAt-b.createdAt;
+  });
+}
+
+/* ============ 渲染：客户视角 ============ */
+function badgeHTML(t){ return '<span class="badge" style="color:'+t.c+';background:'+t.bg+'">'+esc(t.n)+'</span>'; }
+
+function renderClients(){
+  var box = $('clientList');
+  var list = sortedClients();
+  if(!list.length){
+    box.innerHTML = '<div class="empty"><div class="big">▦</div>还没有客户<br>点右上角 <b>＋</b> 创建第一个客户</div>';
+    return;
+  }
+  var html = '', lastTier = null;
+  list.forEach(function(c){
+    var t = tierOf(c);
+    if(c.tier !== lastTier){
+      lastTier = c.tier;
+      var n = list.filter(function(x){ return x.tier===c.tier; }).length;
+      if(html) html += '</div>';
+      html += '<div class="gtitle">'+badgeHTML(t)+'<span class="n">'+n+' 个</span></div>';
+      html += '<div class="list">';
+    }
+    var st = clientTaskStats(c);
+    var ch = channelOf(c);
+    html += '<div class="row" data-cid="'+c.id+'">'
+      + '<div class="body">'
+      +   '<div class="nm">'+esc(c.name)+'<span class="stars">'+starsText(c.stars)+'</span></div>'
+      +   '<div class="sub">'+badgeHTML(t)+'<span>'+esc(ch.n)+'</span></div>'
+      + '</div>'
+      + '<div class="side"><b>'+st.undone+'</b> <i>未完成</i>'
+      + '<span class="t2">共 <b>'+st.total+'</b> 任务</span></div>'
+      + '</div>';
+  });
+  if(html) html += '</div>';
+  box.innerHTML = html;
+  box.querySelectorAll('.row').forEach(function(r){
+    r.onclick = function(){ openDetail('client', r.getAttribute('data-cid')); };
+  });
+}
+
+/* ============ 渲染：任务视角 ============ */
+function renderTasks(){
+  var box = $('taskList');
+  var list = sortedTasks(!!taskShowDone);
+  if(!list.length){
+    box.innerHTML = '<div class="empty"><div class="big">✓</div>'
+      + (taskShowDone ? '还没有已完成的任务' : '还没有待办任务')
+      + '<br>点右上角 <b>＋</b> 创建任务</div>';
+    return;
+  }
+  var html = '<div class="list">';
+  list.forEach(function(t){
+    var st = taskLinkStats(t);
+    var di = dueInfo(t);
+    html += '<div class="row'+(taskDone(t)?' done':'')+'" data-tid="'+t.id+'">'
+      + '<button class="check'+(taskDone(t)?' on':'')+'" data-ck="'+t.id+'" aria-label="切换完成"></button>'
+      + '<div class="body">'
+      +   '<div class="nm">'+esc(t.name)+'<span class="stars">'+starsText(t.stars)+'</span></div>'
+      +   (di ? '<div class="sub"><span class="'+di.cls+'">'+esc(di.text)+'</span></div>' : '<div class="sub"><span>无截止日期</span></div>')
+      + '</div>'
+      + '<div class="side">'
+      +   (taskShowDone
+      ?     '<b>'+st.total+'</b> <i>客户</i>'
+      :     '<b>'+st.undone+'</b> <i>未完成</i><span class="t2">共 <b>'+st.total+'</b> 客户</span>')
+      + '</div>'
+      + '</div>';
+  });
+  html += '</div>';
+  box.innerHTML = html;
+  box.querySelectorAll('.row').forEach(function(r){
+    r.onclick = function(){ openDetail('task', r.getAttribute('data-tid')); };
+  });
+  box.querySelectorAll('.check').forEach(function(b){
+    b.onclick = function(e){
+      e.stopPropagation();
+      toggleTaskDone(taskById(b.getAttribute('data-ck')));
+    };
+  });
+}
+
+function render(){
+  renderClients();
+  renderTasks();
+  if(navStack.length) renderDetail();
+}
+
+/* ============ 详情屏 ============ */
+function openDetail(type, id){
+  navStack.push({ type:type, id:id });
+  $('btnDetailAdd').classList.toggle('hidden', type!=='client');
+  $('detailScreen').classList.remove('hidden');
+  renderDetail();
+}
+function renderDetail(){
+  var top = navStack[navStack.length-1];
+  if(!top) return;
+  if(top.type==='client') renderClientDetail(top.id);
+  else renderTaskDetail(top.id);
+}
+
+function renderClientDetail(id){
+  var c = clientById(id);
+  if(!c || c.deleted){ navStack.pop(); if(!navStack.length) $('detailScreen').classList.add('hidden'); return; }
+  var t = tierOf(c), ch = channelOf(c);
+  $('detailTitle').textContent = c.name;
+  var body = $('detailBody');
+
+  var ts = activeTasks().filter(function(x){
+    return activeLinks(x).some(function(l){ return l.clientId===c.id; });
+  }).sort(function(a,b){
+    return (taskDone(a)-taskDone(b)) || (a.dueAt||INF)-(b.dueAt||INF) || b.stars-a.stars;
+  });
+  var undone = ts.filter(function(x){ return !taskDone(x); }).length;
+
+  var html = '<div class="infocard" id="infoCard">'
+    + '<div class="big-nm">'+esc(c.name)+'<span class="stars">'+starsText(c.stars)+'</span></div>'
+    + '<div class="sub" style="margin-top:10px">'+badgeHTML(t)+'<span style="font-size:11.5px;color:var(--muted)">'+esc(ch.n)+'</span></div>'
+    + (c.note ? '<div class="note">'+esc(c.note)+'</div>' : '')
+    + '<div class="meta">创建于 '+fmtDateTime(c.createdAt)+'</div>'
+    + '<div class="tip">点击卡片修改客户信息</div>'
+    + '</div>'
+    + '<div class="gtitle">关联任务<span class="n">未完成 '+undone+' · 共 '+ts.length+'</span></div>';
+
+  if(!ts.length){
+    html += '<div class="empty" style="padding:30px">还没有关联任务<br>点右上角 <b>＋</b> 关联一个任务</div>';
+  }else{
+    html += '<div class="list">';
+    ts.forEach(function(x){
+      var l = x.links.find(function(l){ return l.clientId===c.id; });
+      var myDone = l && l.done;
+      var di = dueInfo(x);
+      html += '<div class="row'+(myDone?' done':'')+'" data-tid="'+x.id+'">'
+        + '<button class="check'+(myDone?' on':'')+'" data-ck="'+x.id+'"></button>'
+        + '<div class="body">'
+        +   '<div class="nm">'+esc(x.name)+'<span class="stars">'+starsText(x.stars)+'</span></div>'
+        +   (di ? '<div class="sub"><span class="'+di.cls+'">'+esc(di.text)+'</span></div>' : '')
+        + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+  body.innerHTML = html;
+  $('infoCard').onclick = function(){ openClientEditor(c.id); };
+  body.querySelectorAll('.row').forEach(function(r){
+    r.onclick = function(){ openDetail('task', r.getAttribute('data-tid')); };
+  });
+  body.querySelectorAll('.check').forEach(function(b){
+    b.onclick = function(e){
+      e.stopPropagation();
+      toggleLink(taskById(b.getAttribute('data-ck')), c.id);
+    };
+  });
+}
+
+function renderTaskDetail(id){
+  var t = taskById(id);
+  if(!t || t.deleted){ navStack.pop(); if(!navStack.length) $('detailScreen').classList.add('hidden'); return; }
+  $('detailTitle').textContent = t.name;
+  var body = $('detailBody');
+  var ls = activeLinks(t);
+  var st = taskLinkStats(t);
+  var done = taskDone(t);
+  var di = dueInfo(t);
+
+  var html = '<div class="infocard" id="infoCard">'
+    + '<div class="big-nm">'+esc(t.name)+'<span class="stars">'+starsText(t.stars)+'</span></div>'
+    + '<div class="meta">'
+    +   (di ? '<span class="'+di.cls+'">'+esc(di.text)+'</span><br>' : '无截止日期<br>')
+    +   '创建于 '+fmtDateTime(t.createdAt)
+    +   (done && t.doneAt ? '<br>完成于 '+fmtDateTime(t.doneAt) : '')
+    + '</div>'
+    + '<div class="tip">点击卡片修改任务信息</div>'
+    + '</div>'
+    + '<div class="master" id="masterRow">'
+    +   '<button class="check'+(done?' on':'')+'"></button>'
+    +   '<span class="lb">整个任务已完成</span>'
+    +   '<span class="st">勾选后所有关联客户一并完成</span>'
+    + '</div>'
+    + '<div class="gtitle">关联客户<span class="n">未完成 '+st.undone+' · 共 '+st.total+'</span></div>';
+
+  if(!ls.length){
+    html += '<div class="empty" style="padding:30px">还没有关联客户<br>点击上方信息卡，在编辑面板里选择客户</div>';
+  }else{
+    var sorted = ls.slice().sort(function(a,b){
+      var ca = clientById(a.clientId), cb = clientById(b.clientId);
+      return (a.done-b.done) || tierIdx(ca)-tierIdx(cb) || cb.stars-ca.stars;
+    });
+    html += '<div class="list">';
+    sorted.forEach(function(l){
+      var c = clientById(l.clientId);
+      html += '<div class="row'+(l.done?' done':'')+'" data-cid="'+c.id+'">'
+        + '<button class="check'+(l.done?' on':'')+'" data-ck="'+c.id+'"></button>'
+        + '<div class="body">'
+        +   '<div class="nm">'+esc(c.name)+'<span class="stars">'+starsText(c.stars)+'</span></div>'
+        +   '<div class="sub">'+badgeHTML(tierOf(c))+'<span>'+esc(channelOf(c).n)+'</span></div>'
+        + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+  body.innerHTML = html;
+  $('infoCard').onclick = function(){ openTaskEditor(t.id); };
+  $('masterRow').onclick = function(){ toggleTaskDone(t); };
+  body.querySelectorAll('.row').forEach(function(r){
+    r.onclick = function(){ openDetail('client', r.getAttribute('data-cid')); };
+  });
+  body.querySelectorAll('.check').forEach(function(b){
+    b.onclick = function(e){
+      e.stopPropagation();
+      toggleLink(t, b.getAttribute('data-ck'));
+    };
+  });
+}
+
+/* ============ 完成状态切换 ============ */
+function toggleLink(t, clientId){
+  if(!t) return;
+  var l = (t.links||[]).find(function(l){ return l.clientId===clientId; });
+  if(!l) return;
+  l.done = !l.done;
+  l.doneAt = l.done ? Date.now() : null;
+  /* 全部勾完 → 任务自动完成；任何一个取消 → 任务回到未完成 */
+  t.doneAt = taskDone(t) ? Date.now() : null;
+  save(); render();
+}
+function toggleTaskDone(t){
+  if(!t) return;
+  var now = Date.now();
+  if(taskDone(t)){
+    activeLinks(t).forEach(function(l){ l.done=false; l.doneAt=null; });
+    t.doneAt = null;
+  }else{
+    activeLinks(t).forEach(function(l){ l.done=true; l.doneAt=now; });
+    t.doneAt = now;
+  }
+  save(); render();
+}
+
+/* ============ 弹层框架 ============ */
+function openSheet(html){
+  $('sheetBox').innerHTML = html;
+  $('mask').classList.remove('hidden');
+}
+function closeSheet(){ $('mask').classList.add('hidden'); }
+$('mask').addEventListener('click', function(e){ if(e.target===$('mask')) closeSheet(); });
+
+/* 星级编辑控件：返回当前值的读写器 */
+function wireStars(containerId, initial){
+  var val = clampStars(initial);
+  var box = $(containerId);
+  function paint(){
+    box.querySelectorAll('button').forEach(function(b){
+      b.classList.toggle('on', parseInt(b.getAttribute('data-s'),10) <= val);
+    });
+  }
+  box.querySelectorAll('button').forEach(function(b){
+    b.onclick = function(){ val = parseInt(b.getAttribute('data-s'),10); paint(); };
+  });
+  paint();
+  return { get:function(){ return val; } };
+}
+function starsEditHTML(){
+  var h = '<div class="staredit">';
+  for(var i=1;i<=5;i++) h += '<button type="button" data-s="'+i+'">★</button>';
+  return h + '</div>';
+}
+/* 单选 chips */
+function wireChips(containerId, initial){
+  var val = initial;
+  var box = $(containerId);
+  function paint(){
+    box.querySelectorAll('.chip').forEach(function(c){
+      c.classList.toggle('on', c.getAttribute('data-v')===val);
+    });
+  }
+  box.querySelectorAll('.chip').forEach(function(c){
+    c.onclick = function(){ val = c.getAttribute('data-v'); paint(); };
+  });
+  paint();
+  return { get:function(){ return val; } };
+}
+
+/* ============ 客户编辑器 ============ */
+function openClientEditor(id){
+  var c = id ? clientById(id) : null;
+  var tierChips = TIERS.map(function(t){ return '<div class="chip" data-v="'+t.k+'">'+esc(t.n)+'</div>'; }).join('');
+  var chChips = CHANNELS.map(function(t){ return '<div class="chip" data-v="'+t.k+'">'+esc(t.n)+'</div>'; }).join('');
+  openSheet(
+    '<h2>'+(c?'编辑客户':'新建客户')+'</h2>'
+    + '<div class="field"><label>客户名称</label><input type="text" id="eName" maxlength="60" placeholder="例如：华东数码连锁" value="'+esc(c?c.name:'')+'"></div>'
+    + '<div class="field"><label>层级</label><div class="chips wrap" id="eTier">'+tierChips+'</div></div>'
+    + '<div class="field"><label>渠道</label><div class="chips" id="eChannel">'+chChips+'</div></div>'
+    + '<div class="field"><label>重要性（星级）</label>'+starsEditHTML()+'</div>'
+    + '<div class="field"><label>备注（可选）</label><textarea id="eNote" maxlength="300" placeholder="联系人、门店地址、合作背景…">'+esc(c&&c.note?c.note:'')+'</textarea></div>'
+    + '<div class="sheet-actions">'
+    +   (c ? '<button class="btn danger" id="eDelete">删除</button>' : '')
+    +   '<button class="btn ghost" id="eCancel">取消</button>'
+    +   '<button class="btn primary" id="eSave">'+(c?'保存':'创建')+'</button>'
+    + '</div>'
+  );
+  var tier = wireChips('eTier', c ? c.tier : 't1000');
+  var chan = wireChips('eChannel', c ? c.channel : 'fd');
+  var stars = wireStars('sheetBox', c ? c.stars : 3);
+  /* wireStars 需要容器内有 .staredit —— sheetBox 里刚好唯一 */
+  $('eCancel').onclick = closeSheet;
+  $('eSave').onclick = function(){
+    var name = $('eName').value.trim();
+    if(!name){ $('eName').focus(); return; }
+    if(c){
+      c.name = name; c.tier = tier.get(); c.channel = chan.get();
+      c.stars = stars.get(); c.note = $('eNote').value.trim();
+    }else{
+      db.clients.push({
+        id: uid(), name: name, tier: tier.get(), channel: chan.get(),
+        stars: stars.get(), note: $('eNote').value.trim(),
+        createdAt: Date.now(), deleted: false
+      });
+    }
+    save(); closeSheet(); render();
+  };
+  if(c) $('eDelete').onclick = function(){
+    c.deleted = true;
+    lastDeleted = { kind:'client', obj:c };
+    save(); closeSheet(); render();
+    showToast('已删除「'+c.name+'」', '撤销', function(){
+      c.deleted = false; save(); render();
+    });
+  };
+}
+
+/* ============ 任务编辑器（含客户多选） ============ */
+var pickSet = null;  // 编辑中的客户选择集
+
+function openTaskEditor(id){
+  var t = id ? taskById(id) : null;
+  pickSet = {};
+  if(t) activeLinks(t).forEach(function(l){ pickSet[l.clientId]=1; });
+
+  openSheet(
+    '<h2>'+(t?'编辑任务':'新建任务')+'</h2>'
+    + '<div class="field"><label>任务名称</label><input type="text" id="eName" maxlength="60" placeholder="例如：完成Q4进货政策宣导" value="'+esc(t?t.name:'')+'"></div>'
+    + '<div class="field"><label>重要性（星级）</label>'+starsEditHTML()+'</div>'
+    + '<div class="field"><label>截止日期（可精确到分钟，留空则不限）</label>'
+    +   '<input type="datetime-local" id="eDue" value="'+(t&&t.dueAt?toLocalInput(t.dueAt):'')+'">'
+    + '</div>'
+    + '<div class="field">'
+    +   '<div class="pick-head"><label>关联客户（<span id="pickCount">0</span> 已选）</label>'
+    +   '<button class="mini" id="pickAll">全选</button><button class="mini" id="pickNone">清空</button></div>'
+    +   '<div class="picklist" id="pickList"></div>'
+    + '</div>'
+    + '<div class="sheet-actions">'
+    +   (t ? '<button class="btn danger" id="eDelete">删除</button>' : '')
+    +   '<button class="btn ghost" id="eCancel">取消</button>'
+    +   '<button class="btn primary" id="eSave">'+(t?'保存':'创建')+'</button>'
+    + '</div>'
+  );
+  var stars = wireStars('sheetBox', t ? t.stars : 3);
+
+  function renderPick(){
+    var list = sortedClients();
+    var box = $('pickList');
+    if(!list.length){
+      box.innerHTML = '<div class="empty" style="padding:22px">客户集还是空的<br>先在「客户」页创建客户</div>';
+    }else{
+      box.innerHTML = list.map(function(c){
+        return '<div class="prow" data-cid="'+c.id+'">'
+          + '<button class="check'+(pickSet[c.id]?' on':'')+'"></button>'
+          + '<span class="pnm">'+esc(c.name)+'</span>'
+          + badgeHTML(tierOf(c))
+          + '<span class="stars">'+starsText(c.stars)+'</span>'
+          + '</div>';
+      }).join('');
+      box.querySelectorAll('.prow').forEach(function(r){
+        r.onclick = function(){
+          var cid = r.getAttribute('data-cid');
+          if(pickSet[cid]) delete pickSet[cid]; else pickSet[cid]=1;
+          renderPick();
+        };
+      });
+    }
+    $('pickCount').textContent = Object.keys(pickSet).length;
+  }
+  renderPick();
+  $('pickAll').onclick = function(){
+    sortedClients().forEach(function(c){ pickSet[c.id]=1; });
+    renderPick();
+  };
+  $('pickNone').onclick = function(){ pickSet = {}; renderPick(); };
+
+  $('eCancel').onclick = closeSheet;
+  $('eSave').onclick = function(){
+    var name = $('eName').value.trim();
+    if(!name){ $('eName').focus(); return; }
+    var dueV = $('eDue').value;
+    var dueAt = dueV ? new Date(dueV).getTime() : null;
+    if(isNaN(dueAt)) dueAt = null;
+    if(t){
+      t.name = name; t.stars = stars.get(); t.dueAt = dueAt;
+      /* 关联调和：保留仍选中的完成状态，加新的，删未选中的 */
+      var keep = {};
+      t.links = (t.links||[]).filter(function(l){
+        if(pickSet[l.clientId]){ keep[l.clientId]=1; return true; }
+        return false;
+      });
+      Object.keys(pickSet).forEach(function(cid){
+        if(!keep[cid]) t.links.push({ clientId:cid, done:false, doneAt:null });
+      });
+      t.doneAt = taskDone(t) ? (t.doneAt||Date.now()) : null;
+    }else{
+      var nt = {
+        id: uid(), name: name, stars: stars.get(), dueAt: dueAt,
+        createdAt: Date.now(), doneAt: null, deleted: false,
+        links: Object.keys(pickSet).map(function(cid){
+          return { clientId:cid, done:false, doneAt:null };
+        })
+      };
+      db.tasks.push(nt);
+    }
+    save(); closeSheet(); render();
+  };
+  if(t) $('eDelete').onclick = function(){
+    t.deleted = true;
+    lastDeleted = { kind:'task', obj:t };
+    save(); closeSheet(); render();
+    showToast('已删除「'+t.name+'」', '撤销', function(){
+      t.deleted = false; save(); render();
+    });
+  };
+}
+
+/* ============ 客户详情：关联任务选择器 ============ */
+function openLinkPicker(clientId){
+  var c = clientById(clientId);
+  if(!c) return;
+  var candidates = activeTasks().filter(function(t){
+    return !activeLinks(t).some(function(l){ return l.clientId===clientId; });
+  }).sort(function(a,b){ return (a.dueAt||INF)-(b.dueAt||INF) || b.stars-a.stars; });
+
+  openSheet('<h2>给「'+esc(c.name)+'」关联任务</h2><div id="linkBox"></div>');
+  var box = $('linkBox');
+  if(!candidates.length){
+    box.innerHTML = '<div class="empty" style="padding:26px">没有可关联的任务<br>先在「任务」页创建任务</div>'
+      + '<div class="sheet-actions"><button class="btn ghost" id="lkClose">关闭</button></div>';
+    $('lkClose').onclick = closeSheet;
+    return;
+  }
+  box.innerHTML = '<div class="picklist" style="max-height:50vh">' + candidates.map(function(t){
+    var st = taskLinkStats(t);
+    return '<div class="prow" data-tid="'+t.id+'">'
+      + '<span class="pnm">'+esc(t.name)+'</span>'
+      + '<span class="stars">'+starsText(t.stars)+'</span>'
+      + '<span style="font-size:11px;color:var(--muted)">'+st.undone+'/'+st.total+'</span>'
+      + '</div>';
+  }).join('') + '</div>'
+  + '<div class="sheet-actions"><button class="btn ghost" id="lkClose">关闭</button></div>';
+  $('lkClose').onclick = closeSheet;
+  box.querySelectorAll('.prow').forEach(function(r){
+    r.onclick = function(){
+      var t = taskById(r.getAttribute('data-tid'));
+      if(t){
+        t.links.push({ clientId:clientId, done:false, doneAt:null });
+        t.doneAt = null;
+        save();
+      }
+      closeSheet(); render();
+      showToast('已关联「'+(t?t.name:'')+'」', null, null);
+    };
+  });
+}
+
+/* ============ 菜单 / 备份 ============ */
+function openMenu(){
+  openSheet(
+    '<h2>数据管理</h2>'
+    + '<div class="menu-list" style="margin:0">'
+    + '<button id="mExport">导出备份（JSON）</button>'
+    + '<button id="mImport">导入备份</button>'
+    + '<button id="mSnap">从自动快照恢复</button>'
+    + '</div>'
+    + '<div class="hint">数据只保存在本浏览器 localStorage，不上传任何服务器。<br>'
+    + '每天首次打开会自动留一份快照（保留 3 份）。<b>建议每周导出一次备份</b>：清理浏览器数据、换手机都会丢数据。</div>'
+    + '<div class="sheet-actions"><button class="btn ghost" id="mClose">关闭</button></div>'
+  );
+  $('mClose').onclick = closeSheet;
+  $('mExport').onclick = function(){
+    download('工作助手-备份-'+toDateInput(Date.now())+'.json', JSON.stringify(db, null, 2));
+    closeSheet();
+  };
+  $('mImport').onclick = function(){ $('fileInput').click(); };
+  $('mSnap').onclick = openSnapSheet;
+}
+function openSnapSheet(){
+  var list = readSnapshots();
+  if(!list.length){
+    openSheet('<h2>自动快照</h2><div class="empty" style="padding:26px">还没有快照<br>每天首次打开会自动留一份</div>'
+      + '<div class="sheet-actions"><button class="btn ghost" onclick="document.getElementById(\'mask\').classList.add(\'hidden\')">关闭</button></div>');
+    return;
+  }
+  var html = '<h2>从自动快照恢复</h2>';
+  list.slice().reverse().forEach(function(s, i){
+    var idx = list.length-1-i;
+    html += '<div class="snap"><div class="t">'+fmtDateTime(s.at)+'</div>'
+      + '<div class="d">客户 '+((s.clients||[]).length)+' · 任务 '+((s.tasks||[]).length)+'</div>'
+      + '<button data-i="'+idx+'">恢复这份（当前数据会先存为快照）</button></div>';
+  });
+  html += '<div class="sheet-actions"><button class="btn ghost" id="snClose">关闭</button></div>';
+  openSheet(html);
+  $('snClose').onclick = closeSheet;
+  $('sheetBox').querySelectorAll('.snap button').forEach(function(b){
+    b.onclick = function(){
+      var s = readSnapshots()[parseInt(b.getAttribute('data-i'),10)];
+      if(!s) return;
+      pushSnapshot();
+      db = { version:1, clients:s.clients||[], tasks:s.tasks||[] };
+      normalizeIds();
+      save(); closeSheet(); render();
+      showToast('已恢复快照', null, null);
+    };
+  });
+}
+$('fileInput').addEventListener('change', function(e){
+  var f = e.target.files[0];
+  e.target.value = '';
+  if(!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try{
+      var o = JSON.parse(r.result);
+      var nd = normalizeImport(o);
+      pushSnapshot();
+      db = nd;
+      normalizeIds();
+      save(); closeSheet(); render();
+      showToast('导入成功（导入前的数据已存为快照）', null, null);
+    }catch(err){
+      showToast('导入失败：'+err.message, null, null);
+    }
+  };
+  r.readAsText(f);
+});
+
+/* ============ Toast ============ */
+function showToast(msg, actionLabel, onAction){
+  var t = $('toast');
+  t.querySelector('.msg').textContent = msg;
+  var btn = $('toastBtn');
+  if(actionLabel){
+    btn.textContent = actionLabel;
+    btn.classList.remove('hidden');
+    btn.onclick = function(){ hideToast(); if(onAction) onAction(); };
+  }else{
+    btn.classList.add('hidden');
+  }
+  t.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, 6000);
+}
+function hideToast(){ $('toast').classList.add('hidden'); clearTimeout(toastTimer); }
+
+/* ============ 标签页 / 顶栏 ============ */
+function switchTab(tab){
+  curTab = tab;
+  $('pageClients').classList.toggle('hidden', tab!=='clients');
+  $('pageTasks').classList.toggle('hidden', tab!=='tasks');
+  $('tabClients').classList.toggle('on', tab==='clients');
+  $('tabTasks').classList.toggle('on', tab==='tasks');
+  $('pageTitle').textContent = tab==='clients' ? '客户' : '任务';
+}
+$('tabClients').onclick = function(){ switchTab('clients'); };
+$('tabTasks').onclick = function(){ switchTab('tasks'); };
+$('taskSeg').querySelectorAll('button').forEach(function(b){
+  b.onclick = function(){
+    taskShowDone = parseInt(b.getAttribute('data-v'),10);
+    $('taskSeg').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x===b); });
+    renderTasks();
+  };
+});
+$('btnAdd').onclick = function(){
+  if(curTab==='clients') openClientEditor(null);
+  else openTaskEditor(null);
+};
+$('btnMenu').onclick = openMenu;
+$('btnBack').onclick = function(){
+  navStack.pop();
+  if(!navStack.length) $('detailScreen').classList.add('hidden');
+  else {
+    var top = navStack[navStack.length-1];
+    $('btnDetailAdd').classList.toggle('hidden', top.type!=='client');
+    renderDetail();
+  }
+};
+$('btnDetailAdd').onclick = function(){
+  var top = navStack[navStack.length-1];
+  if(top && top.type==='client') openLinkPicker(top.id);
+};
+
+/* ============ 启动 ============ */
+function setAppHeight(){
+  document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px');
+}
+window.addEventListener('resize', setAppHeight);
+
+load();
+normalizeIds();
+save();
+snapshot();
+setAppHeight();
+render();
+
+document.addEventListener('visibilitychange', function(){
+  if(!document.hidden) render();
+});
+setInterval(render, 60000);   // 每分钟刷一次倒计时
+
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(function(){});
+  });
+}
+</script>
+</body>
+</html>
