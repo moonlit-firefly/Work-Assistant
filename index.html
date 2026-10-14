@@ -30,12 +30,12 @@ body{
 }
 button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}
 .hidden{display:none!important}
-input,textarea{font:inherit;color:var(--text)}
+input,textarea,select{font:inherit;color:var(--text)}
 
 /* ---------- 顶栏 ---------- */
-.topbar{display:flex;align-items:center;padding:10px 14px 5px}
+.topbar{display:flex;align-items:center;padding:10px 14px 5px;gap:2px}
 .topbar h1{font-size:20px;margin:0;flex:1;font-weight:650;letter-spacing:.2px}
-.iconbtn{width:38px;height:38px;border-radius:50%;font-size:19px;color:var(--muted);display:grid;place-items:center}
+.iconbtn{width:38px;height:38px;border-radius:50%;font-size:18px;color:var(--muted);display:grid;place-items:center;flex:none}
 .iconbtn:active{background:var(--line)}
 #btnAdd{color:var(--accent);font-size:24px;font-weight:300}
 
@@ -48,8 +48,17 @@ input,textarea{font:inherit;color:var(--text)}
 .seg button{flex:1;padding:7px 0;border-radius:7px;font-size:14px;opacity:.62}
 .seg button.on{background:var(--card);opacity:1;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
 
+/* 周条 */
+.wbar{margin:2px 14px 10px;background:var(--card);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;gap:10px;flex:none}
+.wbar .wk{font-size:15px;font-weight:650}
+.wbar .rng{font-size:11.5px;color:var(--muted);margin-top:1px}
+.wbar .tag{font-size:10.5px;padding:2px 7px;border-radius:8px;background:var(--accent);color:#fff;font-weight:600;flex:none}
+.wbar .tag.gray{background:var(--line);color:var(--muted)}
+.wbar .back{margin-left:auto;font-size:12px;color:var(--accent);font-weight:600;flex:none}
+
 /* ---------- 列表 ---------- */
 .list{background:var(--card);border-radius:var(--r);margin:0 14px;overflow:hidden}
+.list.flat{margin:0}
 .row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
 .row:last-child{border-bottom:0}
 .row:active{background:var(--line)}
@@ -59,6 +68,11 @@ input,textarea{font:inherit;color:var(--text)}
 .row .sub .over{color:var(--danger)}
 .row .sub .soon{color:var(--gold)}
 .row.done .nm{text-decoration:line-through;color:var(--muted)}
+.row.pinned{background:var(--accent)}
+.row.pinned .nm,.row.pinned .big{color:#fff}
+.row.pinned .sub{color:#ffffffcc}
+.row.pinned:active{background:var(--accent)}
+.row .big{font-size:15.5px;font-weight:650;color:var(--text)}
 
 /* 右侧计数 */
 .side{flex:none;text-align:right;line-height:1.35}
@@ -66,25 +80,37 @@ input,textarea{font:inherit;color:var(--text)}
 .side i{font-style:normal;font-size:11px;color:var(--muted)}
 .side .t2{display:block;font-size:11px;color:var(--muted)}
 .side .t2 b{font-size:12px;color:var(--muted);font-weight:600}
+.row.pinned .side b,.row.pinned .side i{color:#fff}
 
 /* 勾选圆 */
 .check{width:22px;height:22px;border-radius:50%;border:1.8px solid var(--muted);flex:none;display:grid;place-items:center;transition:background .12s,border-color .12s}
 .check.on{background:var(--accent);border-color:var(--accent)}
 .check.on::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.row.pinned .check{border-color:#fff}
+.row.pinned .check.on{background:#fff}
+.row.pinned .check.on::after{border-color:var(--accent)}
+
+/* 行内小圆点（提单） */
+.dots{display:flex;gap:6px;flex:none;align-items:center}
+.dot{height:24px;padding:0 9px;border-radius:12px;border:1.4px solid var(--line);display:grid;place-items:center;font-size:10.5px;color:var(--muted);line-height:1}
+.dot.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
 
 /* 徽章与星级 */
 .badge{font-size:10.5px;padding:2px 7px;border-radius:8px;font-weight:600;flex:none}
 .stars{color:var(--gold);font-size:11.5px;letter-spacing:1px;flex:none}
+.stars.lg{font-size:15px}
 
 /* 空态 */
-.empty{padding:60px 30px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.9}
+.empty{padding:56px 30px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.9}
 .empty .big{font-size:34px;margin-bottom:10px}
 .empty b{color:var(--text);font-weight:600}
-
-/* 分组标题（层级分组） */
-.gtitle{font-size:12px;font-weight:700;color:var(--muted);margin:16px 18px 6px;letter-spacing:.4px;display:flex;align-items:center;gap:6px}
-.gtitle:first-child{margin-top:8px}
-.gtitle .n{font-weight:400}
+.sec-title{font-size:12px;font-weight:700;color:var(--muted);margin:16px 18px 7px;letter-spacing:.4px;display:flex;align-items:center;gap:6px}
+.sec-title:first-child{margin-top:8px}
+.sec-title .n{font-weight:400}
+.hint{font-size:11.5px;color:var(--muted);line-height:1.7;margin:10px 18px 0}
+.warnline{background:#ff950022;color:#c86a00;font-size:12px;padding:9px 14px;line-height:1.6}
+@media (prefers-color-scheme:dark){.warnline{color:#ffb340}}
+.gap{height:12px}
 
 /* ---------- 底部标签栏 ---------- */
 .tabbar{display:flex;flex:none;border-top:1px solid var(--line);background:var(--card);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -106,12 +132,45 @@ input,textarea{font:inherit;color:var(--text)}
 .infocard .meta{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.7}
 .infocard .meta .over{color:var(--danger)}
 .infocard .note{margin-top:10px;font-size:13.5px;color:var(--text);background:var(--bg);border-radius:10px;padding:10px 12px;line-height:1.6;word-break:break-word}
+.infocard .kv{display:flex;font-size:13.5px;padding:6px 0;border-bottom:1px solid var(--line)}
+.infocard .kv:last-of-type{border-bottom:0}
+.infocard .kv .k{width:82px;flex:none;color:var(--muted);font-size:12.5px}
+.infocard .kv .v{flex:1;min-width:0;word-break:break-word}
+
+/* 汇总条 */
+.sum{background:var(--card);border-radius:var(--r);margin:12px 14px;padding:13px 14px;display:flex;gap:16px;flex-wrap:wrap}
+.sum .it .v{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.sum .it .k{font-size:11px;color:var(--muted);margin-top:2px}
+.sum .it .v.acc{color:var(--accent)}
+.sum .it .v.gold{color:var(--gold)}
 
 /* 完成总开关行 */
 .master{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:var(--r);margin:0 14px 12px;padding:13px 14px}
 .master:active{background:var(--line)}
 .master .lb{flex:1;font-size:15px;font-weight:600}
 .master .st{font-size:11.5px;color:var(--muted)}
+
+/* 业务入口卡 */
+.cards{display:grid;gap:10px;margin:0 14px}
+.bizcard{background:var(--card);border-radius:var(--r);padding:14px;display:flex;align-items:center;gap:12px}
+.bizcard:active{background:var(--line)}
+.bizcard .ic{font-size:20px;width:40px;height:40px;border-radius:11px;background:var(--bg);display:grid;place-items:center;flex:none}
+.bizcard .tt{flex:1;min-width:0}
+.bizcard .tt b{font-size:15.5px;display:block;font-weight:650}
+.bizcard .tt span{font-size:11.5px;color:var(--muted);display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bizcard .nums{text-align:right;font-size:11px;color:var(--muted);line-height:1.6;flex:none}
+.bizcard .nums b{color:var(--accent);font-size:14px;font-variant-numeric:tabular-nums}
+
+/* 拖动排序 */
+.drag{width:24px;flex:none;text-align:center;color:var(--muted);font-size:16px;touch-action:none;cursor:grab;padding:2px 0}
+.row.dragging{opacity:.45;background:var(--line)}
+
+/* 行内操作按钮 / 长文本截断 */
+.addbtn{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:17px;line-height:1;display:grid;place-items:center;flex:none;font-weight:300}
+.addbtn:active{opacity:.7}
+.xbtn{width:26px;height:26px;border-radius:50%;color:var(--muted);font-size:17px;display:grid;place-items:center;flex:none}
+.xbtn:active{background:var(--line)}
+.clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal}
 
 /* ---------- 底部弹层 ---------- */
 .mask{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:flex-end}
@@ -120,12 +179,12 @@ input,textarea{font:inherit;color:var(--text)}
 .sheet h2{margin:0 0 14px;font-size:17px;font-weight:650}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:500}
-.field textarea,.field input[type=text],.field input[type=datetime-local]{
+.field textarea,.field input[type=text],.field input[type=tel],.field input[type=number],.field input[type=date],.field input[type=datetime-local],.field select{
   width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px;outline:none
 }
-@media (prefers-color-scheme:dark){.field textarea,.field input[type=text],.field input[type=datetime-local]{background:#2c2c2e}}
+@media (prefers-color-scheme:dark){.field textarea,.field input,.field select{background:#2c2c2e}}
 .field textarea{resize:none;min-height:64px;line-height:1.5}
-.field textarea:focus,.field input:focus{border-color:var(--accent)}
+.field textarea:focus,.field input:focus,.field select:focus{border-color:var(--accent)}
 .chips{display:flex;gap:8px}
 .chips.wrap{flex-wrap:wrap}
 .chip{flex:1;padding:10px 0;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center}
@@ -150,13 +209,22 @@ input,textarea{font:inherit;color:var(--text)}
 @media (prefers-color-scheme:dark){.btn.ghost{background:#2c2c2e}}
 .btn.danger{background:transparent;color:var(--danger)}
 .btn:active{opacity:.75}
+.switchline{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.switchline:last-child{border-bottom:0}
+.switchline .lb{flex:1;font-size:14.5px}
+.switchline .st{font-size:11.5px;color:var(--muted)}
+.tgl{width:48px;height:29px;border-radius:15px;background:var(--line);flex:none;position:relative;transition:background .15s}
+.tgl::after{content:"";position:absolute;top:2px;left:2px;width:25px;height:25px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
+.tgl.on{background:var(--ok)}
+.tgl.on::after{transform:translateX(19px)}
 
-/* ---------- 菜单 / 快照 ---------- */
+/* ---------- 菜单 / 快照 / 指南 ---------- */
 .menu-list{background:var(--card);border-radius:var(--r);overflow:hidden;margin:0 14px}
 .menu-list button{display:block;width:100%;text-align:left;padding:15px 16px;font-size:15.5px;border-bottom:1px solid var(--line)}
 .menu-list button:last-child{border-bottom:0}
 .menu-list button.danger{color:var(--danger)}
 .menu-list button:active{background:var(--line)}
+.menu-list button .sm{font-size:11.5px;color:var(--muted);display:block;margin-top:2px}
 .warnbar{background:#ff950022;color:#c86a00;font-size:12.5px;padding:9px 14px;text-align:center;line-height:1.6}
 @media (prefers-color-scheme:dark){.warnbar{color:#ffb340}}
 .warnbar button{color:inherit;text-decoration:underline;font-weight:700;font-size:12.5px;margin-left:4px}
@@ -173,41 +241,50 @@ input,textarea{font:inherit;color:var(--text)}
 .snap .t{font-size:13.5px;font-weight:600;margin-bottom:3px}
 .snap .d{font-size:11.5px;color:var(--muted);margin-bottom:9px}
 .snap button{font-size:13px;color:var(--accent);font-weight:600}
-.hint{font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:10px}
+.guide{padding:0 2px 4px;font-size:13.5px;line-height:1.75}
+.guide h3{font-size:14px;margin:16px 0 6px;font-weight:650}
+.guide h3:first-child{margin-top:2px}
+.guide ul{margin:0;padding-left:20px}
+.guide li{margin-bottom:5px}
+.guide code{background:var(--bg);border-radius:5px;padding:1px 5px;font-size:12.5px}
+.guide .q{color:var(--muted);font-size:12.5px}
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <h1 id="pageTitle">客户</h1>
-  <button class="iconbtn" id="btnAdd" aria-label="新建">＋</button>
-  <button class="iconbtn" id="btnMenu" aria-label="数据管理">⋯</button>
+  <h1 id="pageTitle">周度</h1>
+  <button class="iconbtn hidden" id="btnCal" aria-label="日历">🗓</button>
+  <button class="iconbtn hidden" id="btnAdd" aria-label="新建">＋</button>
+  <button class="iconbtn" id="btnMenu" aria-label="更多">⋯</button>
 </div>
 
 <div id="storeWarn" class="warnbar hidden"></div>
 
-<div id="pageClients" class="page">
+<div id="pageWeek" class="page">
+  <div class="wbar" id="weekBar"></div>
+  <div class="scrollarea" id="weekList"></div>
+</div>
+
+<div id="pageBiz" class="page hidden">
+  <div class="scrollarea" id="bizList"></div>
+</div>
+
+<div id="pageClients" class="page hidden">
   <div class="scrollarea" id="clientList"></div>
 </div>
 
-<div id="pageTasks" class="page hidden">
-  <div class="seg" id="taskSeg">
-    <button data-v="0" class="on">未完成</button>
-    <button data-v="1">已完成</button>
-  </div>
-  <div class="scrollarea" id="taskList"></div>
-</div>
-
 <div class="tabbar">
-  <button id="tabClients" class="on"><span class="ic">▦</span>客户</button>
-  <button id="tabTasks"><span class="ic">✓</span>任务</button>
+  <button id="tabWeek" class="on"><span class="ic">🗓</span>周度</button>
+  <button id="tabBiz"><span class="ic">💼</span>业务</button>
+  <button id="tabClients"><span class="ic">▦</span>客户</button>
 </div>
 
 <div id="detailScreen" class="screen hidden">
   <div class="screen-head">
     <button class="back" id="btnBack">‹ 返回</button>
     <h2 id="detailTitle"></h2>
-    <button class="iconbtn hidden" id="btnDetailAdd" aria-label="关联任务">＋</button>
+    <button class="iconbtn hidden" id="btnDetailAdd" aria-label="新建">＋</button>
   </div>
   <div class="screen-body" id="detailBody"></div>
 </div>
@@ -230,38 +307,61 @@ input,textarea{font:inherit;color:var(--text)}
 'use strict';
 
 /* ============ 常量 ============ */
-var KEY = 'work.assistant.v1';
+var KEY = 'work.assistant.v1';          // 沿用旧键，保证老数据不丢（靠 version 字段迁移）
 var SNAP_KEY = 'work.assistant.snapshots';
 var SNAP_META = 'work.assistant.snapmeta';
 var CORRUPT_KEY = 'work.assistant.corrupt';
 var SNAP_MAX = 3;
 var DAY = 86400000;
 var INF = 9007199254740991;
+var DB_VERSION = 3;
 
-/* 层级：顺序即排序顺序，最上面的最高 */
+/* 客户层级：顺序即层级高低，最上面的最高 */
 var TIERS = [
   { k:'seed',  n:'金种子',  c:'#a07d00', bg:'#ffd60a33' },
-  { k:'t360',  n:'top360',  c:'#ff3b30', bg:'#ff3b3022' },
+  { k:'t368',  n:'top368',  c:'#ff3b30', bg:'#ff3b3022' },
   { k:'t1000', n:'top1000', c:'#e08400', bg:'#ff950022' },
   { k:'t1500', n:'top1500', c:'#0a84ff', bg:'#0a84ff22' },
-  { k:'ndka',  n:'NDKA+',   c:'#8e8e93', bg:'#8e8e9322' }
+  { k:'ndka',  n:'NDKA+',   c:'#8e8e93', bg:'#8e8e9322' },
+  { k:'brk',   n:'破格商',   c:'#af52de', bg:'#af52de22' },
+  { k:'tier8', n:'tier8',   c:'#0a84ff', bg:'#5ac8fa22' }
 ];
 var CHANNELS = [
   { k:'fd',   n:'FD渠道' },
   { k:'exp',  n:'体验店渠道' },
   { k:'both', n:'FD+体验店' }
 ];
+/* 各层级默认月度拜访次数（可逐客户修改） */
+var VISIT_QUOTA = { seed:6, t368:6, t1000:4, t1500:2, ndka:2, brk:2, tier8:1 };
+/* 业务类型 */
+var BIZS = [
+  { k:'visit',    n:'拜访业务',   ic:'🚶', d:'客户月度拜访次数与拜访报告' },
+  { k:'gov',      n:'政企业务',   ic:'🏛', d:'政企客户、开户维系、鸿蒙电脑提单' },
+  { k:'emergent', n:'新兴业务',   ic:'🌱', d:'新兴客户、提单金额、拜访节律' },
+  { k:'recycle',  n:'优品机业务', ic:'♻️', d:'月度提单与回收项目' }
+];
+var EMERGENT_VISIT_NEED = 4;   // 新兴客户每月需要的拜访次数
+var EMERGENT_MAX_SPAN = 14;    // 不允许在这么多天内集中完成
 
-var db = { version:1, clients:[], tasks:[] };
-var storageOK = true, saveFailed = false, corruptRaw = null;
-var loadFailed = false;
+var db = {
+  version: DB_VERSION,
+  clients: [], tasks: [],
+  visitGoals: {}, visits: [],
+  gov: { customers: [], visits: [], orders: [] },
+  emergent: { customers: [], visits: [], orders: [] },
+  recycle: { customers: [], records: [] },
+  weeks: {}
+};
+var storageOK = true, saveFailed = false, corruptRaw = null, loadFailed = false;
 
 /* 界面状态 */
-var curTab = 'clients';      // clients | tasks
-var taskShowDone = 0;        // 0 未完成 1 已完成
-var navStack = [];           // [{type:'client'|'task', id}]
+var curTab = 'week';          // week | biz | clients
+var weekSeg = 0;              // 0 规划 1 完成
+var viewWeek = null;          // 当前查看的周 key，null = 本周
+var viewMonth = null;         // 业务页查看的月份 'YYYY-MM'，null = 本月
+var navStack = [];
 var toastTimer = null;
-var lastDeleted = null;      // {kind, obj}
+var pickSet = null;           // 任务编辑器里的客户选择集
 
 /* ============ 工具 ============ */
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
@@ -279,21 +379,62 @@ function fmtDateTime(ts){
   var d=new Date(ts);
   return d.getFullYear()+'/'+p2(d.getMonth()+1)+'/'+p2(d.getDate())+' '+p2(d.getHours())+':'+p2(d.getMinutes());
 }
+function fmtDate(ts){ var d=new Date(ts); return d.getFullYear()+'/'+p2(d.getMonth()+1)+'/'+p2(d.getDate()); }
 function clampStars(n){ n = parseInt(n,10)||3; return Math.max(1, Math.min(5, n)); }
 function starsText(n){ n = clampStars(n); var s=''; for(var i=1;i<=5;i++) s += (i<=n?'★':'☆'); return s; }
+function num(v){ var n = parseFloat(v); return isNaN(n) ? 0 : n; }
+function money(v){
+  var n = Math.round(num(v)*100)/100;
+  return '¥' + n.toLocaleString('zh-CN', { maximumFractionDigits:2 });
+}
 
-function tierOf(c){
-  for(var i=0;i<TIERS.length;i++) if(TIERS[i].k===c.tier) return TIERS[i];
-  return TIERS[TIERS.length-1];
+/* 层级 / 渠道 / 业务 */
+function tierOf(t){ for(var i=0;i<TIERS.length;i++) if(TIERS[i].k===t) return TIERS[i]; return TIERS[TIERS.length-1]; }
+function tierIdx(o){ var k=(o&&o.tier)?o.tier:o; for(var i=0;i<TIERS.length;i++) if(TIERS[i].k===k) return i; return TIERS.length; }
+function channelOf(k){ for(var i=0;i<CHANNELS.length;i++) if(CHANNELS[i].k===k) return CHANNELS[i]; return CHANNELS[0]; }
+function bizOf(k){ for(var i=0;i<BIZS.length;i++) if(BIZS[i].k===k) return BIZS[i]; return BIZS[0]; }
+
+/* 月份 / 周 */
+function monthKey(ts){ var d=new Date(ts); return d.getFullYear()+'-'+p2(d.getMonth()+1); }
+function monthLabel(key){ var p=String(key).split('-'); return p[0]+'年'+parseInt(p[1],10)+'月'; }
+function curMonthKey(){ return monthKey(Date.now()); }
+function activeMonth(){ return viewMonth || curMonthKey(); }
+function inMonth(ts, mk){ return !!ts && monthKey(ts)===mk; }
+function mondayOf(ts){
+  var d = new Date(ts); d.setHours(0,0,0,0);
+  var wd = (d.getDay()+6)%7;
+  d.setDate(d.getDate()-wd);
+  return d.getTime();
 }
-function tierIdx(c){
-  for(var i=0;i<TIERS.length;i++) if(TIERS[i].k===c.tier) return i;
-  return TIERS.length;
+function isoWeek(ts){
+  var d = new Date(ts); d.setHours(0,0,0,0);
+  var day = (d.getDay()+6)%7;
+  d.setDate(d.getDate()-day+3);
+  var year = d.getFullYear();
+  var jan4 = new Date(year,0,4);
+  var jd = (jan4.getDay()+6)%7;
+  jan4.setDate(jan4.getDate()-jd+3);
+  var week = 1 + Math.round((d-jan4)/(7*DAY));
+  return { year: year, week: week };
 }
-function channelOf(c){
-  for(var i=0;i<CHANNELS.length;i++) if(CHANNELS[i].k===c.channel) return CHANNELS[i];
-  return CHANNELS[0];
+function weekKeyOf(ts){ var w = isoWeek(ts); return w.year+'-W'+p2(w.week); }
+function weekStartFromKey(key){
+  var m = /^(\d{4})-W(\d{2})$/.exec(String(key));
+  if(!m) return mondayOf(Date.now());
+  var y = +m[1], wk = +m[2];
+  var jan4 = new Date(y,0,4);
+  var jd = (jan4.getDay()+6)%7;
+  var w1 = jan4.getTime() - jd*DAY;
+  return w1 + (wk-1)*7*DAY;
 }
+function weekLabel(key){
+  var ws = weekStartFromKey(key);
+  var w = String(key).split('-W')[1];
+  return 'W'+parseInt(w,10)+' · '+mmdd(ws)+'–'+mmdd(ws+6*DAY);
+}
+function curWeekKey(){ return weekKeyOf(Date.now()); }
+function activeWeek(){ return viewWeek || curWeekKey(); }
+function weekRange(key){ var ws = weekStartFromKey(key); return { start: ws, end: ws + 7*DAY }; }
 
 /* 倒计时文案 */
 function countdown(ms){
@@ -305,7 +446,6 @@ function countdown(ms){
   var d = Math.floor(h/24), rh = h%24;
   return d + ' 天' + (rh ? ' '+rh+' 小时' : '');
 }
-/* 截止日期走精确时刻，不走凌晨 4 点 */
 function dayLabel(ts){
   var d = new Date(ts), now = new Date();
   var a = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
@@ -322,6 +462,7 @@ function warn(msg, danger){
   el.classList.toggle('danger', !!danger);
   el.classList.remove('hidden');
 }
+function clearWarn(){ $('storeWarn').classList.add('hidden'); }
 function warnCorrupt(){
   warn('⚠️ 本地数据读取失败，已用空数据启动。<b>原始内容已保留</b>，可下载后排查。' +
     '<button id="btnCorruptDl">下载原始数据</button><button id="btnCorruptClear">知道了</button>', true);
@@ -330,8 +471,7 @@ function warnCorrupt(){
   };
   $('btnCorruptClear').onclick = function(){
     try{ localStorage.removeItem(CORRUPT_KEY); }catch(e){}
-    corruptRaw = null;
-    $('storeWarn').classList.add('hidden');
+    corruptRaw = null; clearWarn();
   };
 }
 function load(){
@@ -374,14 +514,20 @@ function save(){
     }
   }
 }
-/* 每天首次打开留一份快照，最多 3 份。损坏空表启动时绝不写快照。 */
+function snapPayload(){
+  return {
+    visitGoals: db.visitGoals, visits: db.visits,
+    gov: db.gov, emergent: db.emergent, recycle: db.recycle,
+    weeks: db.weeks
+  };
+}
 function snapshot(){
   if(!storageOK || saveFailed || loadFailed) return;
   try{
     var today = toDateInput(Date.now());
     if(localStorage.getItem(SNAP_META) === today) return;
     var list = readSnapshots();
-    list.push({ at:Date.now(), clients:db.clients, tasks:db.tasks });
+    list.push({ at:Date.now(), clients:db.clients, tasks:db.tasks, payload:snapPayload() });
     if(list.length > SNAP_MAX) list = list.slice(-SNAP_MAX);
     localStorage.setItem(SNAP_KEY, JSON.stringify(list));
     localStorage.setItem(SNAP_META, today);
@@ -396,14 +542,14 @@ function readSnapshots(){
 function pushSnapshot(){
   try{
     var l = readSnapshots();
-    l.push({ at:Date.now(), clients:db.clients, tasks:db.tasks });
+    l.push({ at:Date.now(), clients:db.clients, tasks:db.tasks, payload:snapPayload() });
     if(l.length > SNAP_MAX) l = l.slice(-SNAP_MAX);
     localStorage.setItem(SNAP_KEY, JSON.stringify(l));
   }catch(e){}
 }
 
-/* id 规范化：会拼进 HTML 属性，必须是安全形状 */
-function normalizeIds(){
+/* id 规范化：所有 id 都会拼进 HTML 属性，必须是安全形状 */
+function normalizeAllIds(){
   var map = {}, seen = {};
   function fix(arr){
     (arr||[]).forEach(function(t){
@@ -419,51 +565,205 @@ function normalizeIds(){
     });
   }
   fix(db.clients); fix(db.tasks);
-  db.tasks.forEach(function(t){
-    (t.links||[]).forEach(function(l){ if(l && map[l.clientId]) l.clientId = map[l.clientId]; });
+  fix(db.visits);
+  fix(db.gov.customers); fix(db.gov.visits); fix(db.gov.orders);
+  fix(db.emergent.customers); fix(db.emergent.visits); fix(db.emergent.orders);
+  fix(db.recycle.customers); fix(db.recycle.records);
+  Object.keys(db.weeks).forEach(function(k){ fix(db.weeks[k].mappings); });
+  /* 引用重映射 */
+  function remap(obj, field){ if(obj && map[obj[field]]) obj[field] = map[obj[field]]; }
+  db.tasks.forEach(function(t){ (t.links||[]).forEach(function(l){ remap(l,'clientId'); }); });
+  db.visits.forEach(function(v){ remap(v,'clientId'); });
+  ['gov','emergent'].forEach(function(k){
+    db[k].visits.forEach(function(v){ remap(v,'customerId'); });
+    db[k].orders.forEach(function(o){ remap(o,'customerId'); });
+  });
+  db.recycle.records.forEach(function(r){ remap(r,'customerId'); });
+  Object.keys(db.weeks).forEach(function(k){
+    var b = db.weeks[k].bill;
+    if(b && Array.isArray(b.items)) b.items.forEach(function(it){ remap(it,'clientId'); });
   });
 }
 
-/* 导入前校验与归一化 */
+/* ============ 数据迁移（每次启动都跑，幂等） ============ */
+function migrate(){
+  var changed = false;
+  function needObj(k, shape){
+    if(!db[k] || typeof db[k]!=='object' || Array.isArray(db[k])){ db[k] = shape; return true; }
+    var c = false;
+    Object.keys(shape).forEach(function(f){
+      if(!Array.isArray(db[k][f])){ db[k][f] = shape[f]; c = true; }
+    });
+    return c;
+  }
+  if(!Array.isArray(db.clients)){ db.clients = []; changed = true; }
+  if(!Array.isArray(db.tasks)){ db.tasks = []; changed = true; }
+  if(!db.visitGoals || typeof db.visitGoals!=='object' || Array.isArray(db.visitGoals)){ db.visitGoals = {}; changed = true; }
+  if(!Array.isArray(db.visits)){ db.visits = []; changed = true; }
+  if(needObj('gov', { customers:[], visits:[], orders:[] })) changed = true;
+  if(needObj('emergent', { customers:[], visits:[], orders:[] })) changed = true;
+  if(needObj('recycle', { customers:[], records:[] })) changed = true;
+  if(!db.weeks || typeof db.weeks!=='object' || Array.isArray(db.weeks)){ db.weeks = {}; changed = true; }
+
+  /* 旧层级键改名：top360 → top368 */
+  db.clients.forEach(function(c){
+    if(c.tier === 't360'){ c.tier = 't368'; changed = true; }
+  });
+  /* 各业务客户字段补全 */
+  db.gov.customers.forEach(function(c){
+    if(typeof c.contact!=='string'){ c.contact=''; changed=true; }
+    if(typeof c.phone!=='string'){ c.phone=''; changed=true; }
+    if(typeof c.address!=='string'){ c.address=''; changed=true; }
+    if(typeof c.opened!=='boolean'){ c.opened=false; changed=true; }
+    if(typeof c.maintained!=='boolean'){ c.maintained=false; changed=true; }
+  });
+  db.emergent.customers.forEach(function(c){
+    if(typeof c.contact!=='string'){ c.contact=''; changed=true; }
+    if(typeof c.phone!=='string'){ c.phone=''; changed=true; }
+    if(typeof c.address!=='string'){ c.address=''; changed=true; }
+    if(typeof c.opened!=='boolean'){ c.opened=false; changed=true; }
+    if(typeof c.maintained!=='boolean'){ c.maintained=false; changed=true; }
+    if(typeof c.amount!=='number'){ c.amount=0; changed=true; }
+  });
+  db.recycle.customers.forEach(function(c, i){
+    if(!c.months || typeof c.months!=='object'){ c.months = {}; changed=true; }
+    if(typeof c.sort!=='number'){ c.sort = i; changed=true; }
+  });
+  /* 周数据结构补全 */
+  Object.keys(db.weeks).forEach(function(k){
+    var w = db.weeks[k];
+    if(!w || typeof w!=='object'){ db.weeks[k] = { mappings:[], bill:null }; changed=true; return; }
+    if(!Array.isArray(w.mappings)){ w.mappings = []; changed=true; }
+    w.mappings.forEach(function(m){
+      if(typeof m.biz!=='string'){ m.biz='visit'; changed=true; }
+      if(typeof m.done!=='boolean'){ m.done=false; changed=true; }
+      if(typeof m.createdAt!=='number'){ m.createdAt=Date.now(); changed=true; }
+    });
+  });
+  if(db.version !== DB_VERSION){ db.version = DB_VERSION; changed = true; }
+  if(changed) save();
+}
+
+/* ============ 导入校验与归一化 ============ */
 function normalizeImport(o){
   if(!o || !Array.isArray(o.clients) || !Array.isArray(o.tasks))
     throw new Error('缺少 clients/tasks 数组 —— 可能不是本应用的备份文件');
-  var out = { version:1, clients:[], tasks:[] };
+  var out = {
+    version: DB_VERSION, clients: [], tasks: [],
+    visitGoals: {}, visits: [],
+    gov: { customers:[], visits:[], orders:[] },
+    emergent: { customers:[], visits:[], orders:[] },
+    recycle: { customers:[], records:[] },
+    weeks: {}
+  };
+  function str(v){ return typeof v==='string' ? v : ''; }
+  function tsv(v, d){ return typeof v==='number' ? v : d; }
+
   o.clients.forEach(function(c){
     if(!c || typeof c!=='object' || typeof c.name!=='string') return;
     out.clients.push({
-      id: c.id,
-      name: c.name,
-      tier: typeof c.tier==='string' ? c.tier : 'ndka',
+      id:c.id, name:c.name,
+      tier: typeof c.tier==='string' ? (c.tier==='t360'?'t368':c.tier) : 'ndka',
       channel: (c.channel==='fd'||c.channel==='exp'||c.channel==='both') ? c.channel : 'fd',
-      stars: clampStars(c.stars),
-      note: typeof c.note==='string' ? c.note : '',
-      createdAt: typeof c.createdAt==='number' ? c.createdAt : Date.now(),
-      deleted: !!c.deleted
+      stars: clampStars(c.stars), note: str(c.note),
+      createdAt: tsv(c.createdAt, Date.now()), deleted: !!c.deleted
     });
   });
   o.tasks.forEach(function(t){
     if(!t || typeof t!=='object' || typeof t.name!=='string') return;
     out.tasks.push({
-      id: t.id,
-      name: t.name,
-      stars: clampStars(t.stars),
-      dueAt: typeof t.dueAt==='number' ? t.dueAt : null,
-      createdAt: typeof t.createdAt==='number' ? t.createdAt : Date.now(),
-      doneAt: typeof t.doneAt==='number' ? t.doneAt : null,
-      deleted: !!t.deleted,
+      id:t.id, name:t.name, stars:clampStars(t.stars),
+      dueAt: tsv(t.dueAt, null), createdAt: tsv(t.createdAt, Date.now()),
+      doneAt: tsv(t.doneAt, null), deleted: !!t.deleted,
       links: Array.isArray(t.links) ? t.links.filter(function(l){
         return l && typeof l.clientId==='string';
       }).map(function(l){
-        return { clientId:l.clientId, done:!!l.done, doneAt:typeof l.doneAt==='number'?l.doneAt:null };
+        return { clientId:l.clientId, done:!!l.done, doneAt: tsv(l.doneAt, null) };
       }) : []
     });
   });
-  /* 清掉指向不存在客户的关联 */
-  var cids = {};
+  if(o.visitGoals && typeof o.visitGoals==='object' && !Array.isArray(o.visitGoals)) out.visitGoals = o.visitGoals;
+  (Array.isArray(o.visits)?o.visits:[]).forEach(function(v){
+    if(!v || typeof v.clientId!=='string') return;
+    out.visits.push({ id:v.id, clientId:v.clientId, at: tsv(v.at, Date.now()), report: str(v.report) });
+  });
+  ['gov','emergent'].forEach(function(bk){
+    var src = (o[bk] && typeof o[bk]==='object') ? o[bk] : {};
+    (Array.isArray(src.customers)?src.customers:[]).forEach(function(c){
+      if(!c || typeof c.name!=='string') return;
+      var rec = {
+        id:c.id, name:c.name, contact:str(c.contact), phone:str(c.phone), address:str(c.address),
+        opened:!!c.opened, maintained:!!c.maintained, stars:clampStars(c.stars),
+        createdAt: tsv(c.createdAt, Date.now()), deleted: !!c.deleted
+      };
+      if(bk==='emergent') rec.amount = num(c.amount);
+      out[bk].customers.push(rec);
+    });
+    (Array.isArray(src.visits)?src.visits:[]).forEach(function(v){
+      if(!v || typeof v.customerId!=='string') return;
+      out[bk].visits.push({ id:v.id, customerId:v.customerId, at: tsv(v.at, Date.now()), note: str(v.note) });
+    });
+    (Array.isArray(src.orders)?src.orders:[]).forEach(function(x){
+      if(!x || typeof x.customerId!=='string') return;
+      out[bk].orders.push({
+        id:x.id, customerId:x.customerId, at: tsv(x.at, Date.now()),
+        count: num(x.count), amount: num(x.amount)
+      });
+    });
+  });
+  var rsrc = (o.recycle && typeof o.recycle==='object') ? o.recycle : {};
+  (Array.isArray(rsrc.customers)?rsrc.customers:[]).forEach(function(c, i){
+    if(!c || typeof c.name!=='string') return;
+    out.recycle.customers.push({
+      id:c.id, name:c.name,
+      months: (c.months && typeof c.months==='object' && !Array.isArray(c.months)) ? c.months : {},
+      sort: tsv(c.sort, i), createdAt: tsv(c.createdAt, Date.now()), deleted: !!c.deleted
+    });
+  });
+  (Array.isArray(rsrc.records)?rsrc.records:[]).forEach(function(r){
+    if(!r) return;
+    out.recycle.records.push({
+      id:r.id, customerId: str(r.customerId), customerName: str(r.customerName),
+      model: str(r.model), qty: num(r.qty), at: tsv(r.at, Date.now())
+    });
+  });
+  if(o.weeks && typeof o.weeks==='object' && !Array.isArray(o.weeks)){
+    Object.keys(o.weeks).forEach(function(k){
+      var w = o.weeks[k];
+      if(!w || typeof w!=='object') return;
+      var nw = { mappings:[], bill:null };
+      (Array.isArray(w.mappings)?w.mappings:[]).forEach(function(m){
+        if(!m) return;
+        nw.mappings.push({
+          id:m.id, biz: typeof m.biz==='string'?m.biz:'visit',
+          done: !!m.done, doneAt: tsv(m.doneAt,null), createdAt: tsv(m.createdAt, Date.now())
+        });
+      });
+      if(w.bill && Array.isArray(w.bill.items)){
+        nw.bill = { inited:true, items: w.bill.items.filter(function(it){ return it && typeof it.clientId==='string'; })
+          .map(function(it){
+            return { clientId:it.clientId, name:str(it.name), mobile:!!it.mobile, fusion:!!it.fusion, removed:!!it.removed };
+          }) };
+      }
+      out.weeks[k] = nw;
+    });
+  }
+  /* 清掉指向不存在对象的关联 */
+  var cids = {}, gids = {}, eids = {}, rids = {};
   out.clients.forEach(function(c){ cids[c.id]=1; });
-  out.tasks.forEach(function(t){
-    t.links = t.links.filter(function(l){ return cids[l.clientId]; });
+  out.gov.customers.forEach(function(c){ gids[c.id]=1; });
+  out.emergent.customers.forEach(function(c){ eids[c.id]=1; });
+  out.recycle.customers.forEach(function(c){ rids[c.id]=1; });
+  out.tasks.forEach(function(t){ t.links = t.links.filter(function(l){ return cids[l.clientId]; }); });
+  out.visits = out.visits.filter(function(v){ return cids[v.clientId]; });
+  out.gov.visits = out.gov.visits.filter(function(v){ return gids[v.customerId]; });
+  out.gov.orders = out.gov.orders.filter(function(v){ return gids[v.customerId]; });
+  out.emergent.visits = out.emergent.visits.filter(function(v){ return eids[v.customerId]; });
+  out.emergent.orders = out.emergent.orders.filter(function(v){ return eids[v.customerId]; });
+  out.recycle.records = out.recycle.records.filter(function(r){ return !r.customerId || rids[r.customerId]; });
+  Object.keys(out.weeks).forEach(function(k){
+    var b = out.weeks[k].bill;
+    if(b) b.items = b.items.filter(function(it){ return cids[it.clientId]; });
   });
   return out;
 }
@@ -476,45 +776,44 @@ function download(filename, text, mime){
   document.body.appendChild(a); a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
 }
-
-/* ============ 领域逻辑 ============ */
+/* ============ 领域：通用 ============ */
 function activeClients(){ return db.clients.filter(function(c){ return !c.deleted; }); }
 function activeTasks(){ return db.tasks.filter(function(t){ return !t.deleted; }); }
-function clientById(id){
-  for(var i=0;i<db.clients.length;i++) if(db.clients[i].id===id) return db.clients[i];
-  return null;
+function clientById(id){ for(var i=0;i<db.clients.length;i++) if(db.clients[i].id===id) return db.clients[i]; return null; }
+function taskById(id){ for(var i=0;i<db.tasks.length;i++) if(db.tasks[i].id===id) return db.tasks[i]; return null; }
+function byIdIn(arr, id){ for(var i=0;i<arr.length;i++) if(arr[i].id===id) return arr[i]; return null; }
+function govById(id){ return byIdIn(db.gov.customers, id); }
+function emgById(id){ return byIdIn(db.emergent.customers, id); }
+function recById(id){ return byIdIn(db.recycle.customers, id); }
+function activeIn(arr){ return (arr||[]).filter(function(x){ return x && !x.deleted; }); }
+function sumBy(arr, k){ return (arr||[]).reduce(function(a,x){ return a + num(k?x[k]:x); }, 0); }
+function badgeHTML(tierKey){
+  var t = tierOf(tierKey);
+  return '<span class="badge" style="color:'+t.c+';background:'+t.bg+'">'+esc(t.n)+'</span>';
 }
-function taskById(id){
-  for(var i=0;i<db.tasks.length;i++) if(db.tasks[i].id===id) return db.tasks[i];
-  return null;
-}
-/* 任务的关联里，指向已删除客户的不参与计数 */
+
+/* ---- 任务完成模型：任务完成 = 所有有效关联客户都勾完 ---- */
 function activeLinks(t){
   return (t.links||[]).filter(function(l){
     var c = clientById(l.clientId);
     return c && !c.deleted;
   });
 }
-/* 任务完成 = 所有关联客户都勾完；无关联时看自身 doneAt */
 function taskDone(t){
   var ls = activeLinks(t);
   return ls.length ? ls.every(function(l){ return l.done; }) : !!t.doneAt;
 }
 function taskLinkStats(t){
   var ls = activeLinks(t);
-  var undone = ls.filter(function(l){ return !l.done; }).length;
-  return { total: ls.length, undone: undone };
+  return { total: ls.length, undone: ls.filter(function(l){ return !l.done; }).length };
 }
-/* 客户视角：该客户关联的任务统计 */
 function clientTaskStats(c){
   var ts = activeTasks().filter(function(t){
     return activeLinks(t).some(function(l){ return l.clientId===c.id; });
   });
-  var undone = ts.filter(function(t){ return !taskDone(t); }).length;
-  return { total: ts.length, undone: undone };
+  return { total: ts.length, undone: ts.filter(function(t){ return !taskDone(t); }).length };
 }
 function isOverdue(t){ return !taskDone(t) && !!t.dueAt && t.dueAt < Date.now(); }
-
 function dueInfo(t){
   if(!t.dueAt) return null;
   var d = new Date(t.dueAt);
@@ -525,24 +824,167 @@ function dueInfo(t){
   return { text:'⏰ '+dayLabel(t.dueAt)+' '+hm+' · 还剩 '+countdown(diff), cls:(diff<DAY?'soon':'') };
 }
 
-/* 排序：客户 = 层级顺序 → 星级高 → 创建早 */
+/* ---- 排序 ---- */
+/* 客户：星级优先 → 层级 → 创建时间 */
 function sortedClients(){
   return activeClients().slice().sort(function(a,b){
-    return tierIdx(a)-tierIdx(b) || b.stars-a.stars || a.createdAt-b.createdAt;
+    return b.stars-a.stars || tierIdx(a)-tierIdx(b) || a.createdAt-b.createdAt;
   });
 }
-/* 排序：任务未完成 = 截止早(无截止沉底) → 星级高 → 创建早；已完成 = 完成晚 */
-function sortedTasks(done){
-  var list = activeTasks().filter(function(t){ return taskDone(t)===done; });
-  if(done) return list.sort(function(a,b){ return (b.doneAt||0)-(a.doneAt||0); });
-  return list.sort(function(a,b){
+/* 任务：截止早优先（无截止沉底）→ 星级 → 创建时间 */
+function sortTasks(list){
+  return list.slice().sort(function(a,b){
     return (a.dueAt||INF)-(b.dueAt||INF) || b.stars-a.stars || a.createdAt-b.createdAt;
   });
 }
+/* 业务客户：星级优先 → 创建时间 */
+function sortByStars(list){
+  return list.slice().sort(function(a,b){
+    return b.stars-a.stars || a.createdAt-b.createdAt;
+  });
+}
 
-/* ============ 渲染：客户视角 ============ */
-function badgeHTML(t){ return '<span class="badge" style="color:'+t.c+';background:'+t.bg+'">'+esc(t.n)+'</span>'; }
+/* ============ 领域：拜访业务 ============ */
+function visitQuotaOf(c){
+  var g = db.visitGoals[c.id];
+  if(typeof g === 'number') return g;
+  return (VISIT_QUOTA[c.tier] != null) ? VISIT_QUOTA[c.tier] : 1;
+}
+function visitCountOf(clientId, mk){
+  return db.visits.filter(function(v){
+    return v.clientId===clientId && (!mk || inMonth(v.at, mk));
+  }).length;
+}
+function visitTotal(mk){
+  return db.visits.filter(function(v){ return inMonth(v.at, mk); }).length;
+}
+function visitGoalTotal(){
+  return activeClients().reduce(function(a,c){ return a + visitQuotaOf(c); }, 0);
+}
+function sortVisitsDesc(list){
+  return list.slice().sort(function(a,b){ return b.at-a.at; });
+}
 
+/* ============ 领域：政企 / 新兴 / 优品机 ============ */
+function orderStats(orders, cid){
+  var mo = activeMonth();
+  var all = orders.filter(function(o){ return o.customerId===cid; });
+  var m = all.filter(function(o){ return inMonth(o.at, mo); });
+  return { month: m, total: all };
+}
+function govStats(cid){
+  var s = orderStats(db.gov.orders, cid);
+  return { month: sumBy(s.month,'count'), total: sumBy(s.total,'count') };
+}
+function emgStats(cid){
+  var s = orderStats(db.emergent.orders, cid);
+  return { month: sumBy(s.month,'amount'), total: sumBy(s.total,'amount') + num((emgById(cid)||{}).amount) };
+}
+function bizSummary(k){
+  var cs = activeIn(db[k].customers);
+  return {
+    total: cs.length,
+    opened: cs.filter(function(c){ return c.opened; }).length,
+    maintained: cs.filter(function(c){ return c.maintained; }).length
+  };
+}
+/* 新兴客户本月拜访次数 */
+function emgVisitCount(cid, mk){
+  return db.emergent.visits.filter(function(v){
+    return v.customerId===cid && (!mk || inMonth(v.at, mk));
+  }).length;
+}
+/* 本月拜访是否挤在两周内（只提示，不阻止） */
+function emgSpreadWarn(){
+  var mo = activeMonth();
+  var ts = db.emergent.visits.filter(function(v){ return inMonth(v.at, mo); })
+    .map(function(v){ return v.at; }).sort(function(a,b){ return a-b; });
+  if(ts.length < EMERGENT_VISIT_NEED) return null;
+  var span = ts[ts.length-1] - ts[0];
+  var days = Math.round(span/DAY) + 1;
+  if(days <= EMERGENT_MAX_SPAN)
+    return '本月 '+ts.length+' 次拜访集中在 '+days+' 天内完成，规则要求 '+EMERGENT_VISIT_NEED+' 次不能挤在两周内，建议往后分散。';
+  return null;
+}
+/* 优品机：月度提单 / 回收 */
+function recMonthData(c, mk){ return (c.months && c.months[mk]) || { qty:0, amount:0 }; }
+function recBillTotals(mk){
+  var cs = activeIn(db.recycle.customers);
+  return {
+    qty: cs.reduce(function(a,c){ return a + num(recMonthData(c, mk).qty); }, 0),
+    amount: cs.reduce(function(a,c){ return a + num(recMonthData(c, mk).amount); }, 0)
+  };
+}
+function recCollectTotal(mk){
+  return sumBy(db.recycle.records.filter(function(r){ return inMonth(r.at, mk); }), 'qty');
+}
+function sortRecycle(){
+  var cs = activeIn(db.recycle.customers);
+  return cs.slice().sort(function(a,b){ return num(a.sort)-num(b.sort); });
+}
+
+/* ============ 领域：周度 ============ */
+function weekData(key){
+  if(!db.weeks[key] || typeof db.weeks[key]!=='object') db.weeks[key] = { mappings:[], bill:null };
+  var w = db.weeks[key];
+  if(!Array.isArray(w.mappings)) w.mappings = [];
+  return w;
+}
+function tasksOfWeek(key, onlyDone){
+  var r = weekRange(key);
+  return sortTasks(activeTasks().filter(function(t){
+    if(t.doneAt && t.doneAt < r.start) return false;   // 更早已完成
+    if(t.createdAt >= r.end) return false;             // 更晚才创建
+    if(onlyDone) return !!t.doneAt && t.doneAt >= r.start && t.doneAt < r.end;
+    return true;
+  }));
+}
+function mappingsOf(key, onlyDone){
+  return weekData(key).mappings.filter(function(m){ return onlyDone ? !!m.done : true; })
+    .sort(function(a,b){ return a.createdAt-b.createdAt; });
+}
+function billDone(it){ return !!(it.mobile && it.fusion); }
+/* 提单勾选规则：
+   all    → 左边圆圈：整体完成/取消（两个标记一起变）
+   mobile → 手机提单：取消手机时会连融合一起取消（否则会剩一个孤立的融合）
+   fusion → 融合提单：勾上融合时会自动补上手机 */
+function billToggle(it, field){
+  if(field === 'all'){
+    var target = !billDone(it);
+    it.mobile = target;
+    it.fusion = target;
+  }else if(field === 'mobile'){
+    it.mobile = !it.mobile;
+    if(!it.mobile) it.fusion = false;
+  }else{
+    it.fusion = !it.fusion;
+    if(it.fusion) it.mobile = true;
+  }
+  return billDone(it);
+}
+function ensureBill(key){
+  var w = weekData(key);
+  if(!w.bill){
+    w.bill = { inited:true, items: sortedClients().map(function(c){
+      return { clientId:c.id, name:c.name, mobile:false, fusion:false, removed:false };
+    })};
+    save();
+  }
+  return w.bill;
+}
+function billStats(bill){
+  var items = bill ? bill.items.filter(function(x){ return !x.removed; }) : [];
+  return { total: items.length, undone: items.filter(function(x){ return !billDone(x); }).length };
+}
+function weekList(nBack, nFwd){
+  var out = [], base = weekStartFromKey(curWeekKey());
+  for(var i = nBack; i > 0; i--) out.push(weekKeyOf(base - i*7*DAY));
+  out.push(curWeekKey());
+  for(var j = 1; j <= nFwd; j++) out.push(weekKeyOf(base + j*7*DAY));
+  return out;
+}
+
+/* ============ 渲染：客户页 ============ */
 function renderClients(){
   var box = $('clientList');
   var list = sortedClients();
@@ -550,100 +992,213 @@ function renderClients(){
     box.innerHTML = '<div class="empty"><div class="big">▦</div>还没有客户<br>点右上角 <b>＋</b> 创建第一个客户</div>';
     return;
   }
-  var html = '', lastTier = null;
+  var html = '<div class="sec-title">客户<span class="n">共 '+list.length+' 个 · 星级优先，同级按层级</span></div><div class="list">';
   list.forEach(function(c){
-    var t = tierOf(c);
-    if(c.tier !== lastTier){
-      lastTier = c.tier;
-      var n = list.filter(function(x){ return x.tier===c.tier; }).length;
-      if(html) html += '</div>';
-      html += '<div class="gtitle">'+badgeHTML(t)+'<span class="n">'+n+' 个</span></div>';
-      html += '<div class="list">';
-    }
+    var ch = channelOf(c.channel);
     var st = clientTaskStats(c);
-    var ch = channelOf(c);
     html += '<div class="row" data-cid="'+c.id+'">'
       + '<div class="body">'
       +   '<div class="nm">'+esc(c.name)+'<span class="stars">'+starsText(c.stars)+'</span></div>'
-      +   '<div class="sub">'+badgeHTML(t)+'<span>'+esc(ch.n)+'</span></div>'
+      +   '<div class="sub">'+badgeHTML(c.tier)+'<span>'+esc(ch.n)+'</span></div>'
       + '</div>'
       + '<div class="side"><b>'+st.undone+'</b> <i>未完成</i>'
       + '<span class="t2">共 <b>'+st.total+'</b> 任务</span></div>'
       + '</div>';
   });
-  if(html) html += '</div>';
+  html += '</div>';
   box.innerHTML = html;
   box.querySelectorAll('.row').forEach(function(r){
     r.onclick = function(){ openDetail('client', r.getAttribute('data-cid')); };
   });
 }
 
-/* ============ 渲染：任务视角 ============ */
-function renderTasks(){
-  var box = $('taskList');
-  var list = sortedTasks(!!taskShowDone);
-  if(!list.length){
-    box.innerHTML = '<div class="empty"><div class="big">✓</div>'
-      + (taskShowDone ? '还没有已完成的任务' : '还没有待办任务')
-      + '<br>点右上角 <b>＋</b> 创建任务</div>';
-    return;
+/* ============ 渲染：周度页 ============ */
+function taskRowHTML(t){
+  var st = taskLinkStats(t);
+  var di = dueInfo(t);
+  var done = taskDone(t);
+  return '<div class="row'+(done?' done':'')+'" data-tid="'+t.id+'">'
+    + '<button class="check'+(done?' on':'')+'" data-ck="'+t.id+'"></button>'
+    + '<div class="body">'
+    +   '<div class="nm">'+esc(t.name)+'<span class="stars">'+starsText(t.stars)+'</span></div>'
+    +   (di ? '<div class="sub"><span class="'+di.cls+'">'+esc(di.text)+'</span></div>'
+          : '<div class="sub"><span>无截止日期</span></div>')
+    + '</div>'
+    + '<div class="side"><b>'+st.undone+'</b> <i>未完成</i>'
+    + '<span class="t2">共 <b>'+st.total+'</b> 客户</span></div>'
+    + '</div>';
+}
+function mappingRowHTML(m){
+  var b = bizOf(m.biz);
+  return '<div class="row'+(m.done?' done':'')+'" data-mid="'+m.id+'">'
+    + '<button class="check'+(m.done?' on':'')+'" data-mck="'+m.id+'"></button>'
+    + '<div class="body"><div class="nm">'+b.ic+' '+esc(b.n)+'</div>'
+    + '<div class="sub"><span>点进去可登记数据 · 勾选只表示本周完成</span></div></div>'
+    + '</div>';
+}
+function renderWeek(){
+  var key = activeWeek();
+  var r = weekRange(key);
+  var todayMon = mondayOf(Date.now());
+  var isCur = key === curWeekKey();
+  var isPast = r.start < todayMon;
+  var bar = '<div style="flex:1"><div class="wk">'+weekLabel(key)+'</div>'
+    + '<div class="rng">'+fmtDate(r.start)+' – '+fmtDate(r.end-DAY)+'</div></div>'
+    + '<span class="tag'+(isCur?'':' gray')+'">'+(isCur?'本周':(isPast?'历史':'未来'))+'</span>';
+  if(!isCur) bar += '<button class="back" id="wkBack">回到本周</button>';
+  $('weekBar').innerHTML = bar;
+  if($('wkBack')) $('wkBack').onclick = function(){ viewWeek = null; renderWeek(); };
+
+  var bill = weekData(key).bill;
+  var bs = bill ? billStats(bill) : { total: activeClients().length, undone: activeClients().length };
+  var nowSeg = (isPast ? weekSeg : 0);
+  var tasks = tasksOfWeek(key, isPast ? nowSeg===1 : false);
+  var maps = mappingsOf(key, isPast && nowSeg===1);
+
+  var html = '<div class="list">'
+    + '<div class="row pinned" id="billRow">'
+    +   '<div class="body"><div class="nm">📱 提单任务</div>'
+    +   '<div class="sub">手机提单 + 融合提单，两个都勾 = 该客户完成</div></div>'
+    +   '<div class="side"><b>'+bs.undone+'</b> <i>未完成</i><span class="t2">共 <b>'+bs.total+'</b> 客户</span></div>'
+    + '</div>'
+    + '</div>';
+
+  if(isPast){
+    html += '<div class="seg" id="wkSeg" style="margin-top:14px">'
+      + '<button data-v="0" class="'+(nowSeg===0?'on':'')+'">规划</button>'
+      + '<button data-v="1" class="'+(nowSeg===1?'on':'')+'">完成</button></div>';
   }
-  var html = '<div class="list">';
-  list.forEach(function(t){
-    var st = taskLinkStats(t);
-    var di = dueInfo(t);
-    html += '<div class="row'+(taskDone(t)?' done':'')+'" data-tid="'+t.id+'">'
-      + '<button class="check'+(taskDone(t)?' on':'')+'" data-ck="'+t.id+'" aria-label="切换完成"></button>'
-      + '<div class="body">'
-      +   '<div class="nm">'+esc(t.name)+'<span class="stars">'+starsText(t.stars)+'</span></div>'
-      +   (di ? '<div class="sub"><span class="'+di.cls+'">'+esc(di.text)+'</span></div>' : '<div class="sub"><span>无截止日期</span></div>')
-      + '</div>'
-      + '<div class="side">'
-      +   (taskShowDone
-      ?     '<b>'+st.total+'</b> <i>客户</i>'
-      :     '<b>'+st.undone+'</b> <i>未完成</i><span class="t2">共 <b>'+st.total+'</b> 客户</span>')
-      + '</div>'
+  html += '<div class="sec-title">'+(isPast ? (nowSeg===1?'本 周 完 成':'本 周 规 划') : '本周任务')
+    + '<span class="n">未完成会留到下一周</span></div>';
+  if(!tasks.length){
+    html += '<div class="empty" style="padding:26px">'
+      + (isPast ? (nowSeg===1?'这一周没有完成记录':'这一周没有任务') : '本周还没有任务<br>点右上角 <b>＋</b> 添加任务或业务映射')
       + '</div>';
+  }else{
+    html += '<div class="list">' + tasks.map(taskRowHTML).join('') + '</div>';
+  }
+
+  if(!isPast || nowSeg===1){
+    html += '<div class="sec-title">业务映射<span class="n">点进去直达对应业务页</span></div>';
+    if(!maps.length){
+      html += '<div class="empty" style="padding:22px">'+(nowSeg===1&&isPast?'没有已完成的映射':'还没有映射<br>点右上角 <b>＋</b> 添加')+'</div>';
+    }else{
+      html += '<div class="list">' + maps.map(mappingRowHTML).join('') + '</div>';
+    }
+  }
+
+  $('weekList').innerHTML = html;
+  $('billRow').onclick = function(){ openDetail('bill', key); };
+  if($('wkSeg')) $('wkSeg').querySelectorAll('button').forEach(function(b){
+    b.onclick = function(){ weekSeg = parseInt(b.getAttribute('data-v'),10); renderWeek(); };
   });
-  html += '</div>';
-  box.innerHTML = html;
-  box.querySelectorAll('.row').forEach(function(r){
-    r.onclick = function(){ openDetail('task', r.getAttribute('data-tid')); };
+  $('weekList').querySelectorAll('[data-tid]').forEach(function(r){
+    var id = r.getAttribute('data-tid');
+    if(!id) return;
+    r.onclick = function(){ openDetail('task', id); };
+    var ck = r.querySelector('.check');
+    if(ck) ck.onclick = function(e){ e.stopPropagation(); toggleTaskDone(taskById(id)); };
   });
-  box.querySelectorAll('.check').forEach(function(b){
-    b.onclick = function(e){
+  $('weekList').querySelectorAll('[data-mid]').forEach(function(r){
+    var id = r.getAttribute('data-mid');
+    r.onclick = function(){
+      var m = weekData(key).mappings.filter(function(x){ return x.id===id; })[0];
+      if(m) openDetail('biz', m.biz);
+    };
+    var ck = r.querySelector('.check');
+    if(ck) ck.onclick = function(e){
       e.stopPropagation();
-      toggleTaskDone(taskById(b.getAttribute('data-ck')));
+      var m = weekData(key).mappings.filter(function(x){ return x.id===id; })[0];
+      if(!m) return;
+      m.done = !m.done;
+      m.doneAt = m.done ? Date.now() : null;
+      save(); renderWeek();
     };
   });
 }
 
-function render(){
-  renderClients();
-  renderTasks();
-  if(navStack.length) renderDetail();
+/* ============ 渲染：业务总页 ============ */
+function bizCardHTML(b, numText, numLabel){
+  return '<div class="bizcard" data-biz="'+b.k+'">'
+    + '<div class="ic">'+b.ic+'</div>'
+    + '<div class="tt"><b>'+esc(b.n)+'</b><span>'+esc(b.d)+'</span></div>'
+    + (numText ? '<div class="nums"><b>'+numText+'</b><br>'+numLabel+'</div>' : '')
+    + '</div>';
+}
+function renderBizHome(){
+  var mo = activeMonth();
+  var html = '';
+  if(viewMonth && viewMonth !== curMonthKey()){
+    html += '<div class="warnline">正在查看 '+monthLabel(viewMonth)+' 的数据 · 点右上角日历可切换或回到本月</div>';
+  }
+  var g = bizSummary('gov'), e = bizSummary('emergent');
+  var rc = recBillTotals(mo), col = recCollectTotal(mo);
+  html += '<div class="cards">'
+    + bizCardHTML(BIZS[0], visitTotal(mo) + ' / ' + visitGoalTotal(), '本月拜访 / 目标')
+    + bizCardHTML(BIZS[1], g.maintained + ' / ' + g.opened, '维系 / 开户')
+    + bizCardHTML(BIZS[2], e.maintained + ' / ' + e.opened, '维系 / 开户')
+    + bizCardHTML(BIZS[3], col + ' / ' + rc.qty, '回收 / 提单')
+    + '</div>'
+    + '<div class="hint">'+monthLabel(mo)+' 数据。所有业务按月刷新、按月留存，点右上角日历可查历史月份。</div>';
+  $('bizList').innerHTML = html;
+  $('bizList').querySelectorAll('.bizcard').forEach(function(c){
+    c.onclick = function(){ openDetail('biz', c.getAttribute('data-biz')); };
+  });
 }
 
-/* ============ 详情屏 ============ */
+function render(){
+  if(curTab === 'week') renderWeek();
+  else if(curTab === 'biz') renderBizHome();
+  else renderClients();
+  if(navStack.length) renderDetail();
+}
+/* ============ 详情屏框架 ============ */
+function setDetailAdd(show, handler){
+  var b = $('btnDetailAdd');
+  b.classList.toggle('hidden', !show);
+  b.onclick = handler || null;
+}
 function openDetail(type, id){
   navStack.push({ type:type, id:id });
-  $('btnDetailAdd').classList.toggle('hidden', type!=='client');
   $('detailScreen').classList.remove('hidden');
   renderDetail();
 }
+function closeDetail(){
+  navStack.pop();
+  if(!navStack.length) $('detailScreen').classList.add('hidden');
+  else renderDetail();
+}
 function renderDetail(){
   var top = navStack[navStack.length-1];
-  if(!top) return;
+  if(!top){ $('detailScreen').classList.add('hidden'); return; }
+  setDetailAdd(false);
   if(top.type==='client') renderClientDetail(top.id);
-  else renderTaskDetail(top.id);
+  else if(top.type==='task') renderTaskDetail(top.id);
+  else if(top.type==='bill') renderBill(top.id);
+  else if(top.type==='biz') renderBiz(top.id);
+  else if(top.type==='visitClient') renderVisitClient(top.id);
+  else if(top.type==='govc') renderGovCustomer(top.id);
+  else if(top.type==='emgc') renderEmgCustomer(top.id);
+  else if(top.type==='recc') renderRecCustomer(top.id);
+  else if(top.type==='recycleProj') renderRecycleProject();
+  else closeDetail();
+}
+function visitRowHTML(v, note){
+  var text = note || v.report || '';
+  return '<div class="row" data-vid="'+v.id+'">'
+    + '<div class="body"><div class="nm">'+fmtDateTime(v.at)+'</div>'
+    + '<div class="sub clamp2">'+esc(text || '（未填写内容）')+'</div></div>'
+    + '</div>';
 }
 
+/* ============ 客户详情 ============ */
 function renderClientDetail(id){
   var c = clientById(id);
-  if(!c || c.deleted){ navStack.pop(); if(!navStack.length) $('detailScreen').classList.add('hidden'); return; }
-  var t = tierOf(c), ch = channelOf(c);
+  if(!c || c.deleted){ closeDetail(); return; }
+  var ch = channelOf(c.channel);
+  var mo = curMonthKey();
   $('detailTitle').textContent = c.name;
-  var body = $('detailBody');
+  setDetailAdd(true, function(){ openLinkPicker(c.id); });
 
   var ts = activeTasks().filter(function(x){
     return activeLinks(x).some(function(l){ return l.clientId===c.id; });
@@ -651,22 +1206,24 @@ function renderClientDetail(id){
     return (taskDone(a)-taskDone(b)) || (a.dueAt||INF)-(b.dueAt||INF) || b.stars-a.stars;
   });
   var undone = ts.filter(function(x){ return !taskDone(x); }).length;
+  var vn = visitCountOf(c.id, mo);
 
   var html = '<div class="infocard" id="infoCard">'
-    + '<div class="big-nm">'+esc(c.name)+'<span class="stars">'+starsText(c.stars)+'</span></div>'
-    + '<div class="sub" style="margin-top:10px">'+badgeHTML(t)+'<span style="font-size:11.5px;color:var(--muted)">'+esc(ch.n)+'</span></div>'
+    + '<div class="big-nm">'+esc(c.name)+'<span class="stars lg">'+starsText(c.stars)+'</span></div>'
+    + '<div class="sub" style="margin-top:10px">'+badgeHTML(c.tier)
+    +   '<span style="font-size:11.5px;color:var(--muted)">'+esc(ch.n)+'</span></div>'
     + (c.note ? '<div class="note">'+esc(c.note)+'</div>' : '')
-    + '<div class="meta">创建于 '+fmtDateTime(c.createdAt)+'</div>'
+    + '<div class="meta">本月拜访 '+vn+' / '+visitQuotaOf(c)+' 次 · 创建于 '+fmtDate(c.createdAt)+'</div>'
     + '<div class="tip">点击卡片修改客户信息</div>'
     + '</div>'
-    + '<div class="gtitle">关联任务<span class="n">未完成 '+undone+' · 共 '+ts.length+'</span></div>';
+    + '<div class="sec-title">关联任务<span class="n">未完成 '+undone+' · 共 '+ts.length+'</span></div>';
 
   if(!ts.length){
-    html += '<div class="empty" style="padding:30px">还没有关联任务<br>点右上角 <b>＋</b> 关联一个任务</div>';
+    html += '<div class="empty" style="padding:30px">还没有关联任务<br>点右上角 <b>＋</b> 从任务里关联一个</div>';
   }else{
     html += '<div class="list">';
     ts.forEach(function(x){
-      var l = x.links.find(function(l){ return l.clientId===c.id; });
+      var l = x.links.filter(function(l){ return l.clientId===c.id; })[0];
       var myDone = l && l.done;
       var di = dueInfo(x);
       html += '<div class="row'+(myDone?' done':'')+'" data-tid="'+x.id+'">'
@@ -679,34 +1236,32 @@ function renderClientDetail(id){
     });
     html += '</div>';
   }
-  body.innerHTML = html;
+  $('detailBody').innerHTML = html;
   $('infoCard').onclick = function(){ openClientEditor(c.id); };
-  body.querySelectorAll('.row').forEach(function(r){
-    r.onclick = function(){ openDetail('task', r.getAttribute('data-tid')); };
-  });
-  body.querySelectorAll('.check').forEach(function(b){
-    b.onclick = function(e){
-      e.stopPropagation();
-      toggleLink(taskById(b.getAttribute('data-ck')), c.id);
-    };
+  var body = $('detailBody');
+  body.querySelectorAll('[data-tid]').forEach(function(r){
+    var tid = r.getAttribute('data-tid');
+    r.onclick = function(){ openDetail('task', tid); };
+    var ck = r.querySelector('.check');
+    if(ck) ck.onclick = function(e){ e.stopPropagation(); toggleLink(taskById(tid), c.id); };
   });
 }
 
+/* ============ 任务详情 ============ */
 function renderTaskDetail(id){
   var t = taskById(id);
-  if(!t || t.deleted){ navStack.pop(); if(!navStack.length) $('detailScreen').classList.add('hidden'); return; }
+  if(!t || t.deleted){ closeDetail(); return; }
   $('detailTitle').textContent = t.name;
-  var body = $('detailBody');
   var ls = activeLinks(t);
   var st = taskLinkStats(t);
   var done = taskDone(t);
   var di = dueInfo(t);
 
   var html = '<div class="infocard" id="infoCard">'
-    + '<div class="big-nm">'+esc(t.name)+'<span class="stars">'+starsText(t.stars)+'</span></div>'
+    + '<div class="big-nm">'+esc(t.name)+'<span class="stars lg">'+starsText(t.stars)+'</span></div>'
     + '<div class="meta">'
     +   (di ? '<span class="'+di.cls+'">'+esc(di.text)+'</span><br>' : '无截止日期<br>')
-    +   '创建于 '+fmtDateTime(t.createdAt)
+    +   '创建于 '+fmtDate(t.createdAt)
     +   (done && t.doneAt ? '<br>完成于 '+fmtDateTime(t.doneAt) : '')
     + '</div>'
     + '<div class="tip">点击卡片修改任务信息</div>'
@@ -716,50 +1271,672 @@ function renderTaskDetail(id){
     +   '<span class="lb">整个任务已完成</span>'
     +   '<span class="st">勾选后所有关联客户一并完成</span>'
     + '</div>'
-    + '<div class="gtitle">关联客户<span class="n">未完成 '+st.undone+' · 共 '+st.total+'</span></div>';
+    + '<div class="sec-title">关联客户<span class="n">未完成 '+st.undone+' · 共 '+st.total+'</span></div>';
 
   if(!ls.length){
     html += '<div class="empty" style="padding:30px">还没有关联客户<br>点击上方信息卡，在编辑面板里选择客户</div>';
   }else{
     var sorted = ls.slice().sort(function(a,b){
       var ca = clientById(a.clientId), cb = clientById(b.clientId);
-      return (a.done-b.done) || tierIdx(ca)-tierIdx(cb) || cb.stars-ca.stars;
+      return (a.done-b.done) || (cb?cb.stars:0)-(ca?ca.stars:0) || tierIdx(ca)-tierIdx(cb);
     });
     html += '<div class="list">';
     sorted.forEach(function(l){
       var c = clientById(l.clientId);
+      if(!c) return;
       html += '<div class="row'+(l.done?' done':'')+'" data-cid="'+c.id+'">'
         + '<button class="check'+(l.done?' on':'')+'" data-ck="'+c.id+'"></button>'
         + '<div class="body">'
         +   '<div class="nm">'+esc(c.name)+'<span class="stars">'+starsText(c.stars)+'</span></div>'
-        +   '<div class="sub">'+badgeHTML(tierOf(c))+'<span>'+esc(channelOf(c).n)+'</span></div>'
+        +   '<div class="sub">'+badgeHTML(c.tier)+'<span>'+esc(channelOf(c.channel).n)+'</span></div>'
         + '</div>'
         + '</div>';
     });
     html += '</div>';
   }
-  body.innerHTML = html;
+  $('detailBody').innerHTML = html;
   $('infoCard').onclick = function(){ openTaskEditor(t.id); };
   $('masterRow').onclick = function(){ toggleTaskDone(t); };
-  body.querySelectorAll('.row').forEach(function(r){
-    r.onclick = function(){ openDetail('client', r.getAttribute('data-cid')); };
+  var body = $('detailBody');
+  body.querySelectorAll('[data-cid]').forEach(function(r){
+    var cid = r.getAttribute('data-cid');
+    r.onclick = function(){ openDetail('client', cid); };
+    var ck = r.querySelector('.check');
+    if(ck) ck.onclick = function(e){ e.stopPropagation(); toggleLink(t, cid); };
   });
-  body.querySelectorAll('.check').forEach(function(b){
+}
+
+/* ============ 提单清单 ============ */
+function renderBill(key){
+  key = key || curWeekKey();
+  $('detailTitle').textContent = '提单任务 · '+weekLabel(key);
+  var bill = ensureBill(key);
+  var items = bill.items.filter(function(x){ return !x.removed; });
+  var doneN = items.filter(billDone).length;
+
+  var html = '<div class="sum">'
+    + '<div class="it"><div class="v acc">'+doneN+'</div><div class="k">已完成</div></div>'
+    + '<div class="it"><div class="v">'+(items.length-doneN)+'</div><div class="k">未完成</div></div>'
+    + '<div class="it"><div class="v">'+items.length+'</div><div class="k">客户总数</div></div>'
+    + '</div>';
+
+  if(!items.length){
+    html += '<div class="empty" style="padding:34px">本周还没有客户<br>点右上角 <b>＋</b> 从客户页添加</div>';
+  }else{
+    html += '<div class="list">';
+    items.forEach(function(it){
+      var c = clientById(it.clientId);
+      var nm = c ? c.name : (it.name || '（客户已删除）');
+      var d = billDone(it);
+      html += '<div class="row'+(d?' done':'')+'" data-item="'+it.clientId+'">'
+        + '<button class="check'+(d?' on':'')+'" data-ck="1"></button>'
+        + '<div class="body"><div class="nm">'+esc(nm)+'</div>'
+        +   (c ? '<div class="sub">'+badgeHTML(c.tier)+'<span>'+esc(channelOf(c.channel).n)+'</span></div>' : '')
+        + '</div>'
+        + '<div class="dots">'
+        +   '<button class="dot'+(it.mobile?' on':'')+'" data-m="'+it.clientId+'">手机</button>'
+        +   '<button class="dot'+(it.fusion?' on':'')+'" data-f="'+it.clientId+'">融合</button>'
+        + '</div>'
+        + '<button class="xbtn" data-x="'+it.clientId+'">×</button>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+  html += '<div class="hint">点左边圆圈 = 该客户整体完成（手机+融合一起勾上）；也可以分别点「手机」「融合」，两个都勾即完成。<br>'
+    + '「×」只把客户从本周清单里移除，<b>不影响客户页的客户</b>。</div>';
+  $('detailBody').innerHTML = html;
+
+  setDetailAdd(true, function(){ openBillPicker(key); });
+  var body = $('detailBody');
+  function sync(){ save(); renderDetail(); }
+  body.querySelectorAll('[data-item]').forEach(function(r){
+    var cid = r.getAttribute('data-item');
+    var it = bill.items.filter(function(x){ return x.clientId===cid; })[0];
+    if(!it) return;
+    r.onclick = function(){ billToggle(it, 'all'); sync(); };
+  });
+  body.querySelectorAll('[data-m]').forEach(function(b){
     b.onclick = function(e){
       e.stopPropagation();
-      toggleLink(t, b.getAttribute('data-ck'));
+      var cid = b.getAttribute('data-m');
+      var it = bill.items.filter(function(x){ return x.clientId===cid; })[0];
+      if(!it) return;
+      billToggle(it, 'mobile');
+      sync();
     };
   });
+  body.querySelectorAll('[data-f]').forEach(function(b){
+    b.onclick = function(e){
+      e.stopPropagation();
+      var cid = b.getAttribute('data-f');
+      var it = bill.items.filter(function(x){ return x.clientId===cid; })[0];
+      if(!it) return;
+      billToggle(it, 'fusion');
+      sync();
+    };
+  });
+  body.querySelectorAll('[data-x]').forEach(function(b){
+    b.onclick = function(e){
+      e.stopPropagation();
+      var cid = b.getAttribute('data-x');
+      var it = bill.items.filter(function(x){ return x.clientId===cid; })[0];
+      if(!it) return;
+      it.removed = true;
+      save(); renderDetail();
+      showToast('已从本周清单移除', '撤销', function(){ it.removed = false; save(); renderDetail(); });
+    };
+  });
+}
+function openBillPicker(key){
+  var bill = ensureBill(key);
+  var inList = {};
+  bill.items.forEach(function(x){ if(!x.removed) inList[x.clientId]=1; });
+  var cands = sortedClients().filter(function(c){ return !inList[c.id]; });
+  openSheet('<h2>把客户加入本周清单</h2><div id="bpBox"></div>');
+  var box = $('bpBox');
+  if(!cands.length){
+    box.innerHTML = '<div class="empty" style="padding:24px">客户页的客户都已在清单里</div>'
+      + '<div class="sheet-actions"><button class="btn ghost" id="bpClose">关闭</button></div>';
+    $('bpClose').onclick = closeSheet;
+    return;
+  }
+  box.innerHTML = '<div class="picklist" style="max-height:50vh">' + cands.map(function(c){
+    return '<div class="prow" data-cid="'+c.id+'"><span class="pnm">'+esc(c.name)+'</span>'
+      + badgeHTML(c.tier)+'<span class="stars">'+starsText(c.stars)+'</span></div>';
+  }).join('') + '</div>'
+  + '<div class="sheet-actions"><button class="btn ghost" id="bpClose">关闭</button></div>';
+  $('bpClose').onclick = closeSheet;
+  box.querySelectorAll('.prow').forEach(function(r){
+    r.onclick = function(){
+      var cid = r.getAttribute('data-cid');
+      var c = clientById(cid);
+      var exist = bill.items.filter(function(x){ return x.clientId===cid; })[0];
+      if(exist){ exist.removed = false; }
+      else bill.items.push({ clientId:cid, name:c?c.name:'', mobile:false, fusion:false, removed:false });
+      save(); renderDetail();
+    };
+  });
+}
+
+/* ============ 业务页路由 ============ */
+function renderBiz(k){
+  if(k==='visit') renderBizVisit();
+  else if(k==='gov') renderBizGov();
+  else if(k==='emergent') renderBizEmergent();
+  else if(k==='recycle') renderBizRecycle();
+  else closeDetail();
+}
+function monthTagHTML(){
+  var mo = activeMonth();
+  var cur = mo === curMonthKey();
+  return '<div class="sec-title">'+monthLabel(mo)+'<span class="n">'+(cur?'本月':'历史（只读）')+'</span></div>';
+}
+
+/* ============ 拜访业务 ============ */
+function renderBizVisit(){
+  var mo = activeMonth();
+  var readonly = mo !== curMonthKey();
+  $('detailTitle').textContent = '拜访业务';
+  var list = sortedClients();
+  var total = visitTotal(mo), goal = visitGoalTotal();
+  var covered = list.filter(function(c){ return visitCountOf(c.id, mo) > 0; }).length;
+
+  var html = '<div class="sum">'
+    + '<div class="it"><div class="v acc">'+total+'</div><div class="k">'+(readonly?'已拜访':'本月已拜访')+'</div></div>'
+    + '<div class="it"><div class="v">'+goal+'</div><div class="k">月度目标</div></div>'
+    + '<div class="it"><div class="v">'+covered+'/'+list.length+'</div><div class="k">已覆盖客户</div></div>'
+    + '</div>'
+    + monthTagHTML();
+
+  if(!list.length){
+    html += '<div class="empty" style="padding:30px">客户页还没有客户<br>先去「客户」创建客户，这里会自动出现</div>';
+  }else{
+    html += '<div class="list">';
+    list.forEach(function(c){
+      var n = visitCountOf(c.id, mo), q = visitQuotaOf(c);
+      html += '<div class="row" data-cid="'+c.id+'">'
+        + '<div class="body">'
+        +   '<div class="nm">'+esc(c.name)+'<span class="stars">'+starsText(c.stars)+'</span></div>'
+        +   '<div class="sub">'+badgeHTML(c.tier)
+        +     '<span'+(n>=q?' style="color:var(--ok)"':'')+'>'+(n>=q?'本月已完成':'还差 '+(q-n)+' 次')+'</span></div>'
+        + '</div>'
+        + '<div class="side"><b>'+n+'</b> <i>/ '+q+' 次</i></div>'
+        + (readonly ? '' : '<button class="addbtn" data-add="'+c.id+'">＋</button>')
+        + '</div>';
+    });
+    html += '</div>';
+    html += '<div class="hint">点客户行查看/修改过往拜访报告；点 <b>＋</b> 现场登记一次拜访。<br>'
+      + '默认次数：金种子/top368 6 次，top1000 4 次，top1500/NDKA+/破格商 2 次，tier8 1 次。'
+      + (readonly ? '' : '长按姓名不能改次数 —— 在客户详情卡片里可以逐客户改目标。') + '</div>';
+  }
+  $('detailBody').innerHTML = html;
+  var body = $('detailBody');
+  body.querySelectorAll('[data-cid]').forEach(function(r){
+    var cid = r.getAttribute('data-cid');
+    r.onclick = function(){ openDetail('visitClient', cid); };
+  });
+  body.querySelectorAll('[data-add]').forEach(function(b){
+    b.onclick = function(e){
+      e.stopPropagation();
+      openVisitSheet(b.getAttribute('data-add'), null);
+    };
+  });
+}
+function openVisitSheet(clientId, visitId){
+  var c = clientById(clientId);
+  var v = visitId ? db.visits.filter(function(x){ return x.id===visitId; })[0] : null;
+  openSheet(
+    '<h2>'+(v?'修改拜访报告':'登记一次拜访')+'</h2>'
+    + '<div class="field"><label>客户</label><div style="font-size:15px;font-weight:600">'+esc(c?c.name:'')+'</div></div>'
+    + '<div class="field"><label>拜访时间</label><input type="datetime-local" id="vAt" value="'+toLocalInput(v?v.at:Date.now())+'"></div>'
+    + '<div class="field"><label>拜访报告</label><textarea id="vRp" maxlength="1000" placeholder="本次拜访聊了什么、达成了什么、下一步是什么…">'+esc(v?v.report:'')+'</textarea></div>'
+    + '<div class="sheet-actions">'
+    +   (v ? '<button class="btn danger" id="vDel">删除</button>' : '')
+    +   '<button class="btn ghost" id="vCancel">取消</button>'
+    +   '<button class="btn primary" id="vSave">保存</button>'
+    + '</div>'
+  );
+  $('vCancel').onclick = closeSheet;
+  $('vSave').onclick = function(){
+    var at = new Date($('vAt').value).getTime();
+    if(isNaN(at)) at = Date.now();
+    var rp = $('vRp').value.trim();
+    if(v){ v.at = at; v.report = rp; }
+    else db.visits.push({ id:uid(), clientId:clientId, at:at, report:rp });
+    save(); closeSheet(); renderDetail(); render();
+  };
+  if(v) $('vDel').onclick = function(){
+    var i = db.visits.indexOf(v);
+    if(i >= 0) db.visits.splice(i,1);
+    save(); closeSheet(); renderDetail(); render();
+  };
+}
+function renderVisitClient(cid){
+  var c = clientById(cid);
+  if(!c){ closeDetail(); return; }
+  $('detailTitle').textContent = c.name+' · 拜访';
+  var mo = activeMonth();
+  var vs = sortVisitsDesc(db.visits.filter(function(v){ return v.clientId===cid; }));
+  var inMo = vs.filter(function(v){ return inMonth(v.at, mo); });
+  $('detailBody').innerHTML = '<div class="sum">'
+    + '<div class="it"><div class="v acc">'+inMo.length+'</div><div class="k">'+monthLabel(mo)+'</div></div>'
+    + '<div class="it"><div class="v">'+visitQuotaOf(c)+'</div><div class="k">月度目标</div></div>'
+    + '<div class="it"><div class="v">'+vs.length+'</div><div class="k">累计拜访</div></div>'
+    + '</div>'
+    + (inMo.length >= visitQuotaOf(c) ? '<div class="warnline" style="background:#34c75922;color:#248a3d">✅ 本月拜访目标已达成</div>' : '')
+    + '<div class="sec-title">拜访记录<span class="n">共 '+vs.length+' 条</span></div>'
+    + (vs.length ? '<div class="list">'+vs.map(function(v){ return visitRowHTML(v); }).join('')+'</div>'
+                 : '<div class="empty" style="padding:30px">还没有拜访记录<br>点右上角 <b>＋</b> 登记一次</div>')
+    + '<div class="hint">点记录可修改报告与时间。</div>';
+  setDetailAdd(true, function(){ openVisitSheet(cid, null); });
+  $('detailBody').querySelectorAll('[data-vid]').forEach(function(r){
+    var vid = r.getAttribute('data-vid');
+    r.onclick = function(){ openVisitSheet(cid, vid); };
+  });
+}
+
+/* ============ 政企业务 ============ */
+function renderBizGov(){
+  var mo = activeMonth();
+  var readonly = mo !== curMonthKey();
+  $('detailTitle').textContent = '政企业务';
+  var s = bizSummary('gov');
+  var list = sortByStars(activeIn(db.gov.customers));
+  var visitN = db.gov.visits.filter(function(v){ return inMonth(v.at, mo); }).length;
+
+  var html = '<div class="sum">'
+    + '<div class="it"><div class="v acc">'+s.maintained+' / '+s.opened+'</div><div class="k">维系 / 开户</div></div>'
+    + '<div class="it"><div class="v">'+s.total+'</div><div class="k">政企客户</div></div>'
+    + '<div class="it"><div class="v">'+visitN+'</div><div class="k">'+(readonly?'当月拜访':'本月拜访')+'</div></div>'
+    + '</div>' + monthTagHTML();
+
+  if(!list.length){
+    html += '<div class="empty" style="padding:30px">还没有政企客户<br>点右上角 <b>＋</b> 创建</div>';
+  }else{
+    html += '<div class="list">';
+    list.forEach(function(c){
+      var st = govStats(c.id);
+      html += '<div class="row" data-gid="'+c.id+'">'
+        + '<div class="body">'
+        +   '<div class="nm">'+esc(c.name)+'<span class="stars">'+starsText(c.stars)+'</span></div>'
+        +   '<div class="sub">'
+        +     (c.maintained?'<span style="color:var(--ok)">维系</span>':'')
+        +     (c.opened?'<span style="color:var(--accent)">已开户</span>':'<span>未开户</span>')
+        +     (c.contact?'<span>'+esc(c.contact)+'</span>':'')
+        +   '</div>'
+        + '</div>'
+        + '<div class="side"><b>'+st.month+'</b> <i>/ '+st.total+'</i>'
+        + '<span class="t2">鸿蒙 月/累</span></div>'
+        + (readonly ? '' : '<button class="addbtn" data-add="'+c.id+'">＋</button>')
+        + '</div>';
+    });
+    html += '</div>';
+    html += '<div class="hint">右侧 <b>＋</b> 直接登记一次拜访；点客户进入详情可改信息、记录鸿蒙电脑提单（月度/累计）。</div>';
+  }
+  $('detailBody').innerHTML = html;
+  setDetailAdd(!readonly, function(){ openGovEditor(null); });
+  var body = $('detailBody');
+  body.querySelectorAll('[data-gid]').forEach(function(r){
+    var gid = r.getAttribute('data-gid');
+    r.onclick = function(){ openDetail('govc', gid); };
+  });
+  body.querySelectorAll('[data-add]').forEach(function(b){
+    b.onclick = function(e){ e.stopPropagation(); openBizVisitSheet('gov', b.getAttribute('data-add'), null); };
+  });
+}
+function renderGovCustomer(id){
+  var c = govById(id);
+  if(!c || c.deleted){ closeDetail(); return; }
+  $('detailTitle').textContent = c.name;
+  var st = govStats(c.id);
+  var vs = db.gov.visits.filter(function(v){ return v.customerId===id; })
+    .sort(function(a,b){ return b.at-a.at; });
+  var os = db.gov.orders.filter(function(o){ return o.customerId===id; })
+    .sort(function(a,b){ return b.at-a.at; });
+
+  $('detailBody').innerHTML = '<div class="infocard" id="gcCard">'
+    + '<div class="big-nm">'+esc(c.name)+'<span class="stars lg">'+starsText(c.stars)+'</span></div>'
+    + '<div class="kv"><span class="k">联系人</span><span class="v">'+esc(c.contact||'—')+'</span></div>'
+    + '<div class="kv"><span class="k">联系电话</span><span class="v">'+esc(c.phone||'—')+'</span></div>'
+    + '<div class="kv"><span class="k">地址</span><span class="v">'+esc(c.address||'—')+'</span></div>'
+    + '<div class="kv"><span class="k">开户</span><span class="v">'+(c.opened?'已开户':'未开户')+'</span></div>'
+    + '<div class="kv"><span class="k">维系</span><span class="v">'+(c.maintained?'维系中':'未维系')+'</span></div>'
+    + '<div class="tip">点击卡片修改客户信息</div>'
+    + '</div>'
+    + '<div class="master" id="orderBtn">'
+    +   '<div class="check on" style="border-color:var(--accent);background:var(--accent)"></div>'
+    +   '<span class="lb">鸿蒙电脑提单：'+st.month+' / '+st.total+'</span>'
+    +   '<span class="st">月 / 累计 · 点击记录</span>'
+    + '</div>'
+    + '<div class="sec-title">提单记录<span class="n">共 '+os.length+' 条</span></div>'
+    + (os.length ? '<div class="list">'+os.map(function(o){
+        return '<div class="row" data-oid="'+o.id+'"><div class="body">'
+          + '<div class="nm">'+num(o.count)+' 台</div>'
+          + '<div class="sub"><span>'+fmtDateTime(o.at)+'</span></div></div></div>';
+      }).join('')+'</div>'
+      : '<div class="empty" style="padding:20px">暂无提单记录</div>')
+    + '<div class="sec-title">拜访记录<span class="n">共 '+vs.length+' 条</span></div>'
+    + (vs.length ? '<div class="list">'+vs.map(function(v){ return visitRowHTML(v, v.note); }).join('')+'</div>'
+                 : '<div class="empty" style="padding:20px">还没有拜访记录<br>点右上角 <b>＋</b> 登记一次</div>')
+    + '<div class="hint">点记录可修改内容与时间。</div>';
+
+  setDetailAdd(true, function(){ openBizVisitSheet('gov', id, null); });
+  $('gcCard').onclick = function(){ openGovEditor(id); };
+  $('orderBtn').onclick = function(){ openOrderSheet('gov', id, null); };
+  var body = $('detailBody');
+  body.querySelectorAll('[data-vid]').forEach(function(r){
+    var vid = r.getAttribute('data-vid');
+    r.onclick = function(){ openBizVisitSheet('gov', id, vid); };
+  });
+  body.querySelectorAll('[data-oid]').forEach(function(r){
+    var oid = r.getAttribute('data-oid');
+    r.onclick = function(){ openOrderSheet('gov', id, oid); };
+  });
+}
+
+/* ============ 新兴业务 ============ */
+function renderBizEmergent(){
+  var mo = activeMonth();
+  var readonly = mo !== curMonthKey();
+  $('detailTitle').textContent = '新兴业务';
+  var s = bizSummary('emergent');
+  var list = sortByStars(activeIn(db.emergent.customers));
+  var visitN = db.emergent.visits.filter(function(v){ return inMonth(v.at, mo); }).length;
+
+  var html = '<div class="sum">'
+    + '<div class="it"><div class="v acc">'+s.maintained+' / '+s.opened+'</div><div class="k">维系 / 开户</div></div>'
+    + '<div class="it"><div class="v">'+s.total+'</div><div class="k">新兴客户</div></div>'
+    + '<div class="it"><div class="v">'+visitN+'</div><div class="k">'+(readonly?'当月拜访':'本月拜访')+'/'+EMERGENT_VISIT_NEED+' 次</div></div>'
+    + '</div>';
+  var warn = readonly ? null : emgSpreadWarn();
+  if(warn) html += '<div class="warnline">⚠️ '+esc(warn)+'</div>';
+  html += monthTagHTML();
+
+  if(!list.length){
+    html += '<div class="empty" style="padding:30px">还没有新兴客户<br>点右上角 <b>＋</b> 创建</div>';
+  }else{
+    html += '<div class="list">';
+    list.forEach(function(c){
+      var st = emgStats(c.id);
+      var vn = emgVisitCount(c.id, mo);
+      html += '<div class="row" data-eid="'+c.id+'">'
+        + '<div class="body">'
+        +   '<div class="nm">'+esc(c.name)+'<span class="stars">'+starsText(c.stars)+'</span></div>'
+        +   '<div class="sub">'
+        +     (c.maintained?'<span style="color:var(--ok)">维系</span>':'')
+        +     (c.opened?'<span style="color:var(--accent)">已开户</span>':'<span>未开户</span>')
+        +     '<span'+(vn>=EMERGENT_VISIT_NEED?' style="color:var(--ok)"':'')+'>拜访 '+vn+'/'+EMERGENT_VISIT_NEED+'</span>'
+        +   '</div>'
+        + '</div>'
+        + '<div class="side"><b>'+money(st.month)+'</b>'
+        + '<span class="t2">累计 '+money(st.total)+'</span></div>'
+        + (readonly ? '' : '<button class="addbtn" data-add="'+c.id+'">＋</button>')
+        + '</div>';
+    });
+    html += '</div>';
+    html += '<div class="hint">右侧显示提单金额（当月 / 累计）。每月需要 '+EMERGENT_VISIT_NEED+' 次拜访记录，且不能挤在两周内完成 —— 挤在一起时页面顶部会提示。</div>';
+  }
+  $('detailBody').innerHTML = html;
+  setDetailAdd(!readonly, function(){ openEmgEditor(null); });
+  var body = $('detailBody');
+  body.querySelectorAll('[data-eid]').forEach(function(r){
+    var eid = r.getAttribute('data-eid');
+    r.onclick = function(){ openDetail('emgc', eid); };
+  });
+  body.querySelectorAll('[data-add]').forEach(function(b){
+    b.onclick = function(e){ e.stopPropagation(); openBizVisitSheet('emergent', b.getAttribute('data-add'), null); };
+  });
+}
+function renderEmgCustomer(id){
+  var c = emgById(id);
+  if(!c || c.deleted){ closeDetail(); return; }
+  $('detailTitle').textContent = c.name;
+  var mo = activeMonth();
+  var st = emgStats(c.id);
+  var vn = emgVisitCount(c.id, mo);
+  var vs = db.emergent.visits.filter(function(v){ return v.customerId===id; })
+    .sort(function(a,b){ return b.at-a.at; });
+  var os = db.emergent.orders.filter(function(o){ return o.customerId===id; })
+    .sort(function(a,b){ return b.at-a.at; });
+
+  $('detailBody').innerHTML = '<div class="infocard" id="ecCard">'
+    + '<div class="big-nm">'+esc(c.name)+'<span class="stars lg">'+starsText(c.stars)+'</span></div>'
+    + '<div class="kv"><span class="k">联系人</span><span class="v">'+esc(c.contact||'—')+'</span></div>'
+    + '<div class="kv"><span class="k">联系电话</span><span class="v">'+esc(c.phone||'—')+'</span></div>'
+    + '<div class="kv"><span class="k">地址</span><span class="v">'+esc(c.address||'—')+'</span></div>'
+    + '<div class="kv"><span class="k">开户</span><span class="v">'+(c.opened?'已开户':'未开户')+'</span></div>'
+    + '<div class="kv"><span class="k">维系</span><span class="v">'+(c.maintained?'维系中':'未维系')+'</span></div>'
+    + '<div class="kv"><span class="k">累计提单</span><span class="v">'+money(st.total)+'</span></div>'
+    + '<div class="tip">点击卡片修改客户信息</div>'
+    + '</div>'
+    + '<div class="master" id="orderBtn">'
+    +   '<div class="check on" style="border-color:var(--accent);background:var(--accent)"></div>'
+    +   '<span class="lb">提单金额：'+money(st.month)+' / '+money(st.total)+'</span>'
+    +   '<span class="st">当月 / 累计 · 点击记录</span>'
+    + '</div>'
+    + '<div class="sec-title">提单记录<span class="n">共 '+os.length+' 条</span></div>'
+    + (os.length ? '<div class="list">'+os.map(function(o){
+        return '<div class="row" data-oid="'+o.id+'"><div class="body">'
+          + '<div class="nm">'+money(o.amount)+'</div>'
+          + '<div class="sub"><span>'+fmtDateTime(o.at)+'</span></div></div></div>';
+      }).join('')+'</div>'
+      : '<div class="empty" style="padding:20px">暂无提单记录</div>')
+    + '<div class="sec-title">拜访记录<span class="n">'+(mo===curMonthKey()?'本月 ':'')+vn+' / '+EMERGENT_VISIT_NEED+' · 共 '+vs.length+' 条</span></div>'
+    + (vs.length ? '<div class="list">'+vs.map(function(v){ return visitRowHTML(v, v.note); }).join('')+'</div>'
+                 : '<div class="empty" style="padding:20px">还没有拜访记录<br>点右上角 <b>＋</b> 登记一次</div>')
+    + '<div class="hint">每月需 '+EMERGENT_VISIT_NEED+' 次拜访且不能挤在两周内，注意把拜访分散开。</div>';
+
+  setDetailAdd(true, function(){ openBizVisitSheet('emergent', id, null); });
+  $('ecCard').onclick = function(){ openEmgEditor(id); };
+  $('orderBtn').onclick = function(){ openOrderSheet('emergent', id, null); };
+  var body = $('detailBody');
+  body.querySelectorAll('[data-vid]').forEach(function(r){
+    var vid = r.getAttribute('data-vid');
+    r.onclick = function(){ openBizVisitSheet('emergent', id, vid); };
+  });
+  body.querySelectorAll('[data-oid]').forEach(function(r){
+    var oid = r.getAttribute('data-oid');
+    r.onclick = function(){ openOrderSheet('emergent', id, oid); };
+  });
+}
+
+/* ============ 优品机业务 ============ */
+function renderBizRecycle(){
+  var mo = activeMonth();
+  var readonly = mo !== curMonthKey();
+  $('detailTitle').textContent = '优品机业务';
+  var list = sortRecycle();
+  var bt = recBillTotals(mo), col = recCollectTotal(mo);
+
+  var html = '<div class="sum">'
+    + '<div class="it"><div class="v acc">'+col+'</div><div class="k">'+(readonly?'当月回收':'本月回收')+'</div></div>'
+    + '<div class="it"><div class="v">'+bt.qty+'</div><div class="k">提单数量</div></div>'
+    + '<div class="it"><div class="v">'+money(bt.amount)+'</div><div class="k">提单金额</div></div>'
+    + '</div>' + monthTagHTML()
+    + '<div class="list" style="margin-bottom:12px">'
+    + '<div class="row pinned" id="projRow">'
+    +   '<div class="body"><div class="nm">♻️ 回收项目</div>'
+    +   '<div class="sub">回收客户 / 型号 / 数量</div></div>'
+    +   '<div class="side"><b>'+col+'</b> <i>台</i><span class="t2">本月回收</span></div>'
+    + '</div></div>';
+
+  if(!list.length){
+    html += '<div class="empty" style="padding:30px">还没有优品机客户<br>点右上角 <b>＋</b> 创建</div>';
+  }else{
+    html += '<div class="sec-title">优品机客户<span class="n">按住 ☰ 可拖动排序</span></div>'
+      + '<div class="list" id="recListBox">';
+    list.forEach(function(c){
+      var md = recMonthData(c, mo);
+      html += '<div class="row" data-rid="'+c.id+'">'
+        + (readonly ? '' : '<span class="drag" data-handle="1">☰</span>')
+        + '<div class="body"><div class="nm">'+esc(c.name)+'</div>'
+        +   '<div class="sub"><span>'+monthLabel(mo).replace(/^\d+年/,'')+'提单 '+money(md.amount)+'</span></div>'
+        + '</div>'
+        + '<div class="side"><b>'+num(md.qty)+'</b> <i>台</i><span class="t2">月度提单</span></div>'
+        + '</div>';
+    });
+    html += '</div>';
+    if(!readonly) html += '<div class="hint">点客户可修改月度提单数量与金额（按月分别记录，历史月份保留）。</div>';
+  }
+  $('detailBody').innerHTML = html;
+  setDetailAdd(!readonly, function(){ openRecEditor(null); });
+  $('projRow').onclick = function(){ openDetail('recycleProj', null); };
+  var body = $('detailBody');
+  body.querySelectorAll('[data-rid]').forEach(function(r){
+    var rid = r.getAttribute('data-rid');
+    r.onclick = function(){ openDetail('recc', rid); };
+  });
+  var box = $('recListBox');
+  if(box && !readonly) wireRecycleDrag(box);
+}
+function wireRecycleDrag(box){
+  box.querySelectorAll('[data-handle]').forEach(function(h){
+    h.addEventListener('pointerdown', function(e){
+      e.preventDefault();
+      var row = h.closest('.row');
+      if(!row) return;
+      row.classList.add('dragging');
+      function onMove(ev){
+        var rows = [].slice.call(box.querySelectorAll('.row'));
+        var target = null;
+        for(var i=0;i<rows.length;i++){
+          var b = rows[i].getBoundingClientRect();
+          if(ev.clientY < b.top + b.height/2){ target = rows[i]; break; }
+        }
+        if(target && target !== row) box.insertBefore(row, target);
+        else if(!target) box.appendChild(row);
+      }
+      function onUp(){
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        row.classList.remove('dragging');
+        var ids = [].slice.call(box.querySelectorAll('.row')).map(function(r){ return r.getAttribute('data-rid'); });
+        ids.forEach(function(id, i){
+          var c = recById(id);
+          if(c){ c.sort = i; }
+        });
+        save();
+        renderDetail();
+      }
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+    });
+  });
+}
+function renderRecCustomer(id){
+  var c = recById(id);
+  if(!c || c.deleted){ closeDetail(); return; }
+  var mo = activeMonth();
+  var md = recMonthData(c, mo);
+  $('detailTitle').textContent = c.name;
+  var all = Object.keys(c.months || {}).sort().reverse();
+  $('detailBody').innerHTML = '<div class="infocard" id="rcCard">'
+    + '<div class="big-nm">'+esc(c.name)+'</div>'
+    + '<div class="kv"><span class="k">'+monthLabel(mo)+'提单</span><span class="v">'+num(md.qty)+' 台 / '+money(md.amount)+'</span></div>'
+    + '<div class="tip">点击卡片修改月度提单数量与金额</div>'
+    + '</div>'
+    + '<div class="sec-title">历史月份<span class="n">共 '+all.length+' 个月有记录</span></div>'
+    + (all.length ? '<div class="list">'+all.map(function(mk){
+        var d = c.months[mk];
+        return '<div class="row"><div class="body"><div class="nm">'+monthLabel(mk)+'</div>'
+          + '<div class="sub"><span>提单 '+num(d.qty)+' 台 · '+money(d.amount)+'</span></div></div></div>';
+      }).join('')+'</div>'
+      : '<div class="empty" style="padding:20px">暂无历史记录</div>');
+  $('rcCard').onclick = function(){ openRecEditor(id); };
+}
+function renderRecycleProject(){
+  var mo = activeMonth();
+  var readonly = mo !== curMonthKey();
+  $('detailTitle').textContent = '回收项目';
+  var rs = db.recycle.records.slice().sort(function(a,b){ return b.at-a.at; });
+  var mine = rs.filter(function(r){ return inMonth(r.at, mo); });
+  var totalQty = sumBy(mine, 'qty');
+  var totalAmt = 0;
+
+  $('detailBody').innerHTML = '<div class="sum">'
+    + '<div class="it"><div class="v acc">'+totalQty+'</div><div class="k">'+(readonly?'当月回收':'本月回收')+'</div></div>'
+    + '<div class="it"><div class="v">'+mine.length+'</div><div class="k">回收笔数</div></div>'
+    + '<div class="it"><div class="v">'+rs.length+'</div><div class="k">累计笔数</div></div>'
+    + '</div>' + monthTagHTML()
+    + (mine.length ? '<div class="list">'+mine.map(function(r){
+        return '<div class="row" data-rec="'+r.id+'"><div class="body">'
+          + '<div class="nm">'+esc(r.customerName||'—')+'<span class="stars" style="color:var(--muted)">'+esc(r.model||'')+'</span></div>'
+          + '<div class="sub"><span>'+fmtDateTime(r.at)+'</span></div></div>'
+          + '<div class="side"><b>'+num(r.qty)+'</b> <i>台</i></div></div>';
+      }).join('')+'</div>'
+      : '<div class="empty" style="padding:30px">'+monthLabel(mo)+'还没有回收记录<br>点右上角 <b>＋</b> 新增一条</div>');
+  $('detailBody').innerHTML += '<div class="gap"></div><div class="sec-title">全部记录<span class="n">共 '+rs.length+' 条</span></div>'
+    + (rs.length ? '<div class="list">'+rs.map(function(r){
+        return '<div class="row'+(inMonth(r.at, mo)?'':' ')+'" data-rec="'+r.id+'"><div class="body">'
+          + '<div class="nm">'+esc(r.customerName||'—')+'</div>'
+          + '<div class="sub"><span>'+esc(r.model||'—')+' · '+fmtDate(r.at)+'</span></div></div>'
+          + '<div class="side"><b>'+num(r.qty)+'</b> <i>台</i></div></div>';
+      }).join('')+'</div>' : '')
+    + '<div class="hint">点记录可修改客户、型号与数量。</div>';
+
+  setDetailAdd(!readonly, function(){ openRecRecordSheet(null); });
+  var body = $('detailBody');
+  body.querySelectorAll('[data-rec]').forEach(function(r){
+    var rid = r.getAttribute('data-rec');
+    r.onclick = function(){ openRecRecordSheet(rid); };
+  });
+}
+/* ============ 弹层框架 ============ */
+function openSheet(html){
+  $('sheetBox').innerHTML = html;
+  $('mask').classList.remove('hidden');
+  $('sheetBox').parentNode.scrollTop = 0;
+}
+function closeSheet(){ $('mask').classList.add('hidden'); }
+$('mask').addEventListener('click', function(e){ if(e.target === $('mask')) closeSheet(); });
+
+function wireStars(initial){
+  var val = clampStars(initial);
+  var box = $('sheetBox').querySelector('.staredit');
+  if(!box) return { get:function(){ return val; } };
+  var btns = box.querySelectorAll('button');
+  function paint(){
+    btns.forEach(function(b){ b.classList.toggle('on', parseInt(b.getAttribute('data-s'),10) <= val); });
+  }
+  btns.forEach(function(b){
+    b.onclick = function(){ val = parseInt(b.getAttribute('data-s'),10); paint(); };
+  });
+  paint();
+  return { get:function(){ return val; } };
+}
+function starsEditHTML(){
+  var h = '<div class="staredit">';
+  for(var i=1;i<=5;i++) h += '<button type="button" data-s="'+i+'">★</button>';
+  return h + '</div>';
+}
+function wireChips(containerId, initial){
+  var val = initial;
+  var box = $(containerId);
+  function paint(){
+    box.querySelectorAll('.chip').forEach(function(c){ c.classList.toggle('on', c.getAttribute('data-v')===val); });
+  }
+  box.querySelectorAll('.chip').forEach(function(c){
+    c.onclick = function(){ val = c.getAttribute('data-v'); paint(); if(box.__onPick) box.__onPick(val); };
+  });
+  paint();
+  return { get:function(){ return val; } };
+}
+function wireToggle(elId, initial){
+  var on = !!initial;
+  var el = $(elId);
+  function paint(){ el.classList.toggle('on', on); }
+  el.onclick = function(){ on = !on; paint(); };
+  paint();
+  return { get:function(){ return on; } };
 }
 
 /* ============ 完成状态切换 ============ */
 function toggleLink(t, clientId){
   if(!t) return;
-  var l = (t.links||[]).find(function(l){ return l.clientId===clientId; });
+  var l = (t.links||[]).filter(function(l){ return l.clientId===clientId; })[0];
   if(!l) return;
   l.done = !l.done;
   l.doneAt = l.done ? Date.now() : null;
-  /* 全部勾完 → 任务自动完成；任何一个取消 → 任务回到未完成 */
   t.doneAt = taskDone(t) ? Date.now() : null;
   save(); render();
 }
@@ -776,61 +1953,19 @@ function toggleTaskDone(t){
   save(); render();
 }
 
-/* ============ 弹层框架 ============ */
-function openSheet(html){
-  $('sheetBox').innerHTML = html;
-  $('mask').classList.remove('hidden');
-}
-function closeSheet(){ $('mask').classList.add('hidden'); }
-$('mask').addEventListener('click', function(e){ if(e.target===$('mask')) closeSheet(); });
-
-/* 星级编辑控件：返回当前值的读写器 */
-function wireStars(containerId, initial){
-  var val = clampStars(initial);
-  var box = $(containerId);
-  function paint(){
-    box.querySelectorAll('button').forEach(function(b){
-      b.classList.toggle('on', parseInt(b.getAttribute('data-s'),10) <= val);
-    });
-  }
-  box.querySelectorAll('button').forEach(function(b){
-    b.onclick = function(){ val = parseInt(b.getAttribute('data-s'),10); paint(); };
-  });
-  paint();
-  return { get:function(){ return val; } };
-}
-function starsEditHTML(){
-  var h = '<div class="staredit">';
-  for(var i=1;i<=5;i++) h += '<button type="button" data-s="'+i+'">★</button>';
-  return h + '</div>';
-}
-/* 单选 chips */
-function wireChips(containerId, initial){
-  var val = initial;
-  var box = $(containerId);
-  function paint(){
-    box.querySelectorAll('.chip').forEach(function(c){
-      c.classList.toggle('on', c.getAttribute('data-v')===val);
-    });
-  }
-  box.querySelectorAll('.chip').forEach(function(c){
-    c.onclick = function(){ val = c.getAttribute('data-v'); paint(); };
-  });
-  paint();
-  return { get:function(){ return val; } };
-}
-
 /* ============ 客户编辑器 ============ */
 function openClientEditor(id){
   var c = id ? clientById(id) : null;
   var tierChips = TIERS.map(function(t){ return '<div class="chip" data-v="'+t.k+'">'+esc(t.n)+'</div>'; }).join('');
   var chChips = CHANNELS.map(function(t){ return '<div class="chip" data-v="'+t.k+'">'+esc(t.n)+'</div>'; }).join('');
+  var quota = c ? visitQuotaOf(c) : '';
   openSheet(
     '<h2>'+(c?'编辑客户':'新建客户')+'</h2>'
     + '<div class="field"><label>客户名称</label><input type="text" id="eName" maxlength="60" placeholder="例如：华东数码连锁" value="'+esc(c?c.name:'')+'"></div>'
     + '<div class="field"><label>层级</label><div class="chips wrap" id="eTier">'+tierChips+'</div></div>'
     + '<div class="field"><label>渠道</label><div class="chips" id="eChannel">'+chChips+'</div></div>'
     + '<div class="field"><label>重要性（星级）</label>'+starsEditHTML()+'</div>'
+    + '<div class="field"><label>月度拜访目标（次，留空按层级默认）</label><input type="number" id="eQuota" min="0" max="99" placeholder="层级默认" value="'+quota+'"></div>'
     + '<div class="field"><label>备注（可选）</label><textarea id="eNote" maxlength="300" placeholder="联系人、门店地址、合作背景…">'+esc(c&&c.note?c.note:'')+'</textarea></div>'
     + '<div class="sheet-actions">'
     +   (c ? '<button class="btn danger" id="eDelete">删除</button>' : '')
@@ -840,49 +1975,53 @@ function openClientEditor(id){
   );
   var tier = wireChips('eTier', c ? c.tier : 't1000');
   var chan = wireChips('eChannel', c ? c.channel : 'fd');
-  var stars = wireStars('sheetBox', c ? c.stars : 3);
-  /* wireStars 需要容器内有 .staredit —— sheetBox 里刚好唯一 */
+  var stars = wireStars(c ? c.stars : 3);
+  /* 层级变了，而用户没手填过目标 → 用新层级的默认值刷新提示 */
+  var quotaTouched = false;
+  $('eQuota').addEventListener('input', function(){ quotaTouched = true; });
+  $('eTier').__onPick = function(k){
+    if(!quotaTouched && !c) $('eQuota').value = VISIT_QUOTA[k] != null ? VISIT_QUOTA[k] : '';
+    $('eQuota').placeholder = '默认 '+(VISIT_QUOTA[k] != null ? VISIT_QUOTA[k] : 1)+' 次';
+  };
   $('eCancel').onclick = closeSheet;
   $('eSave').onclick = function(){
     var name = $('eName').value.trim();
     if(!name){ $('eName').focus(); return; }
-    if(c){
-      c.name = name; c.tier = tier.get(); c.channel = chan.get();
-      c.stars = stars.get(); c.note = $('eNote').value.trim();
-    }else{
-      db.clients.push({
+    var qv = $('eQuota').value.trim();
+    var target = c;
+    if(!target){
+      target = {
         id: uid(), name: name, tier: tier.get(), channel: chan.get(),
         stars: stars.get(), note: $('eNote').value.trim(),
         createdAt: Date.now(), deleted: false
-      });
+      };
+      db.clients.push(target);
     }
+    target.name = name; target.tier = tier.get(); target.channel = chan.get();
+    target.stars = stars.get(); target.note = $('eNote').value.trim();
+    if(qv === '') delete db.visitGoals[target.id];
+    else db.visitGoals[target.id] = Math.max(0, parseInt(qv,10)||0);
     save(); closeSheet(); render();
   };
   if(c) $('eDelete').onclick = function(){
     c.deleted = true;
-    lastDeleted = { kind:'client', obj:c };
     save(); closeSheet(); render();
-    showToast('已删除「'+c.name+'」', '撤销', function(){
-      c.deleted = false; save(); render();
-    });
+    showToast('已删除「'+c.name+'」', '撤销', function(){ c.deleted = false; save(); render(); });
   };
 }
 
 /* ============ 任务编辑器（含客户多选） ============ */
-var pickSet = null;  // 编辑中的客户选择集
-
 function openTaskEditor(id){
   var t = id ? taskById(id) : null;
   pickSet = {};
-  if(t) activeLinks(t).forEach(function(l){ pickSet[l.clientId]=1; });
+  if(t) activeLinks(t).forEach(function(l){ pickSet[l.clientId] = 1; });
 
   openSheet(
     '<h2>'+(t?'编辑任务':'新建任务')+'</h2>'
     + '<div class="field"><label>任务名称</label><input type="text" id="eName" maxlength="60" placeholder="例如：完成Q4进货政策宣导" value="'+esc(t?t.name:'')+'"></div>'
     + '<div class="field"><label>重要性（星级）</label>'+starsEditHTML()+'</div>'
     + '<div class="field"><label>截止日期（可精确到分钟，留空则不限）</label>'
-    +   '<input type="datetime-local" id="eDue" value="'+(t&&t.dueAt?toLocalInput(t.dueAt):'')+'">'
-    + '</div>'
+    +   '<input type="datetime-local" id="eDue" value="'+(t&&t.dueAt?toLocalInput(t.dueAt):'')+'"></div>'
     + '<div class="field">'
     +   '<div class="pick-head"><label>关联客户（<span id="pickCount">0</span> 已选）</label>'
     +   '<button class="mini" id="pickAll">全选</button><button class="mini" id="pickNone">清空</button></div>'
@@ -894,7 +2033,7 @@ function openTaskEditor(id){
     +   '<button class="btn primary" id="eSave">'+(t?'保存':'创建')+'</button>'
     + '</div>'
   );
-  var stars = wireStars('sheetBox', t ? t.stars : 3);
+  var stars = wireStars(t ? t.stars : 3);
 
   function renderPick(){
     var list = sortedClients();
@@ -906,14 +2045,14 @@ function openTaskEditor(id){
         return '<div class="prow" data-cid="'+c.id+'">'
           + '<button class="check'+(pickSet[c.id]?' on':'')+'"></button>'
           + '<span class="pnm">'+esc(c.name)+'</span>'
-          + badgeHTML(tierOf(c))
+          + badgeHTML(c.tier)
           + '<span class="stars">'+starsText(c.stars)+'</span>'
           + '</div>';
       }).join('');
       box.querySelectorAll('.prow').forEach(function(r){
         r.onclick = function(){
           var cid = r.getAttribute('data-cid');
-          if(pickSet[cid]) delete pickSet[cid]; else pickSet[cid]=1;
+          if(pickSet[cid]) delete pickSet[cid]; else pickSet[cid] = 1;
           renderPick();
         };
       });
@@ -921,10 +2060,7 @@ function openTaskEditor(id){
     $('pickCount').textContent = Object.keys(pickSet).length;
   }
   renderPick();
-  $('pickAll').onclick = function(){
-    sortedClients().forEach(function(c){ pickSet[c.id]=1; });
-    renderPick();
-  };
+  $('pickAll').onclick = function(){ sortedClients().forEach(function(c){ pickSet[c.id]=1; }); renderPick(); };
   $('pickNone').onclick = function(){ pickSet = {}; renderPick(); };
 
   $('eCancel').onclick = closeSheet;
@@ -936,7 +2072,6 @@ function openTaskEditor(id){
     if(isNaN(dueAt)) dueAt = null;
     if(t){
       t.name = name; t.stars = stars.get(); t.dueAt = dueAt;
-      /* 关联调和：保留仍选中的完成状态，加新的，删未选中的 */
       var keep = {};
       t.links = (t.links||[]).filter(function(l){
         if(pickSet[l.clientId]){ keep[l.clientId]=1; return true; }
@@ -947,44 +2082,40 @@ function openTaskEditor(id){
       });
       t.doneAt = taskDone(t) ? (t.doneAt||Date.now()) : null;
     }else{
-      var nt = {
+      db.tasks.push({
         id: uid(), name: name, stars: stars.get(), dueAt: dueAt,
         createdAt: Date.now(), doneAt: null, deleted: false,
         links: Object.keys(pickSet).map(function(cid){
           return { clientId:cid, done:false, doneAt:null };
         })
-      };
-      db.tasks.push(nt);
+      });
     }
     save(); closeSheet(); render();
   };
   if(t) $('eDelete').onclick = function(){
     t.deleted = true;
-    lastDeleted = { kind:'task', obj:t };
     save(); closeSheet(); render();
-    showToast('已删除「'+t.name+'」', '撤销', function(){
-      t.deleted = false; save(); render();
-    });
+    showToast('已删除「'+t.name+'」', '撤销', function(){ t.deleted = false; save(); render(); });
   };
 }
 
-/* ============ 客户详情：关联任务选择器 ============ */
+/* ============ 客户详情：关联已有任务 ============ */
 function openLinkPicker(clientId){
   var c = clientById(clientId);
   if(!c) return;
-  var candidates = activeTasks().filter(function(t){
+  var cands = activeTasks().filter(function(t){
     return !activeLinks(t).some(function(l){ return l.clientId===clientId; });
   }).sort(function(a,b){ return (a.dueAt||INF)-(b.dueAt||INF) || b.stars-a.stars; });
 
   openSheet('<h2>给「'+esc(c.name)+'」关联任务</h2><div id="linkBox"></div>');
   var box = $('linkBox');
-  if(!candidates.length){
-    box.innerHTML = '<div class="empty" style="padding:26px">没有可关联的任务<br>先在「任务」页创建任务</div>'
+  if(!cands.length){
+    box.innerHTML = '<div class="empty" style="padding:24px">没有可关联的任务<br>先在「周度」页创建任务</div>'
       + '<div class="sheet-actions"><button class="btn ghost" id="lkClose">关闭</button></div>';
     $('lkClose').onclick = closeSheet;
     return;
   }
-  box.innerHTML = '<div class="picklist" style="max-height:50vh">' + candidates.map(function(t){
+  box.innerHTML = '<div class="picklist" style="max-height:50vh">' + cands.map(function(t){
     var st = taskLinkStats(t);
     return '<div class="prow" data-tid="'+t.id+'">'
       + '<span class="pnm">'+esc(t.name)+'</span>'
@@ -1001,27 +2132,337 @@ function openLinkPicker(clientId){
         t.links.push({ clientId:clientId, done:false, doneAt:null });
         t.doneAt = null;
         save();
+        showToast('已关联「'+t.name+'」', null, null);
       }
       closeSheet(); render();
-      showToast('已关联「'+(t?t.name:'')+'」', null, null);
     };
   });
 }
 
-/* ============ 菜单 / 备份 ============ */
+/* ============ 政企 / 新兴客户编辑器 ============ */
+function openBizCustomerEditor(kind, id){
+  var isGov = kind === 'gov';
+  var arr = db[kind].customers;
+  var c = id ? byIdIn(arr, id) : null;
+  var label = isGov ? '政企客户' : '新兴客户';
+  openSheet(
+    '<h2>'+(c?'编辑'+label:'新建'+label)+'</h2>'
+    + '<div class="field"><label>客户名称</label><input type="text" id="bName" maxlength="60" value="'+esc(c?c.name:'')+'"></div>'
+    + '<div class="field"><label>联系人</label><input type="text" id="bContact" maxlength="30" value="'+esc(c?c.contact:'')+'"></div>'
+    + '<div class="field"><label>联系电话</label><input type="tel" id="bPhone" maxlength="20" value="'+esc(c?c.phone:'')+'"></div>'
+    + '<div class="field"><label>地址</label><input type="text" id="bAddr" maxlength="80" value="'+esc(c?c.address:'')+'"></div>'
+    + '<div class="field"><label>重要性（星级）</label>'+starsEditHTML()+'</div>'
+    + (isGov ? '' : '<div class="field"><label>累计提单金额（基准值，可填 0）</label><input type="number" id="bAmount" step="0.01" value="'+(c?num(c.amount):0)+'"></div>')
+    + '<div class="field"><label>状态</label>'
+    +   '<div class="switchline"><span class="lb">是否开户</span><span class="tgl'+(c&&c.opened?' on':'')+'" id="bOpened"></span></div>'
+    +   '<div class="switchline"><span class="lb">是否维系</span><span class="tgl'+(c&&c.maintained?' on':'')+'" id="bMaint"></span></div>'
+    + '</div>'
+    + '<div class="sheet-actions">'
+    +   (c ? '<button class="btn danger" id="bDelete">删除</button>' : '')
+    +   '<button class="btn ghost" id="bCancel">取消</button>'
+    +   '<button class="btn primary" id="bSave">'+(c?'保存':'创建')+'</button>'
+    + '</div>'
+  );
+  var stars = wireStars(c ? c.stars : 3);
+  var opened = wireToggle('bOpened', c ? c.opened : false);
+  var maint = wireToggle('bMaint', c ? c.maintained : false);
+  $('bCancel').onclick = closeSheet;
+  $('bSave').onclick = function(){
+    var name = $('bName').value.trim();
+    if(!name){ $('bName').focus(); return; }
+    var target = c;
+    if(!target){
+      target = { id:uid(), name:name, contact:'', phone:'', address:'', stars:3,
+        opened:false, maintained:false, createdAt:Date.now(), deleted:false };
+      if(!isGov) target.amount = 0;
+      arr.push(target);
+    }
+    target.name = name;
+    target.contact = $('bContact').value.trim();
+    target.phone = $('bPhone').value.trim();
+    target.address = $('bAddr').value.trim();
+    target.stars = stars.get();
+    target.opened = opened.get();
+    target.maintained = maint.get();
+    if(!isGov) target.amount = num($('bAmount').value);
+    save(); closeSheet(); renderDetail(); render();
+  };
+  if(c) $('bDelete').onclick = function(){
+    c.deleted = true;
+    save(); closeSheet(); renderDetail(); render();
+    showToast('已删除「'+c.name+'」', '撤销', function(){ c.deleted = false; save(); renderDetail(); render(); });
+  };
+}
+function openGovEditor(id){ openBizCustomerEditor('gov', id); }
+function openEmgEditor(id){ openBizCustomerEditor('emergent', id); }
+
+/* ============ 业务客户：拜访记录 / 提单记录 ============ */
+function openBizVisitSheet(kind, customerId, visitId){
+  var arr = db[kind].visits;
+  var c = byIdIn(db[kind].customers, customerId);
+  var v = visitId ? byIdIn(arr, visitId) : null;
+  openSheet(
+    '<h2>'+(v?'修改拜访记录':'登记一次拜访')+'</h2>'
+    + '<div class="field"><label>客户</label><div style="font-size:15px;font-weight:600">'+esc(c?c.name:'')+'</div></div>'
+    + '<div class="field"><label>拜访时间</label><input type="datetime-local" id="vAt" value="'+toLocalInput(v?v.at:Date.now())+'"></div>'
+    + '<div class="field"><label>拜访内容</label><textarea id="vNote" maxlength="1000" placeholder="聊了什么、客户什么反应、下一步…">'+esc(v?(v.note||''):'')+'</textarea></div>'
+    + '<div class="sheet-actions">'
+    +   (v ? '<button class="btn danger" id="vDel">删除</button>' : '')
+    +   '<button class="btn ghost" id="vCancel">取消</button>'
+    +   '<button class="btn primary" id="vSave">保存</button>'
+    + '</div>'
+  );
+  $('vCancel').onclick = closeSheet;
+  $('vSave').onclick = function(){
+    var at = new Date($('vAt').value).getTime();
+    if(isNaN(at)) at = Date.now();
+    var note = $('vNote').value.trim();
+    if(v){ v.at = at; v.note = note; }
+    else arr.push({ id:uid(), customerId:customerId, at:at, note:note });
+    save(); closeSheet(); renderDetail(); render();
+  };
+  if(v) $('vDel').onclick = function(){
+    var i = arr.indexOf(v);
+    if(i >= 0) arr.splice(i,1);
+    save(); closeSheet(); renderDetail(); render();
+  };
+}
+function openOrderSheet(kind, customerId, orderId){
+  var isGov = kind === 'gov';
+  var arr = db[kind].orders;
+  var c = byIdIn(db[kind].customers, customerId);
+  var o = orderId ? byIdIn(arr, orderId) : null;
+  openSheet(
+    '<h2>'+(isGov?'记录鸿蒙电脑提单':'记录提单金额')+'</h2>'
+    + '<div class="field"><label>客户</label><div style="font-size:15px;font-weight:600">'+esc(c?c.name:'')+'</div></div>'
+    + '<div class="field"><label>'+(isGov?'提单数量（台）':'提单金额（元）')+'</label>'
+    +   '<input type="number" id="oVal" step="'+(isGov?'1':'0.01')+'" min="0" value="'+(o?(isGov?num(o.count):num(o.amount)):'')+'"></div>'
+    + '<div class="field"><label>时间</label><input type="datetime-local" id="oAt" value="'+toLocalInput(o?o.at:Date.now())+'"></div>'
+    + '<div class="sheet-actions">'
+    +   (o ? '<button class="btn danger" id="oDel">删除</button>' : '')
+    +   '<button class="btn ghost" id="oCancel">取消</button>'
+    +   '<button class="btn primary" id="oSave">保存</button>'
+    + '</div>'
+  );
+  $('oCancel').onclick = closeSheet;
+  $('oSave').onclick = function(){
+    var at = new Date($('oAt').value).getTime();
+    if(isNaN(at)) at = Date.now();
+    var val = num($('oVal').value);
+    if(o){ o.at = at; if(isGov) o.count = val; else o.amount = val; }
+    else arr.push({ id:uid(), customerId:customerId, at:at, count:isGov?val:0, amount:isGov?0:val });
+    save(); closeSheet(); renderDetail(); render();
+  };
+  if(o) $('oDel').onclick = function(){
+    var i = arr.indexOf(o);
+    if(i >= 0) arr.splice(i,1);
+    save(); closeSheet(); renderDetail(); render();
+  };
+}
+
+/* ============ 优品机：客户 / 回收记录 ============ */
+function openRecEditor(id){
+  var c = id ? recById(id) : null;
+  var mo = activeMonth();
+  var md = c ? recMonthData(c, mo) : { qty:0, amount:0 };
+  openSheet(
+    '<h2>'+(c?'编辑优品机客户':'新建优品机客户')+'</h2>'
+    + '<div class="field"><label>客户名称</label><input type="text" id="rName" maxlength="60" value="'+esc(c?c.name:'')+'"></div>'
+    + '<div class="field"><label>'+monthLabel(mo)+' 提单数量（台）</label><input type="number" id="rQty" min="0" value="'+num(md.qty)+'"></div>'
+    + '<div class="field"><label>'+monthLabel(mo)+' 提单金额（元）</label><input type="number" id="rAmt" min="0" step="0.01" value="'+num(md.amount)+'"></div>'
+    + '<div class="sheet-actions">'
+    +   (c ? '<button class="btn danger" id="rDelete">删除</button>' : '')
+    +   '<button class="btn ghost" id="rCancel">取消</button>'
+    +   '<button class="btn primary" id="rSave">'+(c?'保存':'创建')+'</button>'
+    + '</div>'
+  );
+  $('rCancel').onclick = closeSheet;
+  $('rSave').onclick = function(){
+    var name = $('rName').value.trim();
+    if(!name){ $('rName').focus(); return; }
+    var target = c;
+    if(!target){
+      target = { id:uid(), name:name, months:{}, sort:activeIn(db.recycle.customers).length, createdAt:Date.now(), deleted:false };
+      db.recycle.customers.push(target);
+    }
+    target.name = name;
+    var q = num($('rQty').value), a = num($('rAmt').value);
+    if(q === 0 && a === 0) delete target.months[mo];
+    else target.months[mo] = { qty:q, amount:a };
+    save(); closeSheet(); renderDetail(); render();
+  };
+  if(c) $('rDelete').onclick = function(){
+    c.deleted = true;
+    save(); closeSheet(); closeDetail(); render();
+    showToast('已删除「'+c.name+'」', '撤销', function(){ c.deleted = false; save(); render(); });
+  };
+}
+function openRecRecordSheet(id){
+  var r = id ? byIdIn(db.recycle.records, id) : null;
+  var cs = activeIn(db.recycle.customers);
+  openSheet(
+    '<h2>'+(r?'修改回收记录':'新增回收记录')+'</h2>'
+    + '<div class="field"><label>回收客户</label>'
+    +   '<input type="text" id="rcName" list="rcList" maxlength="60" value="'+esc(r?r.customerName:'')+'" placeholder="选已有客户或直接输入">'
+    +   '<datalist id="rcList">'+cs.map(function(c){ return '<option value="'+esc(c.name)+'"></option>'; }).join('')+'</datalist>'
+    + '</div>'
+    + '<div class="field"><label>回收型号</label><input type="text" id="rcModel" maxlength="40" value="'+esc(r?r.model:'')+'" placeholder="例如：MateBook D14"></div>'
+    + '<div class="field"><label>回收数量（台）</label><input type="number" id="rcQty" min="0" value="'+(r?num(r.qty):1)+'"></div>'
+    + '<div class="field"><label>时间</label><input type="datetime-local" id="rcAt" value="'+toLocalInput(r?r.at:Date.now())+'"></div>'
+    + '<div class="sheet-actions">'
+    +   (r ? '<button class="btn danger" id="rcDel">删除</button>' : '')
+    +   '<button class="btn ghost" id="rcCancel">取消</button>'
+    +   '<button class="btn primary" id="rcSave">保存</button>'
+    + '</div>'
+  );
+  $('rcCancel').onclick = closeSheet;
+  $('rcSave').onclick = function(){
+    var at = new Date($('rcAt').value).getTime();
+    if(isNaN(at)) at = Date.now();
+    var name = $('rcName').value.trim();
+    var model = $('rcModel').value.trim();
+    var qty = num($('rcQty').value);
+    /* 客户名对上已有优品机客户时，顺便记下 id，方便以后关联 */
+    var matched = cs.filter(function(c){ return c.name === name; })[0];
+    if(r){
+      r.customerName = name; r.model = model; r.qty = qty; r.at = at;
+      r.customerId = matched ? matched.id : '';
+    }else{
+      db.recycle.records.push({
+        id:uid(), customerId: matched?matched.id:'', customerName:name, model:model, qty:qty, at:at
+      });
+    }
+    save(); closeSheet();
+    if(navStack.length && navStack[navStack.length-1].type==='recycleProj') renderDetail();
+    render();
+  };
+  if(r) $('rcDel').onclick = function(){
+    var i = db.recycle.records.indexOf(r);
+    if(i >= 0) db.recycle.records.splice(i,1);
+    save(); closeSheet(); renderDetail(); render();
+  };
+}
+
+/* ============ 周度：添加任务 / 业务映射 ============ */
+function openWeekAddSheet(){
+  openSheet(
+    '<h2>添加到 '+weekLabel(activeWeek())+'</h2>'
+    + '<div class="menu-list" style="margin:0">'
+    + '<button id="waTask">添加任务<span class="sm">星级、截止日期、关联客户（未完成会自动留到下一周）</span></button>'
+    + '<button id="waMap">添加业务映射<span class="sm">本周要做某个业务：可勾选完成，也可点进去登记数据</span></button>'
+    + '</div>'
+    + '<div class="sheet-actions"><button class="btn ghost" id="waClose">取消</button></div>'
+  );
+  $('waClose').onclick = closeSheet;
+  $('waTask').onclick = function(){ closeSheet(); openTaskEditor(null); };
+  $('waMap').onclick = function(){ openMappingSheet(activeWeek()); };
+}
+function openMappingSheet(key){
+  openSheet(
+    '<h2>添加业务映射</h2>'
+    + '<div class="field"><label>选择业务</label><div class="chips wrap" id="mBiz">'
+    + BIZS.map(function(b){ return '<div class="chip" data-v="'+b.k+'">'+b.ic+' '+esc(b.n)+'</div>'; }).join('')
+    + '</div></div>'
+    + '<div class="hint" style="margin:0 0 6px">映射只是「本周这件事要做」的提醒：勾选完成不会改动业务数据；点它会跳到对应的业务页去登记。</div>'
+    + '<div class="sheet-actions">'
+    +   '<button class="btn ghost" id="mCancel">取消</button>'
+    +   '<button class="btn primary" id="mSave">添加</button>'
+    + '</div>'
+  );
+  var pick = wireChips('mBiz', 'visit');
+  $('mCancel').onclick = closeSheet;
+  $('mSave').onclick = function(){
+    weekData(key).mappings.push({ id:uid(), biz:pick.get(), done:false, doneAt:null, createdAt:Date.now() });
+    save(); closeSheet(); renderWeek(); render();
+  };
+}
+
+/* ============ 周历 / 月历 ============ */
+function openWeekPicker(){
+  var keys = weekList(8, 1);
+  var html = '<h2>周历</h2><div class="picklist" style="max-height:52vh">';
+  keys.slice().reverse().forEach(function(k){
+    var r = weekRange(k);
+    var isCur = k === curWeekKey();
+    var isPast = r.start < mondayOf(Date.now());
+    var tl = tasksOfWeek(k, false);
+    var dn = tl.filter(taskDone).length;
+    html += '<div class="prow" data-wk="'+k+'">'
+      + '<span class="pnm">'+weekLabel(k)+'</span>'
+      + '<span style="font-size:10.5px;color:var(--muted)">'+(isCur?'本周':(isPast?'历史':'未来'))+'</span>'
+      + '<span class="badge" style="color:var(--accent);background:rgba(94,92,230,.18)">'+dn+'/'+tl.length+'</span>'
+      + '</div>';
+  });
+  html += '</div><div class="hint" style="margin-top:10px">历史周可查看「规划 / 完成」两栏；下一周可以提前规划。</div>'
+    + '<div class="sheet-actions"><button class="btn ghost" id="wpCur">回到本周</button><button class="btn primary" id="wpClose">关闭</button></div>';
+  openSheet(html);
+  $('wpClose').onclick = closeSheet;
+  $('wpCur').onclick = function(){ viewWeek = null; closeSheet(); renderWeek(); };
+  $('sheetBox').querySelectorAll('.prow').forEach(function(r){
+    r.onclick = function(){
+      var k = r.getAttribute('data-wk');
+      viewWeek = (k === curWeekKey()) ? null : k;
+      weekSeg = 0;
+      closeSheet(); renderWeek();
+    };
+  });
+}
+function openMonthPicker(){
+  var base = new Date();
+  var keys = [];
+  for(var i = 0; i < 12; i++){
+    var d = new Date(base.getFullYear(), base.getMonth()-i, 1);
+    keys.push(monthKey(d.getTime()));
+  }
+  var html = '<h2>月历</h2><div class="picklist" style="max-height:52vh">';
+  keys.forEach(function(k){
+    var vs = db.visits.filter(function(v){ return inMonth(v.at, k); }).length;
+    var col = recCollectTotal(k);
+    var isCur = k === curMonthKey();
+    html += '<div class="prow" data-mk="'+k+'">'
+      + '<span class="pnm">'+monthLabel(k)+'</span>'
+      + (isCur ? '<span style="font-size:10.5px;color:var(--accent);font-weight:600">本月</span>' : '')
+      + '<span style="font-size:10.5px;color:var(--muted)">拜访 '+vs+' · 回收 '+col+'</span>'
+      + '</div>';
+  });
+  html += '</div><div class="hint" style="margin-top:10px">业务数据按月留存：选一个月可查看当月拜访、提单、回收数字。历史月份为只读。</div>'
+    + '<div class="sheet-actions"><button class="btn ghost" id="mpCur">回到本月</button><button class="btn primary" id="mpClose">关闭</button></div>';
+  openSheet(html);
+  $('mpClose').onclick = closeSheet;
+  $('mpCur').onclick = function(){ viewMonth = null; closeSheet(); renderDetail(); render(); };
+  $('sheetBox').querySelectorAll('.prow').forEach(function(r){
+    r.onclick = function(){
+      var k = r.getAttribute('data-mk');
+      viewMonth = (k === curMonthKey()) ? null : k;
+      closeSheet(); renderDetail(); render();
+    };
+  });
+}
+
+/* ============ 菜单 / 使用指南 / 备份 ============ */
 function openMenu(){
   openSheet(
-    '<h2>数据管理</h2>'
+    '<h2>更多</h2>'
+    + '<div class="menu-list" style="margin:0">'
+    + '<button id="mGuide">使用指南<span class="sm">怎么用、有哪些技巧、常见问题</span></button>'
+    + '<button id="mTodo">待办助手<span class="sm">打开「佳木的待办」（新页面）</span></button>'
+    + '</div>'
+    + '<div class="gap"></div>'
     + '<div class="menu-list" style="margin:0">'
     + '<button id="mExport">导出备份（JSON）</button>'
     + '<button id="mImport">导入备份</button>'
     + '<button id="mSnap">从自动快照恢复</button>'
     + '</div>'
-    + '<div class="hint">数据只保存在本浏览器 localStorage，不上传任何服务器。<br>'
-    + '每天首次打开会自动留一份快照（保留 3 份）。<b>建议每周导出一次备份</b>：清理浏览器数据、换手机都会丢数据。</div>'
+    + '<div class="hint">数据只保存在本浏览器，不上传任何服务器。每天首次打开自动留一份快照（保留 3 份）。<b>建议每周导一次备份</b>。</div>'
     + '<div class="sheet-actions"><button class="btn ghost" id="mClose">关闭</button></div>'
   );
   $('mClose').onclick = closeSheet;
+  $('mGuide').onclick = openGuide;
+  $('mTodo').onclick = function(){
+    var url = 'https://moonlit-firefly.github.io/todo/';
+    var w = window.open(url, '_blank');
+    if(!w) location.href = url;
+  };
   $('mExport').onclick = function(){
     download('工作助手-备份-'+toDateInput(Date.now())+'.json', JSON.stringify(db, null, 2));
     closeSheet();
@@ -1029,18 +2470,61 @@ function openMenu(){
   $('mImport').onclick = function(){ $('fileInput').click(); };
   $('mSnap').onclick = openSnapSheet;
 }
+function openGuide(){
+  var h = '<h2>使用指南</h2><div class="guide">'
+    + '<h3>三个页面的分工</h3><ul>'
+    + '<li><b>周度</b>（默认页）：这一周要干什么。任务、业务映射、提单任务都在这里。</li>'
+    + '<li><b>业务</b>：四类业务的客户与月度数据。所有业务按月刷新、按月留存。</li>'
+    + '<li><b>客户</b>：客户总表。星级优先排序，同级按层级。</li>'
+    + '</ul>'
+    + '<h3>周度怎么用</h3><ul>'
+    + '<li><b>提单任务</b>固定在第一位，点进去是本周提单清单。左边圆圈 = 该客户整体完成（手机+融合一起勾上）；也可以只点「手机」或「融合」，两个都勾也算完成。</li>'
+    + '<li>清单里的客户可以「×」掉，<b>不影响客户页</b>；右上角 ＋ 可以把客户加回清单。</li>'
+    + '<li><b>任务没做完会一直留着</b>：W42 没完成的任务，到 W43 依然是未完成，直到你勾掉它。</li>'
+    + '<li><b>业务映射</b>只是「本周这件事要做」：勾选只表示本周完成，不会改业务数据；点它会跳到对应业务页，在那里登记。</li>'
+    + '<li>右上角 <b>周历</b> 可以看历史周（规划 / 完成两栏），也能进下一周提前规划。</li>'
+    + '</ul>'
+    + '<h3>业务怎么用</h3><ul>'
+    + '<li><b>拜访业务</b>：客户列表就是客户页的客户，右侧显示「本月 N / 目标 M」，点 <code>＋</code> 现场登记拜访并写报告。目标次数可以在客户详情卡里逐客户改。</li>'
+    + '<li>默认目标：金种子 / top368 每月 6 次，top1000 4 次，top1500 / NDKA+ / 破格商 2 次，tier8 1 次。</li>'
+    + '<li><b>政企业务</b>：客户显示鸿蒙电脑提单数（月度 / 累计），点 <code>＋</code> 记一次拜访，进详情可记录提单。</li>'
+    + '<li><b>新兴业务</b>：显示提单金额（月度 / 累计）；每月需要 4 次拜访且<b>不能挤在两周内</b>，挤在一起时顶部会提示。</li>'
+    + '<li><b>优品机业务</b>：客户可按住 <code>☰</code> 拖动排序；回收项目里记「回收客户 / 型号 / 数量」。</li>'
+    + '<li>右上角 <b>月历</b> 可以查历史月份，历史月为只读。</li>'
+    + '</ul>'
+    + '<h3>一些技巧</h3><ul>'
+    + '<li>客户星级越高越靠前，把重要客户钉在列表顶上，比记标签省事。</li>'
+    + '<li>任务用<b>截止日期</b>排紧迫度，无截止的沉在最后；星级用于同一档期内排序。</li>'
+    + '<li>一条任务勾了「整个任务已完成」，所有关联客户会一起完成；取消则一起回到未完成。</li>'
+    + '<li>删除后 6 秒内底部有「撤销」；错过就用 <code>⋯ → 从自动快照恢复</code>。</li>'
+    + '</ul>'
+    + '<h3>常见问题</h3><ul>'
+    + '<li><span class="q">更新后打开还是旧版？</span> 缓存优先策略：第一次打开是旧版，第二次才见新版，属正常。</li>'
+    + '<li><span class="q">数据会同步吗？</span> 不会。数据只在本机浏览器里，换手机用「导出 / 导入备份」搬。</li>'
+    + '<li><span class="q">什么时候会丢数据？</span> 清理浏览器数据、卸载应用、换手机。所以每周导一次备份。</li>'
+    + '<li><span class="q">业务数据会自己清零吗？</span> 不会清零、也不重复计算：按月份归集，切月自动只看新月份的数字。</li>'
+    + '</ul>'
+    + '</div>'
+    + '<div class="sheet-actions"><button class="btn ghost" id="gClose">关闭</button></div>';
+  openSheet(h);
+  $('gClose').onclick = closeSheet;
+}
 function openSnapSheet(){
   var list = readSnapshots();
   if(!list.length){
     openSheet('<h2>自动快照</h2><div class="empty" style="padding:26px">还没有快照<br>每天首次打开会自动留一份</div>'
-      + '<div class="sheet-actions"><button class="btn ghost" onclick="document.getElementById(\'mask\').classList.add(\'hidden\')">关闭</button></div>');
+      + '<div class="sheet-actions"><button class="btn ghost" id="snClose">关闭</button></div>');
+    $('snClose').onclick = closeSheet;
     return;
   }
   var html = '<h2>从自动快照恢复</h2>';
-  list.slice().reverse().forEach(function(s, i){
-    var idx = list.length-1-i;
+  list.slice().reverse().forEach(function(s){
+    var idx = list.indexOf(s);
+    var p = s.payload || {};
+    var bizN = ((p.gov&&p.gov.customers||[]).length) + ((p.emergent&&p.emergent.customers||[]).length)
+      + ((p.recycle&&p.recycle.customers||[]).length);
     html += '<div class="snap"><div class="t">'+fmtDateTime(s.at)+'</div>'
-      + '<div class="d">客户 '+((s.clients||[]).length)+' · 任务 '+((s.tasks||[]).length)+'</div>'
+      + '<div class="d">客户 '+((s.clients||[]).length)+' · 任务 '+((s.tasks||[]).length)+' · 业务客户 '+bizN+'</div>'
       + '<button data-i="'+idx+'">恢复这份（当前数据会先存为快照）</button></div>';
   });
   html += '<div class="sheet-actions"><button class="btn ghost" id="snClose">关闭</button></div>';
@@ -1051,12 +2535,25 @@ function openSnapSheet(){
       var s = readSnapshots()[parseInt(b.getAttribute('data-i'),10)];
       if(!s) return;
       pushSnapshot();
-      db = { version:1, clients:s.clients||[], tasks:s.tasks||[] };
-      normalizeIds();
-      save(); closeSheet(); render();
+      applyBackup(s);
+      closeSheet(); render();
       showToast('已恢复快照', null, null);
     };
   });
+}
+/* 把一份备份（快照或导入文件）装进 db */
+function applyBackup(src){
+  var p = src.payload || src;
+  db.version = DB_VERSION;
+  db.clients = src.clients || [];
+  db.tasks = src.tasks || [];
+  db.visitGoals = (p.visitGoals && typeof p.visitGoals==='object') ? p.visitGoals : {};
+  db.visits = p.visits || [];
+  db.gov = p.gov || { customers:[], visits:[], orders:[] };
+  db.emergent = p.emergent || { customers:[], visits:[], orders:[] };
+  db.recycle = p.recycle || { customers:[], records:[] };
+  db.weeks = p.weeks || {};
+  normalizeAllIds();
 }
 $('fileInput').addEventListener('change', function(e){
   var f = e.target.files[0];
@@ -1065,11 +2562,10 @@ $('fileInput').addEventListener('change', function(e){
   var r = new FileReader();
   r.onload = function(){
     try{
-      var o = JSON.parse(r.result);
-      var nd = normalizeImport(o);
+      var nd = normalizeImport(JSON.parse(r.result));
       pushSnapshot();
       db = nd;
-      normalizeIds();
+      normalizeAllIds();
       save(); closeSheet(); render();
       showToast('导入成功（导入前的数据已存为快照）', null, null);
     }catch(err){
@@ -1100,39 +2596,43 @@ function hideToast(){ $('toast').classList.add('hidden'); clearTimeout(toastTime
 /* ============ 标签页 / 顶栏 ============ */
 function switchTab(tab){
   curTab = tab;
+  $('pageWeek').classList.toggle('hidden', tab!=='week');
+  $('pageBiz').classList.toggle('hidden', tab!=='biz');
   $('pageClients').classList.toggle('hidden', tab!=='clients');
-  $('pageTasks').classList.toggle('hidden', tab!=='tasks');
+  $('tabWeek').classList.toggle('on', tab==='week');
+  $('tabBiz').classList.toggle('on', tab==='biz');
   $('tabClients').classList.toggle('on', tab==='clients');
-  $('tabTasks').classList.toggle('on', tab==='tasks');
-  $('pageTitle').textContent = tab==='clients' ? '客户' : '任务';
+  $('pageTitle').textContent = tab==='week' ? '周度' : (tab==='biz' ? '业务' : '客户');
+  updateTopbar();
+  render();
 }
+function updateTopbar(){
+  var cal = $('btnCal'), add = $('btnAdd');
+  if(curTab === 'week'){
+    cal.classList.remove('hidden');
+    var r = weekRange(activeWeek());
+    add.classList.toggle('hidden', r.start < mondayOf(Date.now()));   // 历史周不给加
+  }else if(curTab === 'biz'){
+    cal.classList.remove('hidden');
+    add.classList.add('hidden');
+  }else{
+    cal.classList.add('hidden');
+    add.classList.remove('hidden');
+  }
+}
+$('tabWeek').onclick = function(){ switchTab('week'); };
+$('tabBiz').onclick = function(){ switchTab('biz'); };
 $('tabClients').onclick = function(){ switchTab('clients'); };
-$('tabTasks').onclick = function(){ switchTab('tasks'); };
-$('taskSeg').querySelectorAll('button').forEach(function(b){
-  b.onclick = function(){
-    taskShowDone = parseInt(b.getAttribute('data-v'),10);
-    $('taskSeg').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x===b); });
-    renderTasks();
-  };
-});
 $('btnAdd').onclick = function(){
-  if(curTab==='clients') openClientEditor(null);
-  else openTaskEditor(null);
+  if(curTab === 'clients') openClientEditor(null);
+  else if(curTab === 'week') openWeekAddSheet();
+};
+$('btnCal').onclick = function(){
+  if(curTab === 'week') openWeekPicker();
+  else if(curTab === 'biz') openMonthPicker();
 };
 $('btnMenu').onclick = openMenu;
-$('btnBack').onclick = function(){
-  navStack.pop();
-  if(!navStack.length) $('detailScreen').classList.add('hidden');
-  else {
-    var top = navStack[navStack.length-1];
-    $('btnDetailAdd').classList.toggle('hidden', top.type!=='client');
-    renderDetail();
-  }
-};
-$('btnDetailAdd').onclick = function(){
-  var top = navStack[navStack.length-1];
-  if(top && top.type==='client') openLinkPicker(top.id);
-};
+$('btnBack').onclick = function(){ closeDetail(); };
 
 /* ============ 启动 ============ */
 function setAppHeight(){
@@ -1141,22 +2641,27 @@ function setAppHeight(){
 window.addEventListener('resize', setAppHeight);
 
 load();
-normalizeIds();
-save();
+normalizeAllIds();
+migrate();
 snapshot();
 setAppHeight();
-render();
+switchTab('week');
 
-document.addEventListener('visibilitychange', function(){
-  if(!document.hidden) render();
-});
-setInterval(render, 60000);   // 每分钟刷一次倒计时
+document.addEventListener('visibilitychange', function(){ if(!document.hidden) render(); });
+setInterval(function(){
+  /* 跨周 / 跨月时自动回到当期，避免一直停在上一周 */
+  if(!viewWeek) updateTopbar();
+  render();
+}, 60000);
 
 if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(function(){});
   });
 }
+
+
+
 </script>
 </body>
 </html>
