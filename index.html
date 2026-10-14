@@ -962,15 +962,45 @@ function billToggle(it, field){
   }
   return billDone(it);
 }
+/* 历史/当前/未来周的判定：周起点早于本周一 = 历史 */
+function isHistoryWeek(key){ return weekStartFromKey(key) < mondayOf(Date.now()); }
+/* 提单清单自动补客户：只在当前周和未来周做（历史周保持原样）。
+   已手动 × 移除的（removed:true）不会补回来 —— 尊重用户的删除。 */
+function syncBill(bill){
+  if(!bill) return 0;
+  var have = {};
+  bill.items.forEach(function(x){ have[x.clientId] = 1; });
+  var added = 0;
+  sortedClients().forEach(function(c){
+    if(!have[c.id]){
+      bill.items.push({ clientId:c.id, name:c.name, mobile:false, fusion:false, removed:false });
+      added++;
+    }
+  });
+  return added;
+}
 function ensureBill(key){
   var w = weekData(key);
-  if(!w.bill){
-    w.bill = { inited:true, items: sortedClients().map(function(c){
-      return { clientId:c.id, name:c.name, mobile:false, fusion:false, removed:false };
-    })};
-    save();
-  }
+  var created = !w.bill;
+  if(created) w.bill = { inited:true, items:[] };
+  var added = isHistoryWeek(key) ? 0 : syncBill(w.bill);
+  if(created || added) save();
   return w.bill;
+}
+/* 周度行上的计数：不改动数据也能算准。
+   当前/未来周：还没进清单的客户算作未完成；
+   历史周：只按当时清单算，没建过清单就是 0。 */
+function billViewStats(key){
+  var bill = weekData(key).bill;
+  var items = bill ? bill.items.filter(function(x){ return !x.removed; }) : [];
+  var undone = items.filter(function(x){ return !billDone(x); }).length;
+  if(!isHistoryWeek(key)){
+    var have = {};
+    bill && bill.items.forEach(function(x){ have[x.clientId] = 1; });
+    var extra = activeClients().filter(function(c){ return !have[c.id]; });
+    return { total: items.length + extra.length, undone: undone + extra.length };
+  }
+  return { total: items.length, undone: undone };
 }
 function billStats(bill){
   var items = bill ? bill.items.filter(function(x){ return !x.removed; }) : [];
@@ -1047,10 +1077,10 @@ function renderWeek(){
     + '<span class="tag'+(isCur?'':' gray')+'">'+(isCur?'本周':(isPast?'历史':'未来'))+'</span>';
   if(!isCur) bar += '<button class="back" id="wkBack">回到本周</button>';
   $('weekBar').innerHTML = bar;
-  if($('wkBack')) $('wkBack').onclick = function(){ viewWeek = null; renderWeek(); };
+  if($('wkBack')) $('wkBack').onclick = function(){ viewWeek = null; renderWeek(); updateTopbar(); };
 
   var bill = weekData(key).bill;
-  var bs = bill ? billStats(bill) : { total: activeClients().length, undone: activeClients().length };
+  var bs = billViewStats(key);
   var nowSeg = (isPast ? weekSeg : 0);
   var tasks = tasksOfWeek(key, isPast ? nowSeg===1 : false);
   var maps = mappingsOf(key, isPast && nowSeg===1);
@@ -1309,6 +1339,7 @@ function renderTaskDetail(id){
 /* ============ 提单清单 ============ */
 function renderBill(key){
   key = key || curWeekKey();
+  var readonly = isHistoryWeek(key);
   $('detailTitle').textContent = '提单任务 · '+weekLabel(key);
   var bill = ensureBill(key);
   var items = bill.items.filter(function(x){ return !x.removed; });
@@ -1321,7 +1352,7 @@ function renderBill(key){
     + '</div>';
 
   if(!items.length){
-    html += '<div class="empty" style="padding:34px">本周还没有客户<br>点右上角 <b>＋</b> 从客户页添加</div>';
+    html += '<div class="empty" style="padding:34px">'+(readonly?'这一周没有提单记录':'本周还没有客户<br>点右上角 <b>＋</b> 从客户页添加')+'</div>';
   }else{
     html += '<div class="list">';
     items.forEach(function(it){
@@ -1337,16 +1368,19 @@ function renderBill(key){
         +   '<button class="dot'+(it.mobile?' on':'')+'" data-m="'+it.clientId+'">手机</button>'
         +   '<button class="dot'+(it.fusion?' on':'')+'" data-f="'+it.clientId+'">融合</button>'
         + '</div>'
-        + '<button class="xbtn" data-x="'+it.clientId+'">×</button>'
+        + (readonly ? '' : '<button class="xbtn" data-x="'+it.clientId+'">×</button>')
         + '</div>';
     });
     html += '</div>';
   }
-  html += '<div class="hint">点左边圆圈 = 该客户整体完成（手机+融合一起勾上）；也可以分别点「手机」「融合」，两个都勾即完成。<br>'
-    + '「×」只把客户从本周清单里移除，<b>不影响客户页的客户</b>。</div>';
+  html += '<div class="hint">'+(readonly
+    ? '历史周只读：这里保留的是当时那一周的提单记录。'
+    : '点左边圆圈 = 该客户整体完成（手机+融合一起勾上）；也可以分别点「手机」「融合」，两个都勾即完成。新建的客户会自动加入本周清单。<br>'
+      + '「×」只把客户从本周清单里移除，<b>不影响客户页的客户</b>（也不会自动回来）。')+'</div>';
   $('detailBody').innerHTML = html;
 
-  setDetailAdd(true, function(){ openBillPicker(key); });
+  setDetailAdd(!readonly, function(){ openBillPicker(key); });
+  if(readonly) return;
   var body = $('detailBody');
   function sync(){ save(); renderDetail(); }
   body.querySelectorAll('[data-item]').forEach(function(r){
@@ -2345,6 +2379,7 @@ function openRecRecordSheet(id){
 
 /* ============ 周度：添加任务 / 业务映射 ============ */
 function openWeekAddSheet(){
+  if(isHistoryWeek(activeWeek())) return;   // 历史周只读，不给加
   openSheet(
     '<h2>添加到 '+weekLabel(activeWeek())+'</h2>'
     + '<div class="menu-list" style="margin:0">'
@@ -2397,13 +2432,13 @@ function openWeekPicker(){
     + '<div class="sheet-actions"><button class="btn ghost" id="wpCur">回到本周</button><button class="btn primary" id="wpClose">关闭</button></div>';
   openSheet(html);
   $('wpClose').onclick = closeSheet;
-  $('wpCur').onclick = function(){ viewWeek = null; closeSheet(); renderWeek(); };
+  $('wpCur').onclick = function(){ viewWeek = null; closeSheet(); renderWeek(); updateTopbar(); };
   $('sheetBox').querySelectorAll('.prow').forEach(function(r){
     r.onclick = function(){
       var k = r.getAttribute('data-wk');
       viewWeek = (k === curWeekKey()) ? null : k;
       weekSeg = 0;
-      closeSheet(); renderWeek();
+      closeSheet(); renderWeek(); updateTopbar();
     };
   });
 }
@@ -2641,8 +2676,12 @@ function setAppHeight(){
 window.addEventListener('resize', setAppHeight);
 
 load();
-normalizeAllIds();
+/* 顺序不能反：老数据（v1）没有 gov/emergent/weeks 等新结构，
+   必须先 migrate 补齐结构，normalizeAllIds 才不会在 undefined 上崩溃。
+   一旦顺序反了，启动即抛异常，后面所有事件绑定都不执行 —— 整个应用点不动。 */
 migrate();
+normalizeAllIds();
+save();
 snapshot();
 setAppHeight();
 switchTab('week');
