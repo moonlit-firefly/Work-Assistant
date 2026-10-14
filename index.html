@@ -48,13 +48,20 @@ input,textarea,select{font:inherit;color:var(--text)}
 .seg button{flex:1;padding:7px 0;border-radius:7px;font-size:14px;opacity:.62}
 .seg button.on{background:var(--card);opacity:1;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
 
-/* 周条 */
-.wbar{margin:2px 14px 10px;background:var(--card);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;gap:10px;flex:none}
-.wbar .wk{font-size:15px;font-weight:650}
-.wbar .rng{font-size:11.5px;color:var(--muted);margin-top:1px}
-.wbar .tag{font-size:10.5px;padding:2px 7px;border-radius:8px;background:var(--accent);color:#fff;font-weight:600;flex:none}
-.wbar .tag.gray{background:var(--line);color:var(--muted)}
-.wbar .back{margin-left:auto;font-size:12px;color:var(--accent);font-weight:600;flex:none}
+/* 周条（跟随内容滚动，不再冻结在顶部） */
+.wbar{margin:4px 14px 12px;background:linear-gradient(135deg,#5e5ce6,#8a7bff);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;flex:none;color:#fff}
+.wbar.alt{background:var(--card);color:var(--text)}
+.wbar .wnum{font-size:24px;font-weight:800;letter-spacing:.4px;line-height:1;flex:none}
+.wbar .wmeta{display:flex;flex-direction:column;gap:3px;min-width:0}
+.wbar .rng{font-size:11px;opacity:.85;white-space:nowrap}
+.wbar .tag{font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,.25);color:#fff;font-weight:600;width:max-content}
+.wbar.alt .tag{background:var(--line);color:var(--muted)}
+.wbar .wstats{margin-left:auto;text-align:right;flex:none}
+.wbar .wstats b{font-size:21px;font-weight:800;font-variant-numeric:tabular-nums}
+.wbar .wstats span{font-size:12px;opacity:.8}
+.wbar .wstats i{display:block;font-style:normal;font-size:10px;opacity:.75;margin-top:1px}
+.wbar .back{font-size:12px;background:rgba(255,255,255,.22);color:#fff;font-weight:600;padding:7px 11px;border-radius:9px;flex:none}
+.wbar.alt .back{background:var(--accent)}
 
 /* ---------- 列表 ---------- */
 .list{background:var(--card);border-radius:var(--r);margin:0 14px;overflow:hidden}
@@ -120,10 +127,22 @@ input,textarea,select{font:inherit;color:var(--text)}
 
 /* ---------- 整屏详情 ---------- */
 .screen{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column}
-.screen-head{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 10px;border-bottom:1px solid var(--line)}
+/* 顶部不叠加 safe-area：独立窗口下系统已为状态栏预留空间，
+   再叠一次就会出现一条空白带（同待办应用踩过的坑） */
+.screen-head{display:flex;align-items:center;gap:8px;padding:12px 14px 10px;border-bottom:1px solid var(--line)}
 .screen-head h2{margin:0;font-size:17px;flex:1;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .screen-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px}
 .back{color:var(--accent);font-size:16px;display:flex;align-items:center;gap:2px;padding:4px 6px 4px 0;flex:none}
+
+/* 返回浮窗（二级页面右下角，半透明） */
+.fabback{position:absolute;right:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);width:48px;height:48px;border-radius:50%;
+  background:rgba(94,92,230,.72);color:#fff;font-size:28px;font-weight:300;display:grid;place-items:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.28);z-index:60;transition:transform .1s}
+.fabback:active{transform:scale(.9)}
+
+/* 映射右侧的本周规划文字 */
+.mnote{flex:1;min-width:0;text-align:right;font-size:11.5px;color:var(--muted);line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal;padding-left:6px}
 
 /* 详情信息卡 */
 .infocard{background:var(--card);border-radius:var(--r);margin:12px 14px;padding:16px}
@@ -262,8 +281,10 @@ input,textarea,select{font:inherit;color:var(--text)}
 <div id="storeWarn" class="warnbar hidden"></div>
 
 <div id="pageWeek" class="page">
-  <div class="wbar" id="weekBar"></div>
-  <div class="scrollarea" id="weekList"></div>
+  <div class="scrollarea" id="weekScroll">
+    <div class="wbar" id="weekBar"></div>
+    <div id="weekList"></div>
+  </div>
 </div>
 
 <div id="pageBiz" class="page hidden">
@@ -287,6 +308,7 @@ input,textarea,select{font:inherit;color:var(--text)}
     <button class="iconbtn hidden" id="btnDetailAdd" aria-label="新建">＋</button>
   </div>
   <div class="screen-body" id="detailBody"></div>
+  <button id="fabBack" class="fabback" aria-label="返回">‹</button>
 </div>
 
 <div id="mask" class="mask hidden">
@@ -314,7 +336,7 @@ var CORRUPT_KEY = 'work.assistant.corrupt';
 var SNAP_MAX = 3;
 var DAY = 86400000;
 var INF = 9007199254740991;
-var DB_VERSION = 3;
+var DB_VERSION = 4;
 
 /* 客户层级：顺序即层级高低，最上面的最高 */
 var TIERS = [
@@ -640,6 +662,31 @@ function migrate(){
       if(typeof m.createdAt!=='number'){ m.createdAt=Date.now(); changed=true; }
     });
   });
+  /* v3 → v4：一次性清理 —— 周记录只留上一周起（删 W40 及以前），
+     月记录只留上月起（删 8 月及以前）。用户明确要求历史记录从近期开始。 */
+  if(db.version < 4){
+    var keepWeekStart = weekStartFromKey(weekKeyOf(mondayOf(Date.now()) - 7*DAY));
+    Object.keys(db.weeks).forEach(function(k){
+      try{
+        if(weekStartFromKey(k) < keepWeekStart) delete db.weeks[k];
+      }catch(e){ delete db.weeks[k]; }
+    });
+    var cutDate = new Date();
+    cutDate = new Date(cutDate.getFullYear(), cutDate.getMonth()-1, 1);   // 上月 1 号
+    var cutTs = cutDate.getTime(), cutKey = monthKey(cutTs);
+    db.visits = db.visits.filter(function(v){ return v.at >= cutTs; });
+    ['gov','emergent'].forEach(function(k){
+      db[k].visits = db[k].visits.filter(function(v){ return v.at >= cutTs; });
+      db[k].orders = db[k].orders.filter(function(o){ return o.at >= cutTs; });
+    });
+    db.recycle.records = db.recycle.records.filter(function(r){ return r.at >= cutTs; });
+    db.recycle.customers.forEach(function(c){
+      if(c.months && typeof c.months === 'object'){
+        Object.keys(c.months).forEach(function(mk){ if(mk < cutKey) delete c.months[mk]; });
+      }
+    });
+    changed = true;
+  }
   if(db.version !== DB_VERSION){ db.version = DB_VERSION; changed = true; }
   if(changed) save();
 }
@@ -1060,10 +1107,14 @@ function taskRowHTML(t){
 }
 function mappingRowHTML(m){
   var b = bizOf(m.biz);
+  var noteHtml = m.note
+    ? esc(m.note)
+    : '<span style="opacity:.5">点此写规划…</span>';
   return '<div class="row'+(m.done?' done':'')+'" data-mid="'+m.id+'">'
     + '<button class="check'+(m.done?' on':'')+'" data-mck="'+m.id+'"></button>'
     + '<div class="body"><div class="nm">'+b.ic+' '+esc(b.n)+'</div>'
-    + '<div class="sub"><span>点进去可登记数据 · 勾选只表示本周完成</span></div></div>'
+    + '<div class="sub"><span>点行进业务页 · 勾选只表示本周完成</span></div></div>'
+    + '<div class="mnote" data-mn="'+m.id+'">'+noteHtml+'</div>'
     + '</div>';
 }
 function renderWeek(){
@@ -1072,11 +1123,22 @@ function renderWeek(){
   var todayMon = mondayOf(Date.now());
   var isCur = key === curWeekKey();
   var isPast = r.start < todayMon;
-  var bar = '<div style="flex:1"><div class="wk">'+weekLabel(key)+'</div>'
-    + '<div class="rng">'+fmtDate(r.start)+' – '+fmtDate(r.end-DAY)+'</div></div>'
-    + '<span class="tag'+(isCur?'':' gray')+'">'+(isCur?'本周':(isPast?'历史':'未来'))+'</span>';
+
+  /* 周条计数：任务 + 业务映射 的 未完成/总数 */
+  var wkTasks = tasksOfWeek(key, false);
+  var wkMaps = weekData(key).mappings;
+  var undoneN = wkTasks.filter(function(t){ return !taskDone(t); }).length
+               + wkMaps.filter(function(m){ return !m.done; }).length;
+  var totalN = wkTasks.length + wkMaps.length;
+  var wNo = 'W' + parseInt(String(key).split('-W')[1], 10);
+
+  var bar = '<div class="wnum">'+wNo+'</div>'
+    + '<div class="wmeta"><span class="tag">'+(isCur?'本周':(isPast?'历史':'未来'))+'</span>'
+    + '<span class="rng">'+fmtDate(r.start)+' – '+fmtDate(r.end-DAY)+'</span></div>'
+    + '<div class="wstats"><b>'+undoneN+'</b><span>/'+totalN+'</span><i>未完成</i></div>';
   if(!isCur) bar += '<button class="back" id="wkBack">回到本周</button>';
   $('weekBar').innerHTML = bar;
+  $('weekBar').classList.toggle('alt', !isCur);
   if($('wkBack')) $('wkBack').onclick = function(){ viewWeek = null; renderWeek(); updateTopbar(); };
 
   var bill = weekData(key).bill;
@@ -1108,13 +1170,11 @@ function renderWeek(){
     html += '<div class="list">' + tasks.map(taskRowHTML).join('') + '</div>';
   }
 
-  if(!isPast || nowSeg===1){
-    html += '<div class="sec-title">业务映射<span class="n">点进去直达对应业务页</span></div>';
-    if(!maps.length){
-      html += '<div class="empty" style="padding:22px">'+(nowSeg===1&&isPast?'没有已完成的映射':'还没有映射<br>点右上角 <b>＋</b> 添加')+'</div>';
-    }else{
-      html += '<div class="list">' + maps.map(mappingRowHTML).join('') + '</div>';
-    }
+  html += '<div class="sec-title">业务映射<span class="n">点行进业务页 · 点右侧文字写本周规划</span></div>';
+  if(!maps.length){
+    html += '<div class="empty" style="padding:22px">'+(nowSeg===1&&isPast?'没有已完成的映射':'还没有映射<br>点右上角 <b>＋</b> 添加')+'</div>';
+  }else{
+    html += '<div class="list">' + maps.map(mappingRowHTML).join('') + '</div>';
   }
 
   $('weekList').innerHTML = html;
@@ -1143,6 +1203,14 @@ function renderWeek(){
       m.done = !m.done;
       m.doneAt = m.done ? Date.now() : null;
       save(); renderWeek();
+    };
+  });
+  /* 点映射右侧文字 → 编辑本周规划 */
+  $('weekList').querySelectorAll('[data-mn]').forEach(function(n){
+    n.onclick = function(e){
+      e.stopPropagation();
+      var m = weekData(key).mappings.filter(function(x){ return x.id===n.getAttribute('data-mn'); })[0];
+      if(m) openMappingSheet(key, m);
     };
   });
 }
@@ -1339,7 +1407,6 @@ function renderTaskDetail(id){
 /* ============ 提单清单 ============ */
 function renderBill(key){
   key = key || curWeekKey();
-  var readonly = isHistoryWeek(key);
   $('detailTitle').textContent = '提单任务 · '+weekLabel(key);
   var bill = ensureBill(key);
   var items = bill.items.filter(function(x){ return !x.removed; });
@@ -1352,7 +1419,7 @@ function renderBill(key){
     + '</div>';
 
   if(!items.length){
-    html += '<div class="empty" style="padding:34px">'+(readonly?'这一周没有提单记录':'本周还没有客户<br>点右上角 <b>＋</b> 从客户页添加')+'</div>';
+    html += '<div class="empty" style="padding:34px">这一周清单里还没有客户<br>点右上角 <b>＋</b> 添加</div>';
   }else{
     html += '<div class="list">';
     items.forEach(function(it){
@@ -1368,19 +1435,16 @@ function renderBill(key){
         +   '<button class="dot'+(it.mobile?' on':'')+'" data-m="'+it.clientId+'">手机</button>'
         +   '<button class="dot'+(it.fusion?' on':'')+'" data-f="'+it.clientId+'">融合</button>'
         + '</div>'
-        + (readonly ? '' : '<button class="xbtn" data-x="'+it.clientId+'">×</button>')
+        + '<button class="xbtn" data-x="'+it.clientId+'">×</button>'
         + '</div>';
     });
     html += '</div>';
   }
-  html += '<div class="hint">'+(readonly
-    ? '历史周只读：这里保留的是当时那一周的提单记录。'
-    : '点左边圆圈 = 该客户整体完成（手机+融合一起勾上）；也可以分别点「手机」「融合」，两个都勾即完成。新建的客户会自动加入本周清单。<br>'
-      + '「×」只把客户从本周清单里移除，<b>不影响客户页的客户</b>（也不会自动回来）。')+'</div>';
+  html += '<div class="hint">点左边圆圈 = 该客户整体完成（手机+融合一起勾上）；也可以分别点「手机」「融合」，两个都勾即完成。<br>'
+    + '「×」只把客户从这一周清单里移除，<b>不影响客户页的客户</b>。本周清单会自动补入新建的客户；历史周清单保持原样、可手动增补。</div>';
   $('detailBody').innerHTML = html;
 
-  setDetailAdd(!readonly, function(){ openBillPicker(key); });
-  if(readonly) return;
+  setDetailAdd(true, function(){ openBillPicker(key); });
   var body = $('detailBody');
   function sync(){ save(); renderDetail(); }
   body.querySelectorAll('[data-item]').forEach(function(r){
@@ -1463,20 +1527,20 @@ function renderBiz(k){
 function monthTagHTML(){
   var mo = activeMonth();
   var cur = mo === curMonthKey();
-  return '<div class="sec-title">'+monthLabel(mo)+'<span class="n">'+(cur?'本月':'历史（只读）')+'</span></div>';
+  return '<div class="sec-title">'+monthLabel(mo)+'<span class="n">'+(cur?'本月':'历史（可修改补录）')+'</span></div>';
 }
 
 /* ============ 拜访业务 ============ */
 function renderBizVisit(){
   var mo = activeMonth();
-  var readonly = mo !== curMonthKey();
   $('detailTitle').textContent = '拜访业务';
   var list = sortedClients();
   var total = visitTotal(mo), goal = visitGoalTotal();
   var covered = list.filter(function(c){ return visitCountOf(c.id, mo) > 0; }).length;
+  var isCur = mo === curMonthKey();
 
   var html = '<div class="sum">'
-    + '<div class="it"><div class="v acc">'+total+'</div><div class="k">'+(readonly?'已拜访':'本月已拜访')+'</div></div>'
+    + '<div class="it"><div class="v acc">'+total+'</div><div class="k">'+(isCur?'本月已拜访':'当月拜访')+'</div></div>'
     + '<div class="it"><div class="v">'+goal+'</div><div class="k">月度目标</div></div>'
     + '<div class="it"><div class="v">'+covered+'/'+list.length+'</div><div class="k">已覆盖客户</div></div>'
     + '</div>'
@@ -1495,13 +1559,12 @@ function renderBizVisit(){
         +     '<span'+(n>=q?' style="color:var(--ok)"':'')+'>'+(n>=q?'本月已完成':'还差 '+(q-n)+' 次')+'</span></div>'
         + '</div>'
         + '<div class="side"><b>'+n+'</b> <i>/ '+q+' 次</i></div>'
-        + (readonly ? '' : '<button class="addbtn" data-add="'+c.id+'">＋</button>')
+        + '<button class="addbtn" data-add="'+c.id+'">＋</button>'
         + '</div>';
     });
     html += '</div>';
-    html += '<div class="hint">点客户行查看/修改过往拜访报告；点 <b>＋</b> 现场登记一次拜访。<br>'
-      + '默认次数：金种子/top368 6 次，top1000 4 次，top1500/NDKA+/破格商 2 次，tier8 1 次。'
-      + (readonly ? '' : '长按姓名不能改次数 —— 在客户详情卡片里可以逐客户改目标。') + '</div>';
+    html += '<div class="hint">点客户行查看/修改拜访报告；点 <b>＋</b> 登记一次拜访（查看历史月时记得把时间改成对应月份）。<br>'
+      + '默认次数：金种子/top368 6 次，top1000 4 次，top1500/NDKA+/破格商 2 次，tier8 1 次。目标次数在客户编辑里可以逐客户改。</div>';
   }
   $('detailBody').innerHTML = html;
   var body = $('detailBody');
@@ -1572,16 +1635,16 @@ function renderVisitClient(cid){
 /* ============ 政企业务 ============ */
 function renderBizGov(){
   var mo = activeMonth();
-  var readonly = mo !== curMonthKey();
   $('detailTitle').textContent = '政企业务';
   var s = bizSummary('gov');
   var list = sortByStars(activeIn(db.gov.customers));
   var visitN = db.gov.visits.filter(function(v){ return inMonth(v.at, mo); }).length;
+  var isCur = mo === curMonthKey();
 
   var html = '<div class="sum">'
     + '<div class="it"><div class="v acc">'+s.maintained+' / '+s.opened+'</div><div class="k">维系 / 开户</div></div>'
     + '<div class="it"><div class="v">'+s.total+'</div><div class="k">政企客户</div></div>'
-    + '<div class="it"><div class="v">'+visitN+'</div><div class="k">'+(readonly?'当月拜访':'本月拜访')+'</div></div>'
+    + '<div class="it"><div class="v">'+visitN+'</div><div class="k">'+(isCur?'本月拜访':'当月拜访')+'</div></div>'
     + '</div>' + monthTagHTML();
 
   if(!list.length){
@@ -1601,14 +1664,14 @@ function renderBizGov(){
         + '</div>'
         + '<div class="side"><b>'+st.month+'</b> <i>/ '+st.total+'</i>'
         + '<span class="t2">鸿蒙 月/累</span></div>'
-        + (readonly ? '' : '<button class="addbtn" data-add="'+c.id+'">＋</button>')
+        + '<button class="addbtn" data-add="'+c.id+'">＋</button>'
         + '</div>';
     });
     html += '</div>';
     html += '<div class="hint">右侧 <b>＋</b> 直接登记一次拜访；点客户进入详情可改信息、记录鸿蒙电脑提单（月度/累计）。</div>';
   }
   $('detailBody').innerHTML = html;
-  setDetailAdd(!readonly, function(){ openGovEditor(null); });
+  setDetailAdd(true, function(){ openGovEditor(null); });
   var body = $('detailBody');
   body.querySelectorAll('[data-gid]').forEach(function(r){
     var gid = r.getAttribute('data-gid');
@@ -1671,7 +1734,7 @@ function renderGovCustomer(id){
 /* ============ 新兴业务 ============ */
 function renderBizEmergent(){
   var mo = activeMonth();
-  var readonly = mo !== curMonthKey();
+  var isCur = mo === curMonthKey();
   $('detailTitle').textContent = '新兴业务';
   var s = bizSummary('emergent');
   var list = sortByStars(activeIn(db.emergent.customers));
@@ -1680,9 +1743,9 @@ function renderBizEmergent(){
   var html = '<div class="sum">'
     + '<div class="it"><div class="v acc">'+s.maintained+' / '+s.opened+'</div><div class="k">维系 / 开户</div></div>'
     + '<div class="it"><div class="v">'+s.total+'</div><div class="k">新兴客户</div></div>'
-    + '<div class="it"><div class="v">'+visitN+'</div><div class="k">'+(readonly?'当月拜访':'本月拜访')+'/'+EMERGENT_VISIT_NEED+' 次</div></div>'
+    + '<div class="it"><div class="v">'+visitN+'</div><div class="k">'+(isCur?'本月拜访':'当月拜访')+'/'+EMERGENT_VISIT_NEED+' 次</div></div>'
     + '</div>';
-  var warn = readonly ? null : emgSpreadWarn();
+  var warn = emgSpreadWarn();
   if(warn) html += '<div class="warnline">⚠️ '+esc(warn)+'</div>';
   html += monthTagHTML();
 
@@ -1704,14 +1767,14 @@ function renderBizEmergent(){
         + '</div>'
         + '<div class="side"><b>'+money(st.month)+'</b>'
         + '<span class="t2">累计 '+money(st.total)+'</span></div>'
-        + (readonly ? '' : '<button class="addbtn" data-add="'+c.id+'">＋</button>')
+        + '<button class="addbtn" data-add="'+c.id+'">＋</button>'
         + '</div>';
     });
     html += '</div>';
     html += '<div class="hint">右侧显示提单金额（当月 / 累计）。每月需要 '+EMERGENT_VISIT_NEED+' 次拜访记录，且不能挤在两周内完成 —— 挤在一起时页面顶部会提示。</div>';
   }
   $('detailBody').innerHTML = html;
-  setDetailAdd(!readonly, function(){ openEmgEditor(null); });
+  setDetailAdd(true, function(){ openEmgEditor(null); });
   var body = $('detailBody');
   body.querySelectorAll('[data-eid]').forEach(function(r){
     var eid = r.getAttribute('data-eid');
@@ -1777,13 +1840,13 @@ function renderEmgCustomer(id){
 /* ============ 优品机业务 ============ */
 function renderBizRecycle(){
   var mo = activeMonth();
-  var readonly = mo !== curMonthKey();
+  var isCur = mo === curMonthKey();
   $('detailTitle').textContent = '优品机业务';
   var list = sortRecycle();
   var bt = recBillTotals(mo), col = recCollectTotal(mo);
 
   var html = '<div class="sum">'
-    + '<div class="it"><div class="v acc">'+col+'</div><div class="k">'+(readonly?'当月回收':'本月回收')+'</div></div>'
+    + '<div class="it"><div class="v acc">'+col+'</div><div class="k">'+(isCur?'本月回收':'当月回收')+'</div></div>'
     + '<div class="it"><div class="v">'+bt.qty+'</div><div class="k">提单数量</div></div>'
     + '<div class="it"><div class="v">'+money(bt.amount)+'</div><div class="k">提单金额</div></div>'
     + '</div>' + monthTagHTML()
@@ -1791,7 +1854,7 @@ function renderBizRecycle(){
     + '<div class="row pinned" id="projRow">'
     +   '<div class="body"><div class="nm">♻️ 回收项目</div>'
     +   '<div class="sub">回收客户 / 型号 / 数量</div></div>'
-    +   '<div class="side"><b>'+col+'</b> <i>台</i><span class="t2">本月回收</span></div>'
+    +   '<div class="side"><b>'+col+'</b> <i>台</i><span class="t2">'+(isCur?'本月回收':'当月回收')+'</span></div>'
     + '</div></div>';
 
   if(!list.length){
@@ -1802,7 +1865,7 @@ function renderBizRecycle(){
     list.forEach(function(c){
       var md = recMonthData(c, mo);
       html += '<div class="row" data-rid="'+c.id+'">'
-        + (readonly ? '' : '<span class="drag" data-handle="1">☰</span>')
+        + '<span class="drag" data-handle="1">☰</span>'
         + '<div class="body"><div class="nm">'+esc(c.name)+'</div>'
         +   '<div class="sub"><span>'+monthLabel(mo).replace(/^\d+年/,'')+'提单 '+money(md.amount)+'</span></div>'
         + '</div>'
@@ -1810,10 +1873,10 @@ function renderBizRecycle(){
         + '</div>';
     });
     html += '</div>';
-    if(!readonly) html += '<div class="hint">点客户可修改月度提单数量与金额（按月分别记录，历史月份保留）。</div>';
+    html += '<div class="hint">点客户可修改当前查看月份的提单数量与金额（按月分别记录，历史月份保留）。</div>';
   }
   $('detailBody').innerHTML = html;
-  setDetailAdd(!readonly, function(){ openRecEditor(null); });
+  setDetailAdd(true, function(){ openRecEditor(null); });
   $('projRow').onclick = function(){ openDetail('recycleProj', null); };
   var body = $('detailBody');
   body.querySelectorAll('[data-rid]').forEach(function(r){
@@ -1821,7 +1884,7 @@ function renderBizRecycle(){
     r.onclick = function(){ openDetail('recc', rid); };
   });
   var box = $('recListBox');
-  if(box && !readonly) wireRecycleDrag(box);
+  if(box) wireRecycleDrag(box);
 }
 function wireRecycleDrag(box){
   box.querySelectorAll('[data-handle]').forEach(function(h){
@@ -1880,15 +1943,14 @@ function renderRecCustomer(id){
 }
 function renderRecycleProject(){
   var mo = activeMonth();
-  var readonly = mo !== curMonthKey();
+  var isCur = mo === curMonthKey();
   $('detailTitle').textContent = '回收项目';
   var rs = db.recycle.records.slice().sort(function(a,b){ return b.at-a.at; });
   var mine = rs.filter(function(r){ return inMonth(r.at, mo); });
   var totalQty = sumBy(mine, 'qty');
-  var totalAmt = 0;
 
   $('detailBody').innerHTML = '<div class="sum">'
-    + '<div class="it"><div class="v acc">'+totalQty+'</div><div class="k">'+(readonly?'当月回收':'本月回收')+'</div></div>'
+    + '<div class="it"><div class="v acc">'+totalQty+'</div><div class="k">'+(isCur?'本月回收':'当月回收')+'</div></div>'
     + '<div class="it"><div class="v">'+mine.length+'</div><div class="k">回收笔数</div></div>'
     + '<div class="it"><div class="v">'+rs.length+'</div><div class="k">累计笔数</div></div>'
     + '</div>' + monthTagHTML()
@@ -1901,14 +1963,14 @@ function renderRecycleProject(){
       : '<div class="empty" style="padding:30px">'+monthLabel(mo)+'还没有回收记录<br>点右上角 <b>＋</b> 新增一条</div>');
   $('detailBody').innerHTML += '<div class="gap"></div><div class="sec-title">全部记录<span class="n">共 '+rs.length+' 条</span></div>'
     + (rs.length ? '<div class="list">'+rs.map(function(r){
-        return '<div class="row'+(inMonth(r.at, mo)?'':' ')+'" data-rec="'+r.id+'"><div class="body">'
+        return '<div class="row" data-rec="'+r.id+'"><div class="body">'
           + '<div class="nm">'+esc(r.customerName||'—')+'</div>'
           + '<div class="sub"><span>'+esc(r.model||'—')+' · '+fmtDate(r.at)+'</span></div></div>'
           + '<div class="side"><b>'+num(r.qty)+'</b> <i>台</i></div></div>';
       }).join('')+'</div>' : '')
-    + '<div class="hint">点记录可修改客户、型号与数量。</div>';
+    + '<div class="hint">点记录可修改客户、型号与数量。补录历史月时，记得把时间改成对应月份。</div>';
 
-  setDetailAdd(!readonly, function(){ openRecRecordSheet(null); });
+  setDetailAdd(true, function(){ openRecRecordSheet(null); });
   var body = $('detailBody');
   body.querySelectorAll('[data-rec]').forEach(function(r){
     var rid = r.getAttribute('data-rec');
@@ -2379,42 +2441,57 @@ function openRecRecordSheet(id){
 
 /* ============ 周度：添加任务 / 业务映射 ============ */
 function openWeekAddSheet(){
-  if(isHistoryWeek(activeWeek())) return;   // 历史周只读，不给加
   openSheet(
     '<h2>添加到 '+weekLabel(activeWeek())+'</h2>'
     + '<div class="menu-list" style="margin:0">'
     + '<button id="waTask">添加任务<span class="sm">星级、截止日期、关联客户（未完成会自动留到下一周）</span></button>'
-    + '<button id="waMap">添加业务映射<span class="sm">本周要做某个业务：可勾选完成，也可点进去登记数据</span></button>'
+    + '<button id="waMap">添加业务映射<span class="sm">本周要做某个业务：可勾选完成、可写本周规划、可点进去登记数据</span></button>'
     + '</div>'
     + '<div class="sheet-actions"><button class="btn ghost" id="waClose">取消</button></div>'
   );
   $('waClose').onclick = closeSheet;
   $('waTask').onclick = function(){ closeSheet(); openTaskEditor(null); };
-  $('waMap').onclick = function(){ openMappingSheet(activeWeek()); };
+  $('waMap').onclick = function(){ openMappingSheet(activeWeek(), null); };
 }
-function openMappingSheet(key){
+function openMappingSheet(key, m){
+  var isNew = !m;
   openSheet(
-    '<h2>添加业务映射</h2>'
+    '<h2>'+(isNew?'添加业务映射':'修改业务映射')+'</h2>'
     + '<div class="field"><label>选择业务</label><div class="chips wrap" id="mBiz">'
     + BIZS.map(function(b){ return '<div class="chip" data-v="'+b.k+'">'+b.ic+' '+esc(b.n)+'</div>'; }).join('')
     + '</div></div>'
+    + '<div class="field"><label>本周规划（可选，显示在映射右侧）</label>'
+    + '<textarea id="mNote" maxlength="200" placeholder="这一周这个业务打算做到什么程度…">'+esc(m?(m.note||''):'')+'</textarea></div>'
     + '<div class="hint" style="margin:0 0 6px">映射只是「本周这件事要做」的提醒：勾选完成不会改动业务数据；点它会跳到对应的业务页去登记。</div>'
     + '<div class="sheet-actions">'
+    +   (isNew ? '' : '<button class="btn danger" id="mDel">删除</button>')
     +   '<button class="btn ghost" id="mCancel">取消</button>'
-    +   '<button class="btn primary" id="mSave">添加</button>'
+    +   '<button class="btn primary" id="mSave">'+(isNew?'添加':'保存')+'</button>'
     + '</div>'
   );
-  var pick = wireChips('mBiz', 'visit');
+  var pick = wireChips('mBiz', m ? m.biz : 'visit');
   $('mCancel').onclick = closeSheet;
   $('mSave').onclick = function(){
-    weekData(key).mappings.push({ id:uid(), biz:pick.get(), done:false, doneAt:null, createdAt:Date.now() });
+    var note = $('mNote').value.trim();
+    if(isNew){
+      weekData(key).mappings.push({ id:uid(), biz:pick.get(), note:note, done:false, doneAt:null, createdAt:Date.now() });
+    }else{
+      m.biz = pick.get();
+      m.note = note;
+    }
+    save(); closeSheet(); renderWeek(); render();
+  };
+  if(!isNew) $('mDel').onclick = function(){
+    var arr = weekData(key).mappings;
+    var i = arr.indexOf(m);
+    if(i >= 0) arr.splice(i,1);
     save(); closeSheet(); renderWeek(); render();
   };
 }
 
 /* ============ 周历 / 月历 ============ */
 function openWeekPicker(){
-  var keys = weekList(8, 1);
+  var keys = weekList(4, 1);
   var html = '<h2>周历</h2><div class="picklist" style="max-height:52vh">';
   keys.slice().reverse().forEach(function(k){
     var r = weekRange(k);
@@ -2428,7 +2505,7 @@ function openWeekPicker(){
       + '<span class="badge" style="color:var(--accent);background:rgba(94,92,230,.18)">'+dn+'/'+tl.length+'</span>'
       + '</div>';
   });
-  html += '</div><div class="hint" style="margin-top:10px">历史周可查看「规划 / 完成」两栏；下一周可以提前规划。</div>'
+  html += '</div><div class="hint" style="margin-top:10px">历史周可查看、可修改补录（规划 / 完成两栏）；下一周可以提前规划。没有记录的周不会显示其他周创建的数据。</div>'
     + '<div class="sheet-actions"><button class="btn ghost" id="wpCur">回到本周</button><button class="btn primary" id="wpClose">关闭</button></div>';
   openSheet(html);
   $('wpClose').onclick = closeSheet;
@@ -2445,7 +2522,7 @@ function openWeekPicker(){
 function openMonthPicker(){
   var base = new Date();
   var keys = [];
-  for(var i = 0; i < 12; i++){
+  for(var i = 0; i < 6; i++){
     var d = new Date(base.getFullYear(), base.getMonth()-i, 1);
     keys.push(monthKey(d.getTime()));
   }
@@ -2460,7 +2537,7 @@ function openMonthPicker(){
       + '<span style="font-size:10.5px;color:var(--muted)">拜访 '+vs+' · 回收 '+col+'</span>'
       + '</div>';
   });
-  html += '</div><div class="hint" style="margin-top:10px">业务数据按月留存：选一个月可查看当月拜访、提单、回收数字。历史月份为只读。</div>'
+  html += '</div><div class="hint" style="margin-top:10px">业务数据按月留存。历史月份也能修改补录——新增记录时记得把<b>时间改成对应月份</b>，否则会算进本月。</div>'
     + '<div class="sheet-actions"><button class="btn ghost" id="mpCur">回到本月</button><button class="btn primary" id="mpClose">关闭</button></div>';
   openSheet(html);
   $('mpClose').onclick = closeSheet;
@@ -2516,8 +2593,9 @@ function openGuide(){
     + '<li><b>提单任务</b>固定在第一位，点进去是本周提单清单。左边圆圈 = 该客户整体完成（手机+融合一起勾上）；也可以只点「手机」或「融合」，两个都勾也算完成。</li>'
     + '<li>清单里的客户可以「×」掉，<b>不影响客户页</b>；右上角 ＋ 可以把客户加回清单。</li>'
     + '<li><b>任务没做完会一直留着</b>：W42 没完成的任务，到 W43 依然是未完成，直到你勾掉它。</li>'
-    + '<li><b>业务映射</b>只是「本周这件事要做」：勾选只表示本周完成，不会改业务数据；点它会跳到对应业务页，在那里登记。</li>'
-    + '<li>右上角 <b>周历</b> 可以看历史周（规划 / 完成两栏），也能进下一周提前规划。</li>'
+    + '<li><b>业务映射</b>只是「本周这件事要做」：勾选只表示本周完成，不会改业务数据；点它会跳到对应业务页登记；<b>点映射右侧的文字可以写这段业务的本周规划</b>（写在映射右边显示）。</li>'
+    + '<li>顶部周条右侧显示这一周「未完成 / 总数」——任务加业务映射一起算。</li>'
+    + '<li>右上角 <b>周历</b>：看最近几周 + 下一周。历史周可以<b>修改补录</b>（规划 / 完成两栏都能改）；没有记录的周不会显示别周创建的数据；下一周可以提前规划。</li>'
     + '</ul>'
     + '<h3>业务怎么用</h3><ul>'
     + '<li><b>拜访业务</b>：客户列表就是客户页的客户，右侧显示「本月 N / 目标 M」，点 <code>＋</code> 现场登记拜访并写报告。目标次数可以在客户详情卡里逐客户改。</li>'
@@ -2525,13 +2603,14 @@ function openGuide(){
     + '<li><b>政企业务</b>：客户显示鸿蒙电脑提单数（月度 / 累计），点 <code>＋</code> 记一次拜访，进详情可记录提单。</li>'
     + '<li><b>新兴业务</b>：显示提单金额（月度 / 累计）；每月需要 4 次拜访且<b>不能挤在两周内</b>，挤在一起时顶部会提示。</li>'
     + '<li><b>优品机业务</b>：客户可按住 <code>☰</code> 拖动排序；回收项目里记「回收客户 / 型号 / 数量」。</li>'
-    + '<li>右上角 <b>月历</b> 可以查历史月份，历史月为只读。</li>'
+    + '<li>右上角 <b>月历</b>：查看历史月份。历史月也能<b>修改补录</b>——新增记录时把时间改成对应月份即可。</li>'
     + '</ul>'
     + '<h3>一些技巧</h3><ul>'
     + '<li>客户星级越高越靠前，把重要客户钉在列表顶上，比记标签省事。</li>'
     + '<li>任务用<b>截止日期</b>排紧迫度，无截止的沉在最后；星级用于同一档期内排序。</li>'
     + '<li>一条任务勾了「整个任务已完成」，所有关联客户会一起完成；取消则一起回到未完成。</li>'
     + '<li>删除后 6 秒内底部有「撤销」；错过就用 <code>⋯ → 从自动快照恢复</code>。</li>'
+    + '<li>二级页面右下角有<b>半透明返回按钮</b>，比够左上角「返回」省事。</li>'
     + '</ul>'
     + '<h3>常见问题</h3><ul>'
     + '<li><span class="q">更新后打开还是旧版？</span> 缓存优先策略：第一次打开是旧版，第二次才见新版，属正常。</li>'
@@ -2645,8 +2724,7 @@ function updateTopbar(){
   var cal = $('btnCal'), add = $('btnAdd');
   if(curTab === 'week'){
     cal.classList.remove('hidden');
-    var r = weekRange(activeWeek());
-    add.classList.toggle('hidden', r.start < mondayOf(Date.now()));   // 历史周不给加
+    add.classList.remove('hidden');   // 历史/未来周都可以添加（历史周可补录）
   }else if(curTab === 'biz'){
     cal.classList.remove('hidden');
     add.classList.add('hidden');
@@ -2668,6 +2746,7 @@ $('btnCal').onclick = function(){
 };
 $('btnMenu').onclick = openMenu;
 $('btnBack').onclick = function(){ closeDetail(); };
+$('fabBack').onclick = function(){ closeDetail(); };
 
 /* ============ 启动 ============ */
 function setAppHeight(){
