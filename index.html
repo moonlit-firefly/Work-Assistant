@@ -47,6 +47,13 @@ input,textarea,select{font:inherit;color:var(--text)}
 .seg{display:flex;gap:3px;margin:2px 14px 10px;background:var(--line);border-radius:9px;padding:3px;flex:none}
 .seg button{flex:1;padding:7px 0;border-radius:7px;font-size:14px;opacity:.62}
 .seg button.on{background:var(--card);opacity:1;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+/* 标题行内右侧的紧凑切换（规划 / 未完成 / 已完成） */
+.secline{display:flex;align-items:center;gap:8px;margin:16px 14px 7px}
+.secline .st{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.4px;flex:1;min-width:0}
+.secline .st i{display:block;font-style:normal;font-weight:400;letter-spacing:0;font-size:11px;margin-top:2px}
+.row .sub .dtime{color:var(--ok)}
+.seg.mini{margin:0;flex:none;padding:2px;gap:2px;border-radius:8px}
+.seg.mini button{flex:none;padding:5px 10px;font-size:12px;border-radius:6px}
 
 /* 周条（跟随内容滚动，不再冻结在顶部） */
 .wbar{margin:4px 14px 12px;background:linear-gradient(135deg,#5e5ce6,#8a7bff);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;flex:none;color:#fff}
@@ -193,36 +200,39 @@ input,textarea,select{font:inherit;color:var(--text)}
 
 /* ---------- 底部弹层 ---------- */
 .mask{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:flex-end}
-.sheet{background:var(--card);width:100%;max-height:92vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:6px 18px calc(env(safe-area-inset-bottom,0px) + 18px)}
-.sheet-grip{width:36px;height:4px;border-radius:2px;background:var(--line);margin:6px auto 12px}
-.sheet h2{margin:0 0 14px;font-size:17px;font-weight:650}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:500}
+/* 紧凑版弹层：间距收紧，操作按钮吸底，一屏内就能看到取消/创建 */
+.sheet{background:var(--card);width:100%;max-height:92vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:0 18px}
+.sheet.noact{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}
+.sheet-grip{width:36px;height:4px;border-radius:2px;background:var(--line);margin:5px auto 8px}
+.sheet h2{margin:0 0 10px;font-size:16px;font-weight:650}
+.field{margin-bottom:9px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:500}
 .field textarea,.field input[type=text],.field input[type=tel],.field input[type=number],.field input[type=date],.field input[type=datetime-local],.field select{
-  width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px;outline:none
+  width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:15px;outline:none
 }
 @media (prefers-color-scheme:dark){.field textarea,.field input,.field select{background:#2c2c2e}}
-.field textarea{resize:none;min-height:64px;line-height:1.5}
+.field textarea{resize:none;min-height:52px;line-height:1.5}
 .field textarea:focus,.field input:focus,.field select:focus{border-color:var(--accent)}
-.chips{display:flex;gap:8px}
+.chips{display:flex;gap:7px}
 .chips.wrap{flex-wrap:wrap}
-.chip{flex:1;padding:10px 0;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center}
+.chip{flex:1;padding:8px 0;border-radius:9px;background:var(--bg);border:1px solid var(--line);font-size:12.5px;color:var(--muted);text-align:center}
 @media (prefers-color-scheme:dark){.chip{background:#2c2c2e}}
 .chips.wrap .chip{flex:1 1 30%}
 .chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
-.staredit{display:flex;gap:6px}
-.staredit button{flex:1;padding:8px 0;font-size:22px;color:var(--line);text-align:center}
+.staredit{display:flex;gap:4px}
+.staredit button{flex:1;padding:3px 0;font-size:20px;color:var(--line);text-align:center}
 .staredit button.on{color:var(--gold)}
 .mini{font-size:12px;color:var(--accent);font-weight:600;padding:4px 6px}
-.pick-head{display:flex;align-items:center;gap:4px;margin-bottom:6px}
+.pick-head{display:flex;align-items:center;gap:4px;margin-bottom:5px}
 .pick-head label{flex:1;margin:0}
-.picklist{max-height:300px;overflow-y:auto;border:1px solid var(--line);border-radius:10px}
-.picklist .prow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.picklist{max-height:30vh;overflow-y:auto;border:1px solid var(--line);border-radius:10px}
+.picklist .prow{display:flex;align-items:center;gap:10px;padding:8px 11px;border-bottom:1px solid var(--line)}
 .picklist .prow:last-child{border-bottom:0}
 .picklist .prow:active{background:var(--line)}
 .picklist .pnm{flex:1;min-width:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sheet-actions{display:flex;gap:10px;margin-top:18px}
-.btn{flex:1;padding:13px 0;border-radius:11px;font-size:15.5px;text-align:center;font-weight:600}
+.sheet-actions{display:flex;gap:10px;margin:10px -18px 0;padding:9px 18px calc(env(safe-area-inset-bottom,0px) + 12px);
+  position:sticky;bottom:0;background:var(--card);box-shadow:0 -8px 16px -10px rgba(0,0,0,.45);z-index:2}
+.btn{flex:1;padding:12px 0;border-radius:11px;font-size:15.5px;text-align:center;font-weight:600}
 .btn.primary{background:var(--accent);color:#fff}
 .btn.ghost{background:var(--bg);color:var(--text)}
 @media (prefers-color-scheme:dark){.btn.ghost{background:#2c2c2e}}
@@ -378,7 +388,7 @@ var storageOK = true, saveFailed = false, corruptRaw = null, loadFailed = false;
 
 /* 界面状态 */
 var curTab = 'week';          // week | biz | clients
-var weekSeg = 0;              // 0 规划 1 完成
+var weekSeg = 1;              // 0 规划（全部） 1 未完成（默认） 2 已完成
 var viewWeek = null;          // 当前查看的周 key，null = 本周
 var viewMonth = null;         // 业务页查看的月份 'YYYY-MM'，null = 本月
 var navStack = [];
@@ -878,10 +888,10 @@ function sortedClients(){
     return b.stars-a.stars || tierIdx(a)-tierIdx(b) || a.createdAt-b.createdAt;
   });
 }
-/* 任务：截止早优先（无截止沉底）→ 星级 → 创建时间 */
+/* 任务：星级优先 → 截止时间早优先（无截止沉底）→ 创建时间早优先 */
 function sortTasks(list){
   return list.slice().sort(function(a,b){
-    return (a.dueAt||INF)-(b.dueAt||INF) || b.stars-a.stars || a.createdAt-b.createdAt;
+    return b.stars-a.stars || (a.dueAt||INF)-(b.dueAt||INF) || a.createdAt-b.createdAt;
   });
 }
 /* 业务客户：星级优先 → 创建时间 */
@@ -1090,16 +1100,23 @@ function renderClients(){
 }
 
 /* ============ 渲染：周度页 ============ */
-function taskRowHTML(t){
+function taskRowHTML(t, showDoneAt){
   var st = taskLinkStats(t);
   var di = dueInfo(t);
   var done = taskDone(t);
+  var sub;
+  if(showDoneAt && t.doneAt){
+    sub = '<div class="sub"><span class="dtime">✅ 完成于 '+fmtDateTime(t.doneAt)+'</span></div>';
+  }else if(di){
+    sub = '<div class="sub"><span class="'+di.cls+'">'+esc(di.text)+'</span></div>';
+  }else{
+    sub = '<div class="sub"><span>无截止日期</span></div>';
+  }
   return '<div class="row'+(done?' done':'')+'" data-tid="'+t.id+'">'
     + '<button class="check'+(done?' on':'')+'" data-ck="'+t.id+'"></button>'
     + '<div class="body">'
     +   '<div class="nm">'+esc(t.name)+'<span class="stars">'+starsText(t.stars)+'</span></div>'
-    +   (di ? '<div class="sub"><span class="'+di.cls+'">'+esc(di.text)+'</span></div>'
-          : '<div class="sub"><span>无截止日期</span></div>')
+    +   sub
     + '</div>'
     + '<div class="side"><b>'+st.undone+'</b> <i>未完成</i>'
     + '<span class="t2">共 <b>'+st.total+'</b> 客户</span></div>'
@@ -1143,9 +1160,14 @@ function renderWeek(){
 
   var bill = weekData(key).bill;
   var bs = billViewStats(key);
-  var nowSeg = (isPast ? weekSeg : 0);
-  var tasks = tasksOfWeek(key, isPast ? nowSeg===1 : false);
-  var maps = mappingsOf(key, isPast && nowSeg===1);
+  /* 三页切换：0 规划（全部） / 1 未完成（默认） / 2 已完成 */
+  var seg = weekSeg;
+  var allTasks = tasksOfWeek(key, false);
+  var tasks = seg===1 ? allTasks.filter(function(t){ return !taskDone(t); })
+            : seg===2 ? allTasks.filter(function(t){ return taskDone(t); })
+            : allTasks;
+  var maps = weekData(key).mappings.slice().sort(function(a,b){ return a.createdAt-b.createdAt; });
+  var segNames = ['规划','未完成','已完成'];
 
   var html = '<div class="list">'
     + '<div class="row pinned" id="billRow">'
@@ -1155,24 +1177,28 @@ function renderWeek(){
     + '</div>'
     + '</div>';
 
-  if(isPast){
-    html += '<div class="seg" id="wkSeg" style="margin-top:14px">'
-      + '<button data-v="0" class="'+(nowSeg===0?'on':'')+'">规划</button>'
-      + '<button data-v="1" class="'+(nowSeg===1?'on':'')+'">完成</button></div>';
-  }
-  html += '<div class="sec-title">'+(isPast ? (nowSeg===1?'本 周 完 成':'本 周 规 划') : '本周任务')
-    + '<span class="n">未完成会留到下一周</span></div>';
+  html += '<div class="secline">'
+    + '<span class="st">本周任务<i>共 '+allTasks.length+' 条 · 未完成 '+allTasks.filter(function(t){ return !taskDone(t); }).length+'</i></span>'
+    + '<div class="seg mini" id="wkSeg">'
+    +   '<button data-v="0" class="'+(seg===0?'on':'')+'">规划</button>'
+    +   '<button data-v="1" class="'+(seg===1?'on':'')+'">未完成</button>'
+    +   '<button data-v="2" class="'+(seg===2?'on':'')+'">已完成</button>'
+    + '</div></div>';
   if(!tasks.length){
     html += '<div class="empty" style="padding:26px">'
-      + (isPast ? (nowSeg===1?'这一周没有完成记录':'这一周没有任务') : '本周还没有任务<br>点右上角 <b>＋</b> 添加任务或业务映射')
+      + (seg===1 ? (isCur?'🎉 本周任务都已完成':'这一周没有未完成的任务')
+        : seg===2 ? '还没有已完成的任务' : '本周还没有任务<br>点右上角 <b>＋</b> 添加任务或业务映射')
       + '</div>';
   }else{
-    html += '<div class="list">' + tasks.map(taskRowHTML).join('') + '</div>';
+    html += '<div class="list">' + tasks.map(function(t){ return taskRowHTML(t, seg===2); }).join('') + '</div>';
   }
+  html += '<div class="hint">'+(seg===0?'全部任务（含已完成）。未完成的任务会留到下一周。'
+      : seg===1?'只显示未完成的任务，按星级从高到低排。'
+      : '只显示已完成的任务，并标注完成时间。')+'</div>';
 
   html += '<div class="sec-title">业务映射<span class="n">点行进业务页 · 点右侧文字写本周规划</span></div>';
   if(!maps.length){
-    html += '<div class="empty" style="padding:22px">'+(nowSeg===1&&isPast?'没有已完成的映射':'还没有映射<br>点右上角 <b>＋</b> 添加')+'</div>';
+    html += '<div class="empty" style="padding:22px">还没有映射<br>点右上角 <b>＋</b> 添加</div>';
   }else{
     html += '<div class="list">' + maps.map(mappingRowHTML).join('') + '</div>';
   }
@@ -1563,8 +1589,8 @@ function renderBizVisit(){
         + '</div>';
     });
     html += '</div>';
-    html += '<div class="hint">点客户行查看/修改拜访报告；点 <b>＋</b> 登记一次拜访（查看历史月时记得把时间改成对应月份）。<br>'
-      + '默认次数：金种子/top368 6 次，top1000 4 次，top1500/NDKA+/破格商 2 次，tier8 1 次。目标次数在客户编辑里可以逐客户改。</div>';
+    html += '<div class="hint">点客户行查看/修改拜访报告，进去后还能<b>单独改这个客户的月度拜访目标</b>；点 <b>＋</b> 登记一次拜访（查看历史月时记得把时间改成对应月份）。<br>'
+      + '默认次数：金种子/top368 6 次，top1000 4 次，top1500/NDKA+/破格商 2 次，tier8 1 次。目标次数也可以在客户编辑里逐客户改。</div>';
   }
   $('detailBody').innerHTML = html;
   var body = $('detailBody');
@@ -1615,21 +1641,69 @@ function renderVisitClient(cid){
   var mo = activeMonth();
   var vs = sortVisitsDesc(db.visits.filter(function(v){ return v.clientId===cid; }));
   var inMo = vs.filter(function(v){ return inMonth(v.at, mo); });
+  var q = visitQuotaOf(c);
+  var def = tierDefaultQuota(c);
   $('detailBody').innerHTML = '<div class="sum">'
     + '<div class="it"><div class="v acc">'+inMo.length+'</div><div class="k">'+monthLabel(mo)+'</div></div>'
-    + '<div class="it"><div class="v">'+visitQuotaOf(c)+'</div><div class="k">月度目标</div></div>'
+    + '<div class="it"><div class="v">'+q+'</div><div class="k">月度目标</div></div>'
     + '<div class="it"><div class="v">'+vs.length+'</div><div class="k">累计拜访</div></div>'
     + '</div>'
-    + (inMo.length >= visitQuotaOf(c) ? '<div class="warnline" style="background:#34c75922;color:#248a3d">✅ 本月拜访目标已达成</div>' : '')
+    + '<div class="master" id="vgRow">'
+    +   '<span class="lb">月度拜访目标 <b style="color:var(--accent)">'+q+'</b> 次</span>'
+    +   '<span class="st">点击修改 · 层级默认 '+def+' 次 ›</span>'
+    + '</div>'
+    + (inMo.length >= q ? '<div class="warnline" style="background:#34c75922;color:#248a3d">✅ 本月拜访目标已达成</div>' : '')
     + '<div class="sec-title">拜访记录<span class="n">共 '+vs.length+' 条</span></div>'
     + (vs.length ? '<div class="list">'+vs.map(function(v){ return visitRowHTML(v); }).join('')+'</div>'
                  : '<div class="empty" style="padding:30px">还没有拜访记录<br>点右上角 <b>＋</b> 登记一次</div>')
-    + '<div class="hint">点记录可修改报告与时间。</div>';
+    + '<div class="hint">点记录可修改报告与时间；点上方「月度拜访目标」可以单独给这个客户定目标（留空则按层级默认）。</div>';
   setDetailAdd(true, function(){ openVisitSheet(cid, null); });
+  $('vgRow').onclick = function(){ openVisitGoalSheet(cid); };
   $('detailBody').querySelectorAll('[data-vid]').forEach(function(r){
     var vid = r.getAttribute('data-vid');
     r.onclick = function(){ openVisitSheet(cid, vid); };
   });
+}
+function tierDefaultQuota(c){
+  return (c && VISIT_QUOTA[c.tier] != null) ? VISIT_QUOTA[c.tier] : 1;
+}
+/* 单独改某个客户的月度拜访目标 */
+function openVisitGoalSheet(cid){
+  var c = clientById(cid);
+  if(!c) return;
+  var def = tierDefaultQuota(c);
+  var cur = db.visitGoals[cid];
+  var has = (typeof cur === 'number');
+  openSheet(
+    '<h2>月度拜访目标</h2>'
+    + '<div class="field"><label>'+esc(c.name)+' · 每月拜访目标（次）</label>'
+    +   '<input type="number" id="gQ" min="0" max="99" inputmode="numeric" placeholder="留空 = 按层级默认 '+def+' 次" value="'+(has?cur:'')+'"></div>'
+    + '<div class="hint" style="margin:0 0 10px">层级默认：'+esc(tierOf(c.tier).n)+' '+def+' 次/月。'
+    +   '改目标只影响之后的达成统计，已经登记的拜访记录不变。</div>'
+    + '<div class="sheet-actions">'
+    +   (has ? '<button class="btn danger" id="gReset">恢复默认</button>' : '')
+    +   '<button class="btn ghost" id="gCancel">取消</button>'
+    +   '<button class="btn primary" id="gSave">保存</button>'
+    + '</div>'
+  );
+  $('gCancel').onclick = closeSheet;
+  $('gSave').onclick = function(){
+    var raw = $('gQ').value.trim();
+    if(raw === '') delete db.visitGoals[cid];
+    else{
+      var n = parseInt(raw, 10);
+      if(isNaN(n) || n < 0) n = 0;
+      if(n > 99) n = 99;
+      db.visitGoals[cid] = n;
+    }
+    save(); closeSheet(); renderDetail(); render();
+    showToast('月度目标已设为 ' + visitQuotaOf(c) + ' 次');
+  };
+  if(has) $('gReset').onclick = function(){
+    delete db.visitGoals[cid];
+    save(); closeSheet(); renderDetail(); render();
+    showToast('已恢复层级默认 ' + def + ' 次');
+  };
 }
 
 /* ============ 政企业务 ============ */
@@ -1981,7 +2055,10 @@ function renderRecycleProject(){
 function openSheet(html){
   $('sheetBox').innerHTML = html;
   $('mask').classList.remove('hidden');
-  $('sheetBox').parentNode.scrollTop = 0;
+  var sheet = $('sheetBox').parentNode;
+  /* 没有底部按钮条的弹层要自己留底边距（有按钮条时由吸底条提供） */
+  sheet.classList.toggle('noact', html.indexOf('sheet-actions') < 0);
+  sheet.scrollTop = 0;
 }
 function closeSheet(){ $('mask').classList.add('hidden'); }
 $('mask').addEventListener('click', function(e){ if(e.target === $('mask')) closeSheet(); });
@@ -2514,7 +2591,7 @@ function openWeekPicker(){
     r.onclick = function(){
       var k = r.getAttribute('data-wk');
       viewWeek = (k === curWeekKey()) ? null : k;
-      weekSeg = 0;
+      weekSeg = 1;   // 切周后回到默认的「未完成」页
       closeSheet(); renderWeek(); updateTopbar();
     };
   });
@@ -2593,12 +2670,14 @@ function openGuide(){
     + '<li><b>提单任务</b>固定在第一位，点进去是本周提单清单。左边圆圈 = 该客户整体完成（手机+融合一起勾上）；也可以只点「手机」或「融合」，两个都勾也算完成。</li>'
     + '<li>清单里的客户可以「×」掉，<b>不影响客户页</b>；右上角 ＋ 可以把客户加回清单。</li>'
     + '<li><b>任务没做完会一直留着</b>：W42 没完成的任务，到 W43 依然是未完成，直到你勾掉它。</li>'
+    + '<li><b>任务三页切换</b>（「本周任务」右侧）：<b>规划</b>= 全部任务，<b>未完成</b>= 只显示没做完的（默认），<b>已完成</b>= 只显示做完的并标注完成时间。历史周也能这样看。</li>'
+    + '<li>任务排序：<b>星级优先</b>，星级相同再按截止时间（越近越靠前，没填截止的沉底）。</li>'
     + '<li><b>业务映射</b>只是「本周这件事要做」：勾选只表示本周完成，不会改业务数据；点它会跳到对应业务页登记；<b>点映射右侧的文字可以写这段业务的本周规划</b>（写在映射右边显示）。</li>'
     + '<li>顶部周条右侧显示这一周「未完成 / 总数」——任务加业务映射一起算。</li>'
     + '<li>右上角 <b>周历</b>：看最近几周 + 下一周。历史周可以<b>修改补录</b>（规划 / 完成两栏都能改）；没有记录的周不会显示别周创建的数据；下一周可以提前规划。</li>'
     + '</ul>'
     + '<h3>业务怎么用</h3><ul>'
-    + '<li><b>拜访业务</b>：客户列表就是客户页的客户，右侧显示「本月 N / 目标 M」，点 <code>＋</code> 现场登记拜访并写报告。目标次数可以在客户详情卡里逐客户改。</li>'
+    + '<li><b>拜访业务</b>：客户列表就是客户页的客户，右侧显示「本月 N / 目标 M」，点 <code>＋</code> 现场登记拜访并写报告。<b>点进客户页后，点「月度拜访目标」那一行就能单独给这个客户改目标</b>（还能一键恢复层级默认）；客户详情卡里也能改。</li>'
     + '<li>默认目标：金种子 / top368 每月 6 次，top1000 4 次，top1500 / NDKA+ / 破格商 2 次，tier8 1 次。</li>'
     + '<li><b>政企业务</b>：客户显示鸿蒙电脑提单数（月度 / 累计），点 <code>＋</code> 记一次拜访，进详情可记录提单。</li>'
     + '<li><b>新兴业务</b>：显示提单金额（月度 / 累计）；每月需要 4 次拜访且<b>不能挤在两周内</b>，挤在一起时顶部会提示。</li>'
@@ -2607,7 +2686,7 @@ function openGuide(){
     + '</ul>'
     + '<h3>一些技巧</h3><ul>'
     + '<li>客户星级越高越靠前，把重要客户钉在列表顶上，比记标签省事。</li>'
-    + '<li>任务用<b>截止日期</b>排紧迫度，无截止的沉在最后；星级用于同一档期内排序。</li>'
+    + '<li>任务现在是<b>星级优先</b>：先做星级高的，星级一样再看截止时间。</li>'
     + '<li>一条任务勾了「整个任务已完成」，所有关联客户会一起完成；取消则一起回到未完成。</li>'
     + '<li>删除后 6 秒内底部有「撤销」；错过就用 <code>⋯ → 从自动快照恢复</code>。</li>'
     + '<li>二级页面右下角有<b>半透明返回按钮</b>，比够左上角「返回」省事。</li>'
